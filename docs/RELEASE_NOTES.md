@@ -15,4 +15,4 @@ TypeLingo-Source.zip 为完整源码；SHA256SUMS.txt 用于核对两个压缩�
 
 ## 验证范围
 
-Linux 核心测试 106 项通过，Windows 交叉构建通过。发布流程还会运行真实 WPF 窗口验证，成功后才上传版本附件。UIA 第三方应用、真实 IME 及五家付费 API 账户调用仍需手动验收。
+Linux、Windows 核心测试各 106 项通过，Windows x64 自包含发布通过；真实 WPF 窗口检查 12 项通过，截图已核对。发布流程重复运行 Windows 核心与界面检查，成功后才上传版本附件。UIA 第三方应用、真实 IME、中文安装脚本及五家付费 API 账户调用仍需手动验收。

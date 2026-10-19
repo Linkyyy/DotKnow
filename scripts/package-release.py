@@ -2,10 +2,14 @@
 """生成中文 Windows 安装包与源码包，不包含密钥、缓存或构建中间文件。"""
 from pathlib import Path
 import hashlib
+import sys
 import zipfile
 
 
 def main():
+    # Windows 重定向输出时可能采用本地代码页，统一为 UTF-8 以保留中文日志。
+    sys.stdout.reconfigure(encoding="utf-8")
+    sys.stderr.reconfigure(encoding="utf-8")
     root = Path(__file__).resolve().parents[1]
     output = root / "artifacts"
     exe = output / "win-x64" / "TypeLingo.exe"

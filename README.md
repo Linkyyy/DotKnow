@@ -4,13 +4,14 @@
 
 面向 Windows 10/11 的 C# / .NET 8 / WPF 桌面翻译助手。输入停顿后，通过所选 AI 服务翻译当前已授权输入框中的文本，在旁边显示译文。**自动操作只预览；原文仅在你主动请求并确认替换后才写入。**
 
-当前版本为 v0.2.0，提供 Windows 11 设置风格界面与所有应用监控模式。Linux 环境已完成交叉构建、核心自动化测试及 Windows x64 EXE 打包；Windows 桌面交互、中文安装向导、五家真实账户翻译与兼容性验收仍需按下文执行，不能以构建成功代替桌面验收。
+当前版本为 v0.2.0，提供 Windows 11 设置风格界面与所有应用监控模式。已完成 Windows x64 自包含打包，Linux、Windows 核心测试各 106 项通过，真实 Windows WPF 窗口检查 12 项通过。中文安装向导、五家真实账户翻译、跨应用与输入法兼容性仍需按下文验收。
 
 ## 下载安装包
 
-- [Windows x64 中文安装包](https://github.com/Linkyyy/TypeLingo/raw/refs/heads/main/downloads/TypeLingo-Windows-x64.zip)
-- [完整源码 ZIP](https://github.com/Linkyyy/TypeLingo/raw/refs/heads/main/downloads/TypeLingo-Source.zip)
+- [Windows x64 中文安装包](https://github.com/Linkyyy/TypeLingo/releases/download/v0.2.0/TypeLingo-Windows-x64.zip)
+- [完整源码 ZIP](https://github.com/Linkyyy/TypeLingo/releases/download/v0.2.0/TypeLingo-Source.zip)
 - [版本发布页面](https://github.com/Linkyyy/TypeLingo/releases)
+- [安装包备用下载](https://github.com/Linkyyy/TypeLingo/raw/refs/heads/main/downloads/TypeLingo-Windows-x64.zip)
 
 完整解压后直接运行 TypeLingo.exe，或运行「安装到当前用户.cmd」安装中文快捷方式。安装包内附中文说明。
 
@@ -56,7 +57,7 @@ dotnet publish src/TypeLingo.App -c Release -r win-x64 --self-contained true \
   -o artifacts/win-x64
 ```
 
-普通构建与单文件发布使用不同的依赖锁文件，防止发布过程改变常规开发依赖图。CI 同时配置 Linux / Windows 构建和核心测试，Windows job 生成可下载 EXE；CI 尚未在远端触发。
+普通构建与单文件发布使用不同的依赖锁文件，防止发布过程改变常规开发依赖图。GitHub Actions 已执行 Linux / Windows 构建和核心测试；发布流程在真实 Windows WPF 中验证设置窗口，并提供截图与测试报告。
 
 ## 已实现
 
@@ -97,6 +98,8 @@ dotnet publish src/TypeLingo.App -c Release -r win-x64 --self-contained true \
 ## 设置界面
 
 左侧分为主页、常规设置、AI 服务与模型、翻译缓存、外观与悬浮窗、快捷键、隐私与应用。顶部可搜索设置名称，例如「密钥」「字体」「缓存」，支持当前界面语言。右侧使用 Windows 11 风格卡片和控件，底部保存按钮始终可见。默认浅色主题，也可保存为深色主题。
+
+[查看实际 Windows 设置界面](https://github.com/Linkyyy/TypeLingo/releases/download/v0.2.0/settings-general.png) · [查看所有应用设置](https://github.com/Linkyyy/TypeLingo/releases/download/v0.2.0/settings-privacy.png)
 
 ## 测试与手工验收
 
