@@ -4,7 +4,7 @@
 
 面向 Windows 10/11 的 C# / .NET 8 / WPF 桌面翻译助手。输入停顿后，通过所选 AI 服务翻译当前已授权输入框中的文本，在旁边显示译文。**自动操作只预览；原文仅在你主动请求并确认替换后才写入。**
 
-当前版本为 v0.3.0，重做简洁设置界面与图标资源，悬浮窗仅显示译文和少量图标，支持输入后自动出现、快捷键触发、选区触发。Linux 核心测试 121 项通过；Windows 界面、跨进程 UIA 与核心测试由发布流程验证，记录随版本提供。
+当前版本为 v0.3.0，重做简洁设置界面与图标资源，悬浮窗仅显示译文和少量图标，支持输入后自动出现、快捷键触发、选区触发。Linux、Windows 核心测试各 121 项通过，真实 WPF 与跨进程 UIA 检查 31 项通过；截图和记录随版本提供。
 
 ## 下载安装包
 
@@ -101,7 +101,7 @@ dotnet publish src/TypeLingo.App -c Release -r win-x64 --self-contained true \
 
 悬浮窗没有标题、语言标签和常驻状态栏。短译文自动收窄，长译文限制高度并滚动；默认背景不透明度 0.88、字体 14、最大宽度 320、8 秒后隐藏，鼠标悬停时恢复实色并暂停隐藏。文字不随背景变淡。可在「外观与悬浮窗」调整，隐藏秒数为 0 时保持显示。优先避开输入框，并尝试光标/选区四周及屏幕边缘；满屏内容无法保证零遮挡，可使用快捷键模式按需查看。
 
-[查看实际 Windows 设置界面](https://github.com/Linkyyy/TypeLingo/releases/download/v0.3.0/settings-general.png) · [查看所有应用设置](https://github.com/Linkyyy/TypeLingo/releases/download/v0.3.0/settings-privacy.png)
+[查看实际 Windows 设置界面](https://github.com/Linkyyy/TypeLingo/releases/download/v0.3.0/settings-general.png) · [紧凑悬浮窗](https://github.com/Linkyyy/TypeLingo/releases/download/v0.3.0/overlay-compact.png) · [查看所有应用设置](https://github.com/Linkyyy/TypeLingo/releases/download/v0.3.0/settings-privacy.png)
 
 ## 测试与手工验收
 
