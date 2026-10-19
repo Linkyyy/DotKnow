@@ -1,0 +1,47 @@
+{
+  "UiLanguage": "zh-CN",
+  "PrivacyConsent": false,
+  "AI": {
+    "Provider": "DeepSeek",
+    "BaseUrl": "https://api.deepseek.com",
+    "Model": "deepseek-flash",
+    "TimeoutSeconds": 20,
+    "MaxRetries": 2
+  },
+  "Translation": {
+    "Enabled": true,
+    "DebounceMilliseconds": 500,
+    "MinimumRequestIntervalMilliseconds": 700,
+    "MaxInputCharacters": 2000,
+    "SourceLanguage": "auto",
+    "TargetLanguage": "ja",
+    "Mode": "natural"
+  },
+  "Cache": {
+    "MemoryEnabled": true,
+    "MemoryMaxEntries": 500,
+    "MemoryTTLMinutes": 30,
+    "DiskEnabled": false,
+    "DiskMaxEntries": 5000,
+    "DiskTTLDays": 7
+  },
+  "Overlay": {
+    "DarkMode": true,
+    "FontSize": 16,
+    "Opacity": 0.97,
+    "MaxWidth": 380,
+    "Position": "right"
+  },
+  "Hotkeys": {
+    "Replace": "Ctrl+Alt+Enter",
+    "Toggle": "Ctrl+Alt+Space",
+    "Copy": "Ctrl+Alt+C"
+  },
+  "AllowedApplications": [],
+  "ExcludedApplications": [
+    "1password",
+    "keepass",
+    "keepassxc",
+    "bitwarden"
+  ]
+}

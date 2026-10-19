@@ -1,0 +1,2 @@
+3484e8e577749c5eaa5889cdd74739c5500f16a87929bdd30fdfae5b8429af38  TypeLingo-Windows-x64.zip
+153f0781f77b5dfb7a9fcb32cdbc8d9cdaaae71a4aaa9e5731dc92f8ce22ff5b  TypeLingo-Source.zip

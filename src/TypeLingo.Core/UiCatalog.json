@@ -1,0 +1,646 @@
+{
+  "TypeLingo · 伴译": {
+    "en-US": "TypeLingo",
+    "ja-JP": "TypeLingo · 伴訳"
+  },
+  "伴译  /  TypeLingo": {
+    "en-US": "TypeLingo / Translation companion",
+    "ja-JP": "TypeLingo / 入力翻訳アシスタント"
+  },
+  "伴译": {
+    "en-US": "TypeLingo",
+    "ja-JP": "伴訳"
+  },
+  "TypeLingo 翻译预览": {
+    "en-US": "TypeLingo translation preview",
+    "ja-JP": "TypeLingo 翻訳プレビュー"
+  },
+  "输入在哪里，翻译就跟随到哪里。": {
+    "en-US": "Where you type, translation follows.",
+    "ja-JP": "入力する場所に、翻訳を。"
+  },
+  "实时预览 · 主动替换 · 原文由你掌控": {
+    "en-US": "Live preview · Confirm to replace · You control your text",
+    "ja-JP": "リアルタイムプレビュー・確認して置換・原文は自分で管理"
+  },
+  "基础": {
+    "en-US": "General",
+    "ja-JP": "基本"
+  },
+  "界面语言": {
+    "en-US": "Interface language",
+    "ja-JP": "表示言語"
+  },
+  "翻译方向": {
+    "en-US": "Translation direction",
+    "ja-JP": "翻訳方向"
+  },
+  "开启实时翻译（托盘可随时暂停全部读取）": {
+    "en-US": "Enable live translation (pause all reading from the tray)",
+    "ja-JP": "リアルタイム翻訳を有効にする（トレイから読み取りを一時停止）"
+  },
+  "源语言": {
+    "en-US": "Source language",
+    "ja-JP": "翻訳元の言語"
+  },
+  "目标语言": {
+    "en-US": "Target language",
+    "ja-JP": "翻訳先の言語"
+  },
+  "翻译风格": {
+    "en-US": "Translation style",
+    "ja-JP": "翻訳スタイル"
+  },
+  "防抖时间（毫秒）": {
+    "en-US": "Typing debounce (ms)",
+    "ja-JP": "入力待機時間（ミリ秒）"
+  },
+  "API 最小请求间隔（毫秒）": {
+    "en-US": "Minimum API request interval (ms)",
+    "ja-JP": "API の最小リクエスト間隔（ミリ秒）"
+  },
+  "最大输入字符数": {
+    "en-US": "Maximum input characters",
+    "ja-JP": "入力文字数の上限"
+  },
+  "预览不会修改原文；只有确认替换才写入。读取不到或无法安全写入的控件会自动降级。": {
+    "en-US": "Previews leave your text unchanged. Writing requires confirmation. Unsupported controls fall back safely.",
+    "ja-JP": "プレビューでは原文を変更しません。書き込みには確認が必要です。未対応の入力欄では安全な表示・コピーに切り替えます。"
+  },
+  "API 服务商": {
+    "en-US": "API provider",
+    "ja-JP": "API プロバイダー"
+  },
+  "打开官方 API 开通 / 购买平台": {
+    "en-US": "Open official API / billing platform",
+    "ja-JP": "公式 API 申し込み・購入ページを開く"
+  },
+  "API 地址（HTTPS；密钥将发送到此服务）": {
+    "en-US": "API URL (HTTPS; your key is sent to this service)",
+    "ja-JP": "API URL（HTTPS・このサービスへキーを送信します）"
+  },
+  "模型（可从列表选择，也可手动输入模型 ID）": {
+    "en-US": "Model (select from the list or enter a model ID)",
+    "ja-JP": "モデル（一覧から選択、またはモデル ID を入力）"
+  },
+  "API 密钥（每个服务商与地址单独保存，留空保留）": {
+    "en-US": "API key (stored per provider and URL; leave blank to retain)",
+    "ja-JP": "API キー（提供元と URL ごとに保存・空欄で保持）"
+  },
+  "请求超时（秒）": {
+    "en-US": "Request timeout (seconds)",
+    "ja-JP": "リクエストのタイムアウト（秒）"
+  },
+  "429 / 5xx 最大重试次数": {
+    "en-US": "Maximum retries for 429 / 5xx",
+    "ja-JP": "429 / 5xx の最大再試行回数"
+  },
+  "查询可用模型": {
+    "en-US": "Fetch available models",
+    "ja-JP": "利用可能なモデルを取得"
+  },
+  "删除当前服务商的密钥": {
+    "en-US": "Delete this provider's key",
+    "ja-JP": "選択中の提供元のキーを削除"
+  },
+  "测试翻译（固定短句）": {
+    "en-US": "Test translation (fixed sample)",
+    "ja-JP": "翻訳テスト（固定の短文）"
+  },
+  "密钥按服务商和 API 地址隔离，并使用当前 Windows 用户的 DPAPI 加密。查询模型不上传输入；测试翻译只发送固定短句 Hello，可能产生少量 API 费用。不同平台的模型列表权限不同，也可以直接填写模型 ID。": {
+    "en-US": "Keys are isolated by provider and API URL and encrypted with Windows DPAPI. Fetching models sends no input text. Translation tests send only Hello and may incur a small API charge. Model listing permissions vary; entering a model ID directly is supported.",
+    "ja-JP": "キーは提供元と API URL ごとに分離し、Windows DPAPI で暗号化します。モデル取得では入力文を送信しません。翻訳テストでは Hello のみ送信し、少額の API 料金が発生する場合があります。一覧の権限がなくてもモデル ID を直接入力できます。"
+  },
+  "缓存": {
+    "en-US": "Cache",
+    "ja-JP": "キャッシュ"
+  },
+  "启用内存缓存": {
+    "en-US": "Enable memory cache",
+    "ja-JP": "メモリキャッシュを有効にする"
+  },
+  "内存最大条目数": {
+    "en-US": "Maximum memory entries",
+    "ja-JP": "メモリの最大件数"
+  },
+  "内存有效期（分钟）": {
+    "en-US": "Memory TTL (minutes)",
+    "ja-JP": "メモリの有効期間（分）"
+  },
+  "主动启用磁盘缓存（默认关闭；可能包含私人聊天译文）": {
+    "en-US": "Opt in to disk cache (off by default; may contain private translations)",
+    "ja-JP": "ディスクキャッシュを有効にする（初期値は無効・私的な訳文が含まれる場合があります）"
+  },
+  "磁盘最大条目数": {
+    "en-US": "Maximum disk entries",
+    "ja-JP": "ディスクの最大件数"
+  },
+  "磁盘有效期（天）": {
+    "en-US": "Disk TTL (days)",
+    "ja-JP": "ディスクの有効期間（日）"
+  },
+  "立即清除全部缓存": {
+    "en-US": "Clear all caches now",
+    "ja-JP": "すべてのキャッシュを削除"
+  },
+  "磁盘中的译文使用 DPAPI 加密；只保存输入哈希，不保存原文。关闭磁盘缓存不会自动删除已有内容，请使用清除按钮。日志不记录原文、译文或 Key。": {
+    "en-US": "Disk translations are DPAPI-encrypted. Only input hashes are saved, never source text. Disabling disk cache does not delete existing entries; use Clear. Logs contain no source text, translations or keys.",
+    "ja-JP": "ディスク上の訳文は DPAPI で暗号化し、原文はハッシュのみ保存します。無効にしても既存データは残るため、削除ボタンを使用してください。原文・訳文・キーはログに記録しません。"
+  },
+  "悬浮窗": {
+    "en-US": "Overlay",
+    "ja-JP": "フローティング表示"
+  },
+  "深色模式": {
+    "en-US": "Dark mode",
+    "ja-JP": "ダークモード"
+  },
+  "字体大小（10–32）": {
+    "en-US": "Font size (10–32)",
+    "ja-JP": "文字サイズ（10–32）"
+  },
+  "不透明度（0.5–1）": {
+    "en-US": "Opacity (0.5–1)",
+    "ja-JP": "不透明度（0.5–1）"
+  },
+  "最大宽度（240–800）": {
+    "en-US": "Maximum width (240–800)",
+    "ja-JP": "最大幅（240–800）"
+  },
+  "位置偏好": {
+    "en-US": "Preferred position",
+    "ja-JP": "優先する表示位置"
+  },
+  "位置不足时依次尝试右、下、左、上；无法取得坐标时显示在屏幕角落。焦点离开、输入清空或暂停时自动隐藏。": {
+    "en-US": "If space is limited, try right, below, left, then above. With no coordinates, use a screen corner. Hide on focus loss, empty input or pause.",
+    "ja-JP": "空きがなければ右・下・左・上の順に配置し、座標不明時は画面の隅に表示します。フォーカス移動・空の入力・一時停止で非表示になります。"
+  },
+  "快捷键": {
+    "en-US": "Shortcuts",
+    "ja-JP": "ショートカット"
+  },
+  "准备替换 / 显示确认": {
+    "en-US": "Prepare replacement / confirm",
+    "ja-JP": "置換の準備・確認画面"
+  },
+  "开启 / 暂停全部读取": {
+    "en-US": "Enable / pause all reading",
+    "ja-JP": "読み取りの有効・一時停止"
+  },
+  "复制当前译文": {
+    "en-US": "Copy current translation",
+    "ja-JP": "現在の訳文をコピー"
+  },
+  "格式：Ctrl+Alt+Enter，可使用 Shift / Win。冲突会明确提示；不会监听所有按键。复制操作会按你的要求覆盖剪贴板；软件不会自动粘贴或模拟 Enter。": {
+    "en-US": "Example: Ctrl+Alt+Enter; Shift and Win are supported. Conflicts are reported; keystrokes are not logged. Copying replaces the clipboard only on request. No automatic paste or Enter simulation.",
+    "ja-JP": "例：Ctrl+Alt+Enter。Shift・Win も使用できます。競合を表示し、全キーは監視しません。コピーは操作時のみクリップボードを上書きします。自動貼り付けや Enter の送信は行いません。"
+  },
+  "隐私": {
+    "en-US": "Privacy",
+    "ja-JP": "プライバシー"
+  },
+  "先授权，再读取": {
+    "en-US": "Consent before reading",
+    "ja-JP": "同意してから読み取り"
+  },
+  "启用后，允许应用中当前输入框的完整文本会发送给所选 AI 服务进行翻译。允许浏览器意味着其所有可访问输入框均可能被读取，包括私人页面。请只允许你信任且需要翻译的应用。": {
+    "en-US": "When enabled, the entire focused input in allowed apps is sent to the chosen AI service. Allowing a browser includes accessible inputs on private pages. Allow only apps you trust and need to translate.",
+    "ja-JP": "有効にすると、許可したアプリの入力欄全体を選択した AI サービスへ送信します。ブラウザーの許可には私的なページも含まれます。信頼でき、翻訳が必要なアプリのみ許可してください。"
+  },
+  "我了解并同意读取允许应用的输入框，并上传给所选 API 翻译": {
+    "en-US": "I consent to reading allowed inputs and sending them to the selected translation API",
+    "ja-JP": "許可したアプリの入力欄を読み取り、選択した API に翻訳を依頼することに同意します"
+  },
+  "允许监控的进程名（逗号分隔；空列表不读取任何应用）": {
+    "en-US": "Allowed process names (comma-separated; empty means no reading)",
+    "ja-JP": "許可するプロセス名（カンマ区切り・空欄なら読み取りなし）"
+  },
+  "例如 notepad, chrome, msedge；填写进程名，不填写窗口标题": {
+    "en-US": "For example: notepad, chrome, msedge. Use process names, not window titles.",
+    "ja-JP": "例：notepad, chrome, msedge。ウィンドウ名ではなくプロセス名を入力します。"
+  },
+  "排除的进程名（优先于允许列表）": {
+    "en-US": "Excluded process names (override allowlist)",
+    "ja-JP": "除外するプロセス名（許可より優先）"
+  },
+  "密码框与常见敏感标签会被排除，但无障碍接口无法识别所有敏感内容。没有按网站授权的能力，请用进程排除或托盘暂停保护敏感输入。无需管理员权限，无键盘记录、注入或驱动。": {
+    "en-US": "Passwords and common sensitive labels are excluded, but accessibility cannot identify every sensitive field. Website-specific consent is unavailable; exclude processes or pause reading for private input. No admin rights, keylogging, injection or drivers.",
+    "ja-JP": "パスワード欄などを除外しますが、すべての機密情報は識別できません。サイト別の許可はなく、機密入力にはプロセス除外や一時停止を使用してください。管理者権限・キー記録・注入・ドライバーは不要です。"
+  },
+  "本次会话统计": {
+    "en-US": "Session statistics",
+    "ja-JP": "今回のセッション統計"
+  },
+  "关闭此窗口后继续在系统托盘运行": {
+    "en-US": "Closing this window keeps TypeLingo in the tray",
+    "ja-JP": "閉じた後もシステムトレイで動作します"
+  },
+  "保存设置": {
+    "en-US": "Save settings",
+    "ja-JP": "設定を保存"
+  },
+  "原文保持不变": {
+    "en-US": "Your original text stays unchanged",
+    "ja-JP": "原文は変更しません"
+  },
+  "复制译文": {
+    "en-US": "Copy translation",
+    "ja-JP": "訳文をコピー"
+  },
+  "替换…": {
+    "en-US": "Replace…",
+    "ja-JP": "置換…"
+  },
+  "是否替换当前输入内容？": {
+    "en-US": "Replace the current input?",
+    "ja-JP": "現在の入力内容を置換しますか？"
+  },
+  "原文": {
+    "en-US": "Original text",
+    "ja-JP": "原文"
+  },
+  "上方译文将写入当前输入框，不会发送消息。": {
+    "en-US": "The translation above will replace the input. No message will be sent.",
+    "ja-JP": "上の訳文で入力欄を置換します。メッセージは送信しません。"
+  },
+  "取消": {
+    "en-US": "Cancel",
+    "ja-JP": "キャンセル"
+  },
+  "确认替换": {
+    "en-US": "Confirm replacement",
+    "ja-JP": "置換を確認"
+  },
+  "TypeLingo 已在系统托盘运行。": {
+    "en-US": "TypeLingo is already running in the system tray.",
+    "ja-JP": "TypeLingo はすでにシステムトレイで動作しています。"
+  },
+  "设置 / 隐私授权": {
+    "en-US": "Settings / privacy consent",
+    "ja-JP": "設定・プライバシーの同意"
+  },
+  "暂停全部读取": {
+    "en-US": "Pause all reading",
+    "ja-JP": "すべての読み取りを一時停止"
+  },
+  "清除缓存": {
+    "en-US": "Clear cache",
+    "ja-JP": "キャッシュを削除"
+  },
+  "退出": {
+    "en-US": "Exit",
+    "ja-JP": "終了"
+  },
+  "TypeLingo · 仅监控允许的应用": {
+    "en-US": "TypeLingo · Allowed apps only",
+    "ja-JP": "TypeLingo · 許可したアプリのみ"
+  },
+  "TypeLingo · 已暂停读取": {
+    "en-US": "TypeLingo · Reading paused",
+    "ja-JP": "TypeLingo · 読み取り停止中"
+  },
+  "本地缓存 · 原文保持不变": {
+    "en-US": "Local cache · Original unchanged",
+    "ja-JP": "ローカルキャッシュ・原文は変更しません"
+  },
+  "译文预览 · 原文保持不变": {
+    "en-US": "Translation preview · Original unchanged",
+    "ja-JP": "訳文プレビュー・原文は変更しません"
+  },
+  "译文已复制": {
+    "en-US": "Translation copied",
+    "ja-JP": "訳文をコピーしました"
+  },
+  "剪贴板正忙，请重试。": {
+    "en-US": "Clipboard is busy. Please try again.",
+    "ja-JP": "クリップボードを使用中です。再試行してください。"
+  },
+  "输入已变化、正在组字或不支持安全写入；请重新确认或复制译文。": {
+    "en-US": "The input changed, is composing, or cannot be written safely. Confirm again or copy the translation.",
+    "ja-JP": "入力変更・変換中・安全な書き込み非対応のいずれかです。再確認するか訳文をコピーしてください。"
+  },
+  "无法安全准备替换，请重新确认或复制译文。": {
+    "en-US": "Could not prepare a safe replacement. Confirm again or copy the translation.",
+    "ja-JP": "安全な置換を準備できません。再確認するか訳文をコピーしてください。"
+  },
+  "目标、内容或配置已变化。未替换，请重新确认。": {
+    "en-US": "The target, text or settings changed. Nothing was replaced. Confirm again.",
+    "ja-JP": "対象・内容・設定が変わりました。置換せず、再確認が必要です。"
+  },
+  "控件拒绝安全写入，未执行其他输入操作。请复制译文。": {
+    "en-US": "The control rejected safe writing. No other input was sent. Copy the translation instead.",
+    "ja-JP": "入力欄が書き込みを拒否しました。他の入力は送信しません。訳文をコピーしてください。"
+  },
+  "已取消 · 原文保持不变": {
+    "en-US": "Canceled · Original unchanged",
+    "ja-JP": "キャンセルしました・原文は変更しません"
+  },
+  "密钥已加密保存，留空即可继续使用。": {
+    "en-US": "The key is encrypted and saved. Leave blank to retain it.",
+    "ja-JP": "キーは暗号化して保存済みです。空欄で保持できます。"
+  },
+  "当前服务商和 API 地址尚未保存密钥。": {
+    "en-US": "No key is saved for this provider and API URL.",
+    "ja-JP": "この提供元と API URL のキーは未保存です。"
+  },
+  "快捷键格式无效，例如 Ctrl+Alt+Enter。": {
+    "en-US": "Invalid shortcut. Example: Ctrl+Alt+Enter.",
+    "ja-JP": "ショートカットが無効です。例：Ctrl+Alt+Enter。"
+  },
+  "已保存。仅监控允许列表中的应用。": {
+    "en-US": "Saved. Only allowed apps are monitored.",
+    "ja-JP": "保存しました。許可したアプリのみ監視します。"
+  },
+  "已保存；未授权，所有文本读取保持暂停。": {
+    "en-US": "Saved. Without consent, all text reading stays paused.",
+    "ja-JP": "保存しました。同意がないため読み取りは停止しています。"
+  },
+  "请输入有效数字（小数使用英文句点）。": {
+    "en-US": "Enter valid numbers, using a dot for decimals.",
+    "ja-JP": "有効な数値を入力してください。小数点にはピリオドを使用します。"
+  },
+  "无法保存设置或加密密钥，请检查本地存储权限。": {
+    "en-US": "Could not save settings or encrypt the key. Check local storage permissions.",
+    "ja-JP": "設定の保存・キーの暗号化ができません。保存先の権限を確認してください。"
+  },
+  "正在查询模型…": {
+    "en-US": "Fetching models…",
+    "ja-JP": "モデルを取得中…"
+  },
+  "模型查询失败；仍可手动填写模型 ID，请检查密钥、地址和账户权限。": {
+    "en-US": "Model listing failed. You can still enter a model ID manually. Check the key, URL and account permissions.",
+    "ja-JP": "モデル一覧の取得に失敗しました。ID を直接入力できます。キー・URL・権限を確認してください。"
+  },
+  "正在测试固定短句 Hello…": {
+    "en-US": "Testing with the fixed sample Hello…",
+    "ja-JP": "固定の短文 Hello でテスト中…"
+  },
+  "测试翻译失败，请检查密钥、模型和网络。": {
+    "en-US": "Translation test failed. Check the key, model and network.",
+    "ja-JP": "翻訳テストに失敗しました。キー・モデル・ネットワークを確認してください。"
+  },
+  "所有缓存已清除。": {
+    "en-US": "All caches cleared.",
+    "ja-JP": "すべてのキャッシュを削除しました。"
+  },
+  "缓存清理失败，请检查文件权限。": {
+    "en-US": "Cache cleanup failed. Check file permissions.",
+    "ja-JP": "キャッシュ削除に失敗しました。ファイル権限を確認してください。"
+  },
+  "已删除当前服务商的密钥。": {
+    "en-US": "The current provider's key was deleted.",
+    "ja-JP": "選択中の提供元のキーを削除しました。"
+  },
+  "无法删除密钥，请检查文件权限。": {
+    "en-US": "Could not delete the key. Check file permissions.",
+    "ja-JP": "キーを削除できません。ファイル権限を確認してください。"
+  },
+  "无法打开浏览器，请复制下方官方平台地址。": {
+    "en-US": "Could not open the browser. Copy the official URL below.",
+    "ja-JP": "ブラウザーを開けません。下の公式 URL をコピーしてください。"
+  },
+  "连接成功，已查询到 {0} 个模型。": {
+    "en-US": "Connected. Found {0} models.",
+    "ja-JP": "接続に成功しました。{0} 個のモデルを取得しました。"
+  },
+  "当前模型不在返回列表中，可以手动修改后测试翻译。": {
+    "en-US": "The current model is not listed. You can edit the ID and test translation.",
+    "ja-JP": "現在のモデルは一覧にありません。ID を変更して翻訳テストを実行できます。"
+  },
+  "固定短句测试成功：{0}": {
+    "en-US": "Sample translation succeeded: {0}",
+    "ja-JP": "固定短文の翻訳テストに成功：{0}"
+  },
+  "HTTP 请求 {0} · 本地命中 / 节省请求 {1}\n翻译成功 {2} · 失败 {3} · 命中率 {4}%\n平均 API 延迟 {5} ms · 输入词元 {6} / 输出词元 {7}": {
+    "en-US": "HTTP requests {0} · Local hits / requests saved {1}\nSuccesses {2} · Failures {3} · Cache hit rate {4}%\nAverage API latency {5} ms · Input tokens {6} / output tokens {7}",
+    "ja-JP": "HTTP リクエスト {0}・キャッシュ利用／節約 {1}\n翻訳成功 {2}・失敗 {3}・ヒット率 {4}%\n平均 API 遅延 {5} ms・入力トークン {6}／出力トークン {7}"
+  },
+  "API 返回格式无效，未显示不完整译文。": {
+    "en-US": "Invalid API response. Incomplete text was not displayed.",
+    "ja-JP": "API 応答形式が無効です。不完全な訳文は表示しません。"
+  },
+  "译文不完整或被服务拒绝，未用于替换。": {
+    "en-US": "The translation is incomplete or blocked; it cannot be used to replace text.",
+    "ja-JP": "訳文が不完全、またはサービスに拒否されました。置換には使用しません。"
+  },
+  "模型列表格式无效。": {
+    "en-US": "Invalid model list response.",
+    "ja-JP": "モデル一覧の応答形式が無効です。"
+  },
+  "请为当前服务商和 API 地址保存密钥。": {
+    "en-US": "Save an API key for this provider and URL.",
+    "ja-JP": "現在の提供元と API URL のキーを保存してください。"
+  },
+  "API 认证失败，请检查 Key 与账户权限。": {
+    "en-US": "API authentication failed. Check the key and account permissions.",
+    "ja-JP": "API 認証に失敗しました。キーとアカウント権限を確認してください。"
+  },
+  "API 请求受限，请稍后重试。": {
+    "en-US": "API rate limit reached. Try again later.",
+    "ja-JP": "API の利用制限に達しました。しばらくしてから再試行してください。"
+  },
+  "翻译服务暂时不可用。": {
+    "en-US": "The translation service is temporarily unavailable.",
+    "ja-JP": "翻訳サービスを一時的に利用できません。"
+  },
+  "API 拒绝请求（HTTP {0}），请检查模型、地址和账户余额。": {
+    "en-US": "API request rejected (HTTP {0}). Check the model, URL and account balance.",
+    "ja-JP": "API に拒否されました（HTTP {0}）。モデル・URL・残高を確認してください。"
+  },
+  "翻译请求超时，请稍后重试。": {
+    "en-US": "Translation request timed out. Try again later.",
+    "ja-JP": "翻訳リクエストがタイムアウトしました。後で再試行してください。"
+  },
+  "无法连接 API，请检查网络与 HTTPS 证书。": {
+    "en-US": "Could not connect to the API. Check the network and HTTPS certificates.",
+    "ja-JP": "API に接続できません。ネットワークと HTTPS 証明書を確認してください。"
+  },
+  "配置损坏或版本不兼容，已暂停读取；原配置文件未覆盖。请检查后重新保存。": {
+    "en-US": "The configuration is damaged or incompatible. Reading is paused; the original file is preserved. Check and save again.",
+    "ja-JP": "設定が破損、または非対応です。読み取りを停止し、元のファイルは保持しました。確認して保存してください。"
+  },
+  "当前 Windows 用户无法解密 API Key，请重新保存。": {
+    "en-US": "This Windows user cannot decrypt the API key. Save it again.",
+    "ja-JP": "現在の Windows ユーザーではキーを復号できません。再保存してください。"
+  },
+  "不支持所选界面语言。": {
+    "en-US": "Unsupported interface language.",
+    "ja-JP": "選択した表示言語は未対応です。"
+  },
+  "请选择 API 服务商并填写模型名称。": {
+    "en-US": "Choose an API provider and enter a model name.",
+    "ja-JP": "API プロバイダーとモデル名を設定してください。"
+  },
+  "API Base URL 必须是不含凭证、查询参数或片段的 HTTPS 地址。": {
+    "en-US": "The API URL must use HTTPS without credentials, query parameters or fragments.",
+    "ja-JP": "API URL は認証情報・クエリ・フラグメントのない HTTPS アドレスにしてください。"
+  },
+  "超时范围为 1–120 秒，重试范围为 0–4。": {
+    "en-US": "Timeout must be 1–120 seconds and retries 0–4.",
+    "ja-JP": "タイムアウトは 1～120 秒、再試行回数は 0～4 にしてください。"
+  },
+  "防抖、请求间隔或文本长度不在支持范围内。": {
+    "en-US": "Debounce, request interval or text length is outside supported limits.",
+    "ja-JP": "入力待機時間・リクエスト間隔・文字数が範囲外です。"
+  },
+  "不支持所选语言或翻译风格。": {
+    "en-US": "Unsupported language or translation style.",
+    "ja-JP": "選択した言語または翻訳スタイルは未対応です。"
+  },
+  "缓存容量或有效期不在支持范围内。": {
+    "en-US": "Cache capacity or lifetime is outside supported limits.",
+    "ja-JP": "キャッシュ容量または有効期間が範囲外です。"
+  },
+  "悬浮窗参数不在支持范围内。": {
+    "en-US": "Overlay settings are outside supported limits.",
+    "ja-JP": "フローティング表示の設定が範囲外です。"
+  },
+  "应用列表仅填写进程名，例如 notepad 或 chrome。": {
+    "en-US": "Enter process names only, such as notepad or chrome.",
+    "ja-JP": "アプリ一覧には notepad や chrome などのプロセス名を入力してください。"
+  },
+  "等待输入稳定…": {
+    "en-US": "Waiting for typing to settle…",
+    "ja-JP": "入力が落ち着くのを待っています…"
+  },
+  "正在翻译…": {
+    "en-US": "Translating…",
+    "ja-JP": "翻訳中…"
+  },
+  "API 未返回有效译文。": {
+    "en-US": "The API returned no valid translation.",
+    "ja-JP": "API から有効な訳文が返されませんでした。"
+  },
+  "本地缓存 · 未调用 API": {
+    "en-US": "Local cache · No API request",
+    "ja-JP": "ローカルキャッシュ・API への送信なし"
+  },
+  "译文就绪 · 原文保持不变": {
+    "en-US": "Translation ready · Original unchanged",
+    "ja-JP": "訳文の準備完了・原文は変更しません"
+  },
+  "翻译或缓存暂时不可用，请检查配置后重试。": {
+    "en-US": "Translation or cache is unavailable. Check settings and try again.",
+    "ja-JP": "翻訳またはキャッシュを利用できません。設定を確認して再試行してください。"
+  },
+  "自动识别 → 日语": {
+    "en-US": "Auto-detect → Japanese",
+    "ja-JP": "自動検出 → 日本語"
+  },
+  "自动识别 → 英语": {
+    "en-US": "Auto-detect → English",
+    "ja-JP": "自動検出 → 英語"
+  },
+  "自动识别 → 中文": {
+    "en-US": "Auto-detect → Chinese",
+    "ja-JP": "自動検出 → 中国語"
+  },
+  "中译英": {
+    "en-US": "Chinese → English",
+    "ja-JP": "中国語 → 英語"
+  },
+  "英译中": {
+    "en-US": "English → Chinese",
+    "ja-JP": "英語 → 中国語"
+  },
+  "中译日": {
+    "en-US": "Chinese → Japanese",
+    "ja-JP": "中国語 → 日本語"
+  },
+  "日译中": {
+    "en-US": "Japanese → Chinese",
+    "ja-JP": "日本語 → 中国語"
+  },
+  "英译日": {
+    "en-US": "English → Japanese",
+    "ja-JP": "英語 → 日本語"
+  },
+  "日译英": {
+    "en-US": "Japanese → English",
+    "ja-JP": "日本語 → 英語"
+  },
+  "自定义方向": {
+    "en-US": "Custom direction",
+    "ja-JP": "方向をカスタマイズ"
+  },
+  "不支持所选翻译方向。": {
+    "en-US": "Unsupported translation direction.",
+    "ja-JP": "選択した翻訳方向は未対応です。"
+  },
+  "快捷键 {0} 已被占用，相关快捷键未启用。请修改设置。": {
+    "en-US": "Shortcut {0} is unavailable. Shortcuts were not enabled. Change settings.",
+    "ja-JP": "ショートカット {0} は使用中です。有効化できないため、設定を変更してください。"
+  },
+  "通义千问（阿里云百炼）": {
+    "en-US": "Qwen (Alibaba Cloud)",
+    "ja-JP": "Qwen（Alibaba Cloud）"
+  },
+  "不支持所选 API 服务商。": {
+    "en-US": "Unsupported API provider.",
+    "ja-JP": "選択した API プロバイダーは未対応です。"
+  },
+  "当前控件不支持安全读取，请切换输入框。": {
+    "en-US": "This control cannot be read safely. Switch inputs.",
+    "ja-JP": "この入力欄は安全に読み取れません。別の入力欄を使用してください。"
+  },
+  "输入监视暂时不可用；未执行写入，请暂停或切换应用。": {
+    "en-US": "Input monitoring is unavailable. Nothing was written. Pause or switch apps.",
+    "ja-JP": "入力の監視を利用できません。書き込みは行っていません。一時停止するかアプリを切り替えてください。"
+  },
+  "快捷键格式无效或重复，例如 Ctrl+Alt+Enter。": {
+    "en-US": "Invalid or duplicate shortcut. Example: Ctrl+Alt+Enter.",
+    "ja-JP": "ショートカットが無効、または重複しています。例：Ctrl+Alt+Enter。"
+  },
+  "自动识别": {
+    "en-US": "Auto-detect",
+    "ja-JP": "自動検出"
+  },
+  "中文": {
+    "en-US": "Chinese",
+    "ja-JP": "中国語"
+  },
+  "英语": {
+    "en-US": "English",
+    "ja-JP": "英語"
+  },
+  "日语": {
+    "en-US": "Japanese",
+    "ja-JP": "日本語"
+  },
+  "自然翻译": {
+    "en-US": "Natural",
+    "ja-JP": "自然な翻訳"
+  },
+  "直译": {
+    "en-US": "Literal",
+    "ja-JP": "直訳"
+  },
+  "商务翻译": {
+    "en-US": "Business",
+    "ja-JP": "ビジネス"
+  },
+  "敬语翻译": {
+    "en-US": "Polite / Keigo",
+    "ja-JP": "敬語"
+  },
+  "右侧": {
+    "en-US": "Right",
+    "ja-JP": "右側"
+  },
+  "下方": {
+    "en-US": "Below",
+    "ja-JP": "下"
+  },
+  "左侧": {
+    "en-US": "Left",
+    "ja-JP": "左側"
+  },
+  "上方": {
+    "en-US": "Above",
+    "ja-JP": "上"
+  },
+  "AI": {
+    "en-US": "AI",
+    "ja-JP": "AI"
+  }
+}

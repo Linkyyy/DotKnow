@@ -1,0 +1,41 @@
+name: 发布中文安装包
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: '要发布的版本标签，例如 v0.1.0'
+        required: true
+        default: 'v0.1.0'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: 检查安装包与源码包校验值
+        working-directory: downloads
+        run: sha256sum --check SHA256SUMS.txt
+      - name: 上传 GitHub Release 附件
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          RELEASE_TAG: ${{ github.event.inputs.tag || github.ref_name }}
+        run: |
+          if [[ ! "$RELEASE_TAG" =~ ^v[0-9]+\.[0-9]+\.[0-9]+([.-][A-Za-z0-9.-]+)?$ ]]; then
+            echo '版本标签格式无效，请使用 v0.1.0 这样的版本号。'
+            exit 1
+          fi
+          gh release create "$RELEASE_TAG" \
+            downloads/TypeLingo-Windows-x64.zip \
+            downloads/TypeLingo-Source.zip \
+            downloads/SHA256SUMS.txt \
+            --verify-tag \
+            --title "TypeLingo（伴译）$RELEASE_TAG 中文版" \
+            --notes-file docs/RELEASE_NOTES.md
