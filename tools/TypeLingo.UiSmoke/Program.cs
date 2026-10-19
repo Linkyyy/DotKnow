@@ -20,7 +20,7 @@ internal static class Program
         if (args.Length == 2 && args[0] == "--input-fixture") return InputFixture.Run(args[1]);
         var output = Path.GetFullPath(args.FirstOrDefault() ?? "artifacts/ui-smoke"); Directory.CreateDirectory(output);
         var temporary = Path.Combine(Path.GetTempPath(), "TypeLingo-UiSmoke-" + Guid.NewGuid().ToString("N"));
-        var app = new App.App(); var checks = new List<string>();
+        var app = new LayoutApplication(); var checks = new List<string>();
         try
         {
             app.InitializeComponent();
@@ -38,6 +38,8 @@ internal static class Program
             }
             window.Show(); Pump(window);
             Check(window.IsVisible && window.ActualWidth >= 760, "真实 WPF 设置窗口已启动并完成布局");
+            using (var icon = Application.GetResourceStream(new Uri("pack://application:,,,/TypeLingo;component/Assets/typelingo.ico")).Stream)
+                Check(window.Icon != null && icon.Length > 0, "设置窗口与托盘使用可加载的新图标资源");
             Check(Find<RadioButton>("SystemThemeRadio").IsChecked == true, "默认主题可跟随 Windows 系统");
             Find<RadioButton>("DarkThemeRadio").IsChecked = true; Pump(window);
             Check(((SolidColorBrush)app.Resources["CanvasBrush"]).Color.R < 100, "深色主题卡片即时切换实际资源");
@@ -94,9 +96,12 @@ internal static class Program
             Check(((Button)overlay.FindName("ReplaceButton")).Visibility == Visibility.Collapsed, "选区预览不显示替换正文按钮");
             Capture(overlay, Path.Combine(output, "overlay-selection.png"));
             overlay.Display(preview with { Result = new TranslationResult(string.Concat(Enumerable.Repeat("较长译文会自动换行并限制可见高度。", 40))) }); Pump(overlay);
-            Check(overlay.ActualWidth <= 320 && overlay.ActualHeight <= 190, "长译文保持紧凑并通过滚动显示");
+            Check(overlay.ActualWidth <= 320 && overlay.ActualHeight <= 190 && ((ScrollViewer)overlay.FindName("TranslationScroll")).ScrollableHeight > 0, "长译文保持紧凑并通过滚动显示");
             Capture(overlay, Path.Combine(output, "overlay-long.png"));
             overlay.Dismiss(); Check(!overlay.IsVisible, "关闭图标可隐藏悬浮窗");
+            overlay.Loading(snapshot, "API 测试错误"); Pump(overlay);
+            Check(overlay.IsVisible && ((TextBlock)overlay.FindName("TranslationText")).Text == "翻译暂不可用", "请求失败时显示简短提示并保留悬停错误原因");
+            overlay.Dismiss();
             InputFixture.Verify(Check);
             File.WriteAllLines(Path.Combine(output, "ui-validation.txt"), checks);
              Console.WriteLine("WPF 界面检查全部通过：" + checks.Count); return 0;
@@ -124,6 +129,11 @@ internal static class Program
     }
     private sealed class NoApiProvider : ITranslationProvider
     { public Task<TranslationResult> TranslateAsync(TranslationRequest request, CancellationToken token) => throw new InvalidOperationException("界面检查不应调用 API"); }
+    private sealed class LayoutApplication : App.App
+    {
+        // 仅托管真实设置与悬浮窗口，不启动托盘或读取运行器用户配置；输入路径另用独立进程验证。
+        protected override void OnStartup(StartupEventArgs e) { }
+    }
     private sealed class EmptyCache : ITranslationCache
     {
         public Task<TranslationResult?> GetAsync(string key, CancellationToken token) => Task.FromResult<TranslationResult?>(null);

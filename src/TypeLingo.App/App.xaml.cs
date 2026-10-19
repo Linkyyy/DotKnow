@@ -86,7 +86,7 @@ public partial class App : System.Windows.Application
             catch (Exception) { ShowSettings(); }
         }).Tag = "清除缓存";
         menu.Items.Add(new Forms.ToolStripSeparator()); menu.Items.Add("退出", null, (_, _) => Shutdown()).Tag = "退出";
-        using (var iconStream = GetResourceStream(new Uri("Assets/typelingo.ico", UriKind.Relative)).Stream)
+        using (var iconStream = GetResourceStream(new Uri("pack://application:,,,/TypeLingo;component/Assets/typelingo.ico", UriKind.Absolute)).Stream)
             trayIcon = new System.Drawing.Icon(iconStream);
         tray = new Forms.NotifyIcon { Icon = trayIcon, Text = "TypeLingo · 伴译", ContextMenuStrip = menu, Visible = true };
         tray.DoubleClick += (_, _) => ShowSettings();

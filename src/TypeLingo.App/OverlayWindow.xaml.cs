@@ -44,7 +44,7 @@ public partial class OverlayWindow : Window
         TranslationText.Text = preview.Result.Text;
         TranslationText.FontSize = settings().Overlay.FontSize;
         RefreshLanguage();
-        CopyButton.IsEnabled = true; ReplaceButton.Visibility = preview.Snapshot.CanWrite ? Visibility.Visible : Visibility.Collapsed; ReplaceButton.IsEnabled = preview.Snapshot.CanWrite;
+        CopyButton.Visibility = Visibility.Visible; CopyButton.IsEnabled = true; ReplaceButton.Visibility = preview.Snapshot.CanWrite ? Visibility.Visible : Visibility.Collapsed; ReplaceButton.IsEnabled = preview.Snapshot.CanWrite;
         ShowStatus(preview.FromCache ? "本地缓存 · 原文保持不变" : "译文预览 · 原文保持不变");
         ConfigureBubble(); Show(); UpdateLayout(); Position(); RestartTimer();
     }
@@ -53,8 +53,14 @@ public partial class OverlayWindow : Window
     private void RefreshLanguage() => Bubble.ToolTip = UiText.Get(statusSource);
     public void Loading(InputSnapshot? snapshot, string message)
     {
-        // 不为等待防抖和后台状态额外弹窗；只在译文就绪时显示紧凑气泡。
+        // 等待状态不额外弹窗；错误保留简短提示，具体原因可悬停查看。
         if (IsVisible) ShowStatus(message);
+        if (current != null || snapshot == null || snapshot.IsComposing || snapshot.IsSensitive || string.IsNullOrWhiteSpace(snapshot.Text) ||
+            message is "等待输入稳定…" or "正在翻译…" or "本地缓存 · 未调用 API" or "译文就绪 · 原文保持不变") return;
+        anchor = snapshot.Bounds; avoid = snapshot.ControlBounds;
+        TranslationText.Text = UiText.Get("翻译暂不可用"); ShowStatus(message);
+        CopyButton.Visibility = ReplaceButton.Visibility = Visibility.Collapsed;
+        ConfigureBubble(); Show(); UpdateLayout(); Position(); RestartTimer();
     }
     private void ConfigureBubble()
     {

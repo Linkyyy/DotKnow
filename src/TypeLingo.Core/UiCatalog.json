@@ -1170,5 +1170,9 @@
   "外观": {
     "en-US": "Appearance",
     "ja-JP": "外観"
+  },
+  "翻译暂不可用": {
+    "en-US": "Translation unavailable",
+    "ja-JP": "翻訳できません"
   }
 }

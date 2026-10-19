@@ -73,3 +73,11 @@ MonitorAllApplications 默认开启；PrivacyGuard 同时支持所有应用和�
 设置窗口采用七个独立页面共享同一份未保存的表单状态；切换导航和搜索不会重建表单，不丢失模型或密钥输入。SettingsNavigation 只索引预定义设置标题和说明，不读取用户输入、API 密钥或译文。
 
 Controls/SettingCard 与 Styles/Win11.xaml 统一设置行、开关和输入控件，保留 WPF 原生键盘与自动化行为。UiSmoke 在 Windows 中直接显示设置窗口、执行交互检查并渲染视觉树；不以网页或静态示意图冒充应用截图。
+
+## v0.3.0 触发与紧凑预览
+
+PreviewActivation 将输入、快捷键和选区三种触发分开。快捷键模式在请求前不读取文本，请求仅绑定当前控件与内容；编辑、焦点、暂停或配置改变会撤销。选区通过 TextPattern.GetSelection 读取，不借助剪贴板，不对整段正文执行替换。
+
+InputSnapshot 记录选区标记及输入区域边界；定位器优先避免光标/选区重叠，再比较输入区遮挡。背景透明度独立于文字；短译文自动尺寸、长译文滚动，DispatcherTimer 管理自动隐藏。设置、悬浮窗、EXE 和托盘使用统一自有矢量与 ICO 资源。
+
+UiSmoke 用布局宿主加载实际资源和窗口，不启动产品托盘；独立测试进程提供真实输入/只读选区/密码框，InputObserver 走生产 UIA 路径。
