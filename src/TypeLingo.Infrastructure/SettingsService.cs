@@ -28,7 +28,11 @@ public sealed class SettingsService(string directory, IDataProtector protector)
         if (!File.Exists(file)) return;
         try
         {
-            var candidate = JsonSerializer.Deserialize<AppSettings>(File.ReadAllText(file)) ?? throw new JsonException();
+            var text = File.ReadAllText(file);
+            var candidate = JsonSerializer.Deserialize<AppSettings>(text) ?? throw new JsonException();
+            using var document = JsonDocument.Parse(text);
+            if (document.RootElement.TryGetProperty("Overlay", out var overlay) && !overlay.TryGetProperty("Theme", out _))
+                candidate = candidate with { Overlay = candidate.Overlay with { Theme = candidate.Overlay.DarkMode ? "dark" : "light" } };
             candidate.Validate(); Current = candidate;
         }
         catch (Exception e) when (e is JsonException or ArgumentException or IOException or UnauthorizedAccessException or NullReferenceException)

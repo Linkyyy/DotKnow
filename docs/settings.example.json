@@ -27,15 +27,19 @@
   },
   "Overlay": {
     "DarkMode": false,
-    "FontSize": 16,
-    "Opacity": 0.97,
-    "MaxWidth": 380,
-    "Position": "right"
+    "FontSize": 14,
+    "Opacity": 0.88,
+    "MaxWidth": 320,
+    "Position": "above",
+    "Theme": "system",
+    "TriggerMode": "typing",
+    "AutoHideSeconds": 8
   },
   "Hotkeys": {
     "Replace": "Ctrl+Alt+Enter",
     "Toggle": "Ctrl+Alt+Space",
-    "Copy": "Ctrl+Alt+C"
+    "Copy": "Ctrl+Alt+C",
+    "Preview": "Ctrl+Alt+T"
   },
   "AllowedApplications": [],
   "ExcludedApplications": [

@@ -38,8 +38,10 @@ public sealed record AppSettings
             Cache.DiskMaxEntries is < 1 or > 100000 || Cache.DiskTTLDays is < 1 or > 365)
             throw new ArgumentException("缓存容量或有效期不在支持范围内。");
         if (!double.IsFinite(Overlay.FontSize) || !double.IsFinite(Overlay.MaxWidth) || !double.IsFinite(Overlay.Opacity) ||
-            Overlay.FontSize is < 10 or > 32 || Overlay.MaxWidth is < 240 or > 800 ||
-            Overlay.Opacity is < .5 or > 1 || !new[] { "right", "below", "left", "above" }.Contains(Overlay.Position))
+            Overlay.FontSize is < 10 or > 32 || Overlay.MaxWidth is < 160 or > 800 ||
+            Overlay.Opacity is < .4 or > 1 || !new[] { "right", "below", "left", "above" }.Contains(Overlay.Position) ||
+            !new[] { "typing", "hotkey", "selection" }.Contains(Overlay.TriggerMode) ||
+            !new[] { "light", "dark", "system" }.Contains(Overlay.Theme) || Overlay.AutoHideSeconds is < 0 or > 120)
             throw new ArgumentException("悬浮窗参数不在支持范围内。");
         if (AllowedApplications.Concat(ExcludedApplications).Any(x =>
                 string.IsNullOrWhiteSpace(x) || x.IndexOfAny(['/', '\\', ':', '*']) >= 0))
@@ -77,17 +79,27 @@ public sealed record CacheSettings
 }
 public sealed record OverlaySettings
 {
+    public string Theme { get; init; } = "system";
+    // 保留旧配置字段；读取旧版设置时迁移到 Theme。
     public bool DarkMode { get; init; }
-    public double FontSize { get; init; } = 16;
-    public double Opacity { get; init; } = .97;
-    public double MaxWidth { get; init; } = 380;
-    public string Position { get; init; } = "right";
+    public double FontSize { get; init; } = 14;
+    public double Opacity { get; init; } = .88;
+    public double MaxWidth { get; init; } = 320;
+    public string Position { get; init; } = "above";
+    public string TriggerMode { get; init; } = "typing";
+    public int AutoHideSeconds { get; init; } = 8;
 }
 public sealed record HotkeySettings
 {
     public string Replace { get; init; } = "Ctrl+Alt+Enter";
     public string Toggle { get; init; } = "Ctrl+Alt+Space";
     public string Copy { get; init; } = "Ctrl+Alt+C";
+    public string Preview { get; init; } = "Ctrl+Alt+T";
+}
+
+public static class AppearanceTheme
+{
+    public static bool IsDark(string theme, bool systemDark) => theme == "dark" || theme == "system" && systemDark;
 }
 
 public static class PrivacyGuard

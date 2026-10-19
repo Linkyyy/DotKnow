@@ -1090,5 +1090,85 @@
   "超过长度限制时跳过翻译": {
     "en-US": "Skip translation above this length limit",
     "ja-JP": "文字数の上限を超えると翻訳をスキップ"
+  },
+  "浅色": {
+    "en-US": "Light",
+    "ja-JP": "ライト"
+  },
+  "深色": {
+    "en-US": "Dark",
+    "ja-JP": "ダーク"
+  },
+  "跟随系统": {
+    "en-US": "System",
+    "ja-JP": "システムに合わせる"
+  },
+  "打开配置文件": {
+    "en-US": "Open configuration",
+    "ja-JP": "設定ファイルを開く"
+  },
+  "关闭": {
+    "en-US": "Close",
+    "ja-JP": "閉じる"
+  },
+  "悬浮窗出现方式": {
+    "en-US": "Preview trigger",
+    "ja-JP": "プレビューの表示方法"
+  },
+  "选择何时翻译并显示悬浮窗": {
+    "en-US": "Choose when to translate and show the preview",
+    "ja-JP": "翻訳とプレビューのタイミングを選択"
+  },
+  "输入后自动出现": {
+    "en-US": "After typing",
+    "ja-JP": "入力後に自動表示"
+  },
+  "按快捷键出现": {
+    "en-US": "With a shortcut",
+    "ja-JP": "ショートカットで表示"
+  },
+  "选中文字后出现": {
+    "en-US": "After selecting text",
+    "ja-JP": "テキスト選択後に表示"
+  },
+  "按所选出现方式翻译，不会自动修改原文": {
+    "en-US": "Translate using the selected trigger; keep the original unchanged",
+    "ja-JP": "選択した方法で翻訳し、原文は自動変更しません"
+  },
+  "自动隐藏（秒）": {
+    "en-US": "Auto-hide (seconds)",
+    "ja-JP": "自動的に閉じる（秒）"
+  },
+  "0 表示不自动隐藏；操作悬浮窗时保持显示": {
+    "en-US": "0 keeps it open; stays visible while you use it",
+    "ja-JP": "0 は自動非表示を無効化。操作中は表示を維持"
+  },
+  "悬浮窗仅显示译文和图标；背景半透明，鼠标悬停时恢复清晰。选区译文只支持复制。": {
+    "en-US": "Compact preview with a translucent background; hover for clarity. Selected text can be copied.",
+    "ja-JP": "訳文とアイコンだけの半透明プレビュー。マウスを置くと鮮明になります。選択範囲はコピーのみ対応。"
+  },
+  "显示翻译预览": {
+    "en-US": "Show translation preview",
+    "ja-JP": "翻訳プレビューを表示"
+  },
+  "默认 Ctrl+Alt+T；优先翻译选区，否则翻译当前输入框": {
+    "en-US": "Default Ctrl+Alt+T; translate the selection or the current input",
+    "ja-JP": "既定は Ctrl+Alt+T。選択範囲、または現在の入力欄を翻訳"
+  },
+  "无法打开配置文件，请检查文件关联与本地存储权限。": {
+    "en-US": "Unable to open configuration. Check file associations and storage access.",
+    "ja-JP": "設定ファイルを開けません。関連付けと保存先の権限を確認してください。"
+  },
+  "无法读取当前输入或选区，请切换应用后重试。": {
+    "en-US": "Unable to read this input or selection. Switch applications and try again.",
+    "ja-JP": "入力や選択範囲を読み取れません。アプリを切り替えて再試行してください。"
+  },
+  "悬浮窗触发方式、主题或自动隐藏参数无效。": {
+    "en-US": "Invalid preview trigger, theme or auto-hide setting.",
+    "ja-JP": "プレビューの表示方法、テーマ、自動非表示の設定が無効です。"
+  },
+  "外观": {
+    "en-US": "Appearance",
+    "ja-JP": "外観"
   }
 }

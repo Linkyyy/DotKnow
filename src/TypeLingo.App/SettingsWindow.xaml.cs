@@ -33,20 +33,39 @@ public partial class SettingsWindow : Window
         InitializeComponent(); LoadSettings(); ShowMessage(service.LoadWarning ?? "");
         SourceInitialized += (_, _) =>
         {
-            Native.ApplyWindowAppearance(new WindowInteropHelper(this).Handle, service.Current.Overlay.DarkMode);
+            Native.ApplyWindowAppearance(new WindowInteropHelper(this).Handle, AppearanceTheme.IsDark(service.Current.Overlay.Theme, DesktopTheme.IsDark));
             // 首次显示时适配高 DPI 或较小的工作区，不用固定最小高度把保存区挤出屏幕。
             var area = SystemParameters.WorkArea;
-            MinWidth = Math.Min(820, area.Width); MinHeight = Math.Min(520, area.Height);
-            Width = Math.Min(1180, area.Width); Height = Math.Min(820, area.Height);
+            MinWidth = Math.Min(760, area.Width); MinHeight = Math.Min(520, area.Height);
+            Width = Math.Min(900, area.Width); Height = Math.Min(760, area.Height);
         };
-        SizeChanged += (_, _) => SidebarColumn.Width = new GridLength(ActualWidth < 1040 ? 232 : 268);
+        SizeChanged += (_, _) => SidebarColumn.Width = new GridLength(ActualWidth < 820 ? 176 : 190);
         Closing += (_, e) => { e.Cancel = true; Hide(); };
         IsVisibleChanged += (_, _) =>
         {
             if (IsVisible) { LoadSettings(); timer.Start(); }
-            else { timer.Stop(); KeyInput.Clear(); UiText.Apply(service.Current.UiLanguage); }
+            else { timer.Stop(); KeyInput.Clear(); UiText.Apply(service.Current.UiLanguage); ((App)System.Windows.Application.Current).ApplyTheme(service.Current.Overlay); }
         };
         timer.Tick += (_, _) => RefreshStatistics();
+    }
+    private string SelectedTheme() => DarkThemeRadio.IsChecked == true ? "dark" : LightThemeRadio.IsChecked == true ? "light" : "system";
+    private void Theme_Changed(object sender, RoutedEventArgs e)
+    {
+        if (loading) return;
+        var theme = service.Current.Overlay with { Theme = SelectedTheme() };
+        ((App)System.Windows.Application.Current).ApplyTheme(theme);
+        Native.ApplyWindowAppearance(new WindowInteropHelper(this).Handle, AppearanceTheme.IsDark(theme.Theme, DesktopTheme.IsDark));
+    }
+    private void CloseSettings_Click(object sender, RoutedEventArgs e) => Hide();
+    private void OpenConfig_Click(object sender, RoutedEventArgs e)
+    {
+        try
+        {
+            var path = System.IO.Path.Combine(service.DirectoryPath, "settings.json");
+            if (!System.IO.File.Exists(path)) service.Save(service.Current);
+            Process.Start(new ProcessStartInfo(path) { UseShellExecute = true });
+        }
+        catch (Exception) { ShowMessage("无法打开配置文件，请检查文件关联与本地存储权限。"); }
     }
     public void ShowMessage(string message) => MessageText.Text = UiText.Get(message);
     private Dictionary<string, FrameworkElement> Pages => new()
@@ -103,8 +122,10 @@ public partial class SettingsWindow : Window
     private static int Integer(string s) => int.Parse(s, CultureInfo.InvariantCulture);
     private static double Decimal(string s) => double.Parse(s, CultureInfo.InvariantCulture);
     private Choice Option(string code, string label) => new(code, UiText.Get(label));
-    private void PopulateChoices(string source, string target, string mode, string position, string provider)
+    private void PopulateChoices(string source, string target, string mode, string position, string provider, string trigger)
     {
+        TriggerInput.ItemsSource = new[] { Option("typing", "输入后自动出现"), Option("hotkey", "按快捷键出现"), Option("selection", "选中文字后出现") };
+        TriggerInput.SelectedValue = trigger;
         UiLanguageInput.ItemsSource = new[] { new Choice("zh-CN", "简体中文"), new Choice("en-US", "English"), new Choice("ja-JP", "日本語") };
         UiLanguageInput.SelectedValue = UiText.Language;
         SourceInput.ItemsSource = new[] { Option("auto", "自动识别"), Option("zh", "中文"), Option("en", "英语"), Option("ja", "日语") };
@@ -125,7 +146,7 @@ public partial class SettingsWindow : Window
         try
         {
             var s = service.Current; UiText.Apply(s.UiLanguage);
-            PopulateChoices(s.Translation.SourceLanguage, s.Translation.TargetLanguage, s.Translation.Mode, s.Overlay.Position, s.AI.Provider);
+            PopulateChoices(s.Translation.SourceLanguage, s.Translation.TargetLanguage, s.Translation.Mode, s.Overlay.Position, s.AI.Provider, s.Overlay.TriggerMode);
             EnabledCheck.IsChecked = s.Translation.Enabled; ConsentCheck.IsChecked = s.PrivacyConsent;
             AllApplicationsCheck.IsChecked = s.MonitorAllApplications;
             DebounceInput.Text = s.Translation.DebounceMilliseconds.ToString(); IntervalInput.Text = s.Translation.MinimumRequestIntervalMilliseconds.ToString(); MaxInput.Text = s.Translation.MaxInputCharacters.ToString();
@@ -134,7 +155,8 @@ public partial class SettingsWindow : Window
             KeyInput.Clear(); RefreshKeyStatus(); PlatformAddress.Text = ProviderCatalog.Get(s.AI.Provider).PlatformUrl;
             MemoryCheck.IsChecked = s.Cache.MemoryEnabled; MemoryCapacityInput.Text = s.Cache.MemoryMaxEntries.ToString(); MemoryTtlInput.Text = s.Cache.MemoryTTLMinutes.ToString();
             DiskCheck.IsChecked = s.Cache.DiskEnabled; DiskCapacityInput.Text = s.Cache.DiskMaxEntries.ToString(); DiskTtlInput.Text = s.Cache.DiskTTLDays.ToString();
-            DarkCheck.IsChecked = s.Overlay.DarkMode; FontInput.Text = Number(s.Overlay.FontSize); WidthInput.Text = Number(s.Overlay.MaxWidth); OpacityInput.Text = Number(s.Overlay.Opacity);
+            LightThemeRadio.IsChecked = s.Overlay.Theme == "light"; DarkThemeRadio.IsChecked = s.Overlay.Theme == "dark"; SystemThemeRadio.IsChecked = s.Overlay.Theme == "system";
+            AutoHideInput.Text = s.Overlay.AutoHideSeconds.ToString(); PreviewHotkey.Text = s.Hotkeys.Preview; FontInput.Text = Number(s.Overlay.FontSize); WidthInput.Text = Number(s.Overlay.MaxWidth); OpacityInput.Text = Number(s.Overlay.Opacity);
             ReplaceHotkey.Text = s.Hotkeys.Replace; ToggleHotkey.Text = s.Hotkeys.Toggle; CopyHotkey.Text = s.Hotkeys.Copy;
             AllowedInput.Text = string.Join(", ", s.AllowedApplications); ExcludedInput.Text = string.Join(", ", s.ExcludedApplications); RefreshStatistics();
             providerRevision++;
@@ -147,11 +169,11 @@ public partial class SettingsWindow : Window
     private void UiLanguage_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
         if (loading || Selected(UiLanguageInput) is not { Length: > 0 } language) return;
-        var source = Selected(SourceInput); var target = Selected(TargetInput); var mode = Selected(ModeInput); var position = Selected(PositionInput); var provider = Selected(ProviderInput);
+        var source = Selected(SourceInput); var target = Selected(TargetInput); var mode = Selected(ModeInput); var position = Selected(PositionInput); var provider = Selected(ProviderInput); var trigger = Selected(TriggerInput);
         loading = true;
         try
         {
-            UiText.Apply(language); PopulateChoices(source, target, mode, position, provider);
+            UiText.Apply(language); PopulateChoices(source, target, mode, position, provider, trigger);
             RefreshKeyStatus(); RefreshStatistics(); ApplySearch(); MessageText.Text = TestStatus.Text = "";
         }
         finally { loading = false; }
@@ -205,12 +227,12 @@ public partial class SettingsWindow : Window
             Translation = new() { Enabled = EnabledCheck.IsChecked == true, SourceLanguage = Selected(SourceInput), TargetLanguage = Selected(TargetInput), Mode = Selected(ModeInput), DebounceMilliseconds = Integer(DebounceInput.Text), MinimumRequestIntervalMilliseconds = Integer(IntervalInput.Text), MaxInputCharacters = Integer(MaxInput.Text) },
             AI = SelectedAi() with { TimeoutSeconds = Integer(TimeoutInput.Text), MaxRetries = Integer(RetriesInput.Text) },
             Cache = new() { MemoryEnabled = MemoryCheck.IsChecked == true, MemoryMaxEntries = Integer(MemoryCapacityInput.Text), MemoryTTLMinutes = Integer(MemoryTtlInput.Text), DiskEnabled = DiskCheck.IsChecked == true, DiskMaxEntries = Integer(DiskCapacityInput.Text), DiskTTLDays = Integer(DiskTtlInput.Text) },
-            Overlay = new() { DarkMode = DarkCheck.IsChecked == true, FontSize = Decimal(FontInput.Text), MaxWidth = Decimal(WidthInput.Text), Opacity = Decimal(OpacityInput.Text), Position = Selected(PositionInput) },
-            Hotkeys = new() { Replace = ReplaceHotkey.Text.Trim(), Toggle = ToggleHotkey.Text.Trim(), Copy = CopyHotkey.Text.Trim() },
+            Overlay = new() { Theme = SelectedTheme(), DarkMode = SelectedTheme() == "dark", TriggerMode = Selected(TriggerInput), AutoHideSeconds = Integer(AutoHideInput.Text), FontSize = Decimal(FontInput.Text), MaxWidth = Decimal(WidthInput.Text), Opacity = Decimal(OpacityInput.Text), Position = Selected(PositionInput) },
+            Hotkeys = new() { Replace = ReplaceHotkey.Text.Trim(), Toggle = ToggleHotkey.Text.Trim(), Copy = CopyHotkey.Text.Trim(), Preview = PreviewHotkey.Text.Trim() },
             AllowedApplications = Split(AllowedInput.Text), ExcludedApplications = Split(ExcludedInput.Text)
         };
         candidate.Validate();
-        foreach (var text in new[] { candidate.Hotkeys.Replace, candidate.Hotkeys.Toggle, candidate.Hotkeys.Copy })
+        foreach (var text in new[] { candidate.Hotkeys.Replace, candidate.Hotkeys.Toggle, candidate.Hotkeys.Copy, candidate.Hotkeys.Preview })
             if (!HotkeyService.TryParse(text, out _, out _)) throw new ArgumentException("快捷键格式无效，例如 Ctrl+Alt+Enter。");
         return candidate;
     }

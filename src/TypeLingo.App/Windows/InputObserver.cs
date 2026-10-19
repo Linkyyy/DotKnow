@@ -1,6 +1,7 @@
 using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.Windows.Automation;
+using System.Windows.Automation.Text;
 using TypeLingo.Core;
 
 namespace TypeLingo.App.Windows;
@@ -17,6 +18,8 @@ internal sealed class InputObserver : IInputTarget, IDisposable
     private readonly AutomationFocusChangedEventHandler focusChanged;
     private readonly AutomationEventHandler textChanged;
     private int dirty = 1;
+    private readonly PreviewActivation activation = new();
+    private AppSettings? capturedSettings;
     public event Action<InputSnapshot?>? SnapshotChanged;
     public event Action<string>? StatusChanged;
     public InputObserver(Func<AppSettings> settings)
@@ -41,7 +44,7 @@ internal sealed class InputObserver : IInputTarget, IDisposable
                 lastPoll = Environment.TickCount64;
                 var config = settings();
                 if (!config.PrivacyConsent || !config.Translation.Enabled)
-                { Unsubscribe(); SnapshotChanged?.Invoke(null); continue; }
+                { activation.Reset(); Unsubscribe(); SnapshotChanged?.Invoke(null); continue; }
                 try
                 {
                     if (!focusSubscribed) { Automation.AddAutomationFocusChangedEventHandler(focusChanged); focusSubscribed = true; }
@@ -50,59 +53,117 @@ internal sealed class InputObserver : IInputTarget, IDisposable
                     SnapshotChanged?.Invoke(Capture());
                 }
                 catch (Exception e) when (IsUiaFailure(e))
-                { SnapshotChanged?.Invoke(null); StatusChanged?.Invoke("当前控件不支持安全读取，请切换输入框。"); }
+                { activation.Reset(); SnapshotChanged?.Invoke(null); StatusChanged?.Invoke("当前控件不支持安全读取，请切换输入框。"); }
                 catch (Exception)
-                { SnapshotChanged?.Invoke(null); StatusChanged?.Invoke("输入监视暂时不可用；未执行写入，请暂停或切换应用。"); }
+                { activation.Reset(); SnapshotChanged?.Invoke(null); StatusChanged?.Invoke("输入监视暂时不可用；未执行写入，请暂停或切换应用。"); }
             }
         }
         finally { Unsubscribe(); }
     }
 
-    private InputSnapshot? Capture()
+    private InputSnapshot? Capture(bool explicitRequest = false)
     {
         var config = settings();
-        if (!config.PrivacyConsent || !config.Translation.Enabled) return null;
+        if (!ReferenceEquals(capturedSettings, config)) { activation.Reset(); capturedSettings = config; }
+        if (!config.PrivacyConsent || !config.Translation.Enabled) { activation.Reset(); return null; }
+        if (!explicitRequest && !activation.ShouldCapture(config.Overlay.TriggerMode)) { SubscribeText(null); return null; }
+        var content = CaptureContent(config);
+        if (!ReferenceEquals(config, settings())) { activation.Reset(); return null; }
+        return activation.Filter(content, config.Overlay.TriggerMode, explicitRequest);
+    }
+
+    private InputSnapshot? CaptureContent(AppSettings config)
+    {
         var foreground = Native.GetForegroundWindow();
         Native.GetWindowThreadProcessId(foreground, out var pid);
         if (pid == 0 || pid == Environment.ProcessId) { SubscribeText(null); return null; }
         string process;
         using (var p = Process.GetProcessById((int)pid)) process = p.ProcessName;
-        // 先检查应用授权，再获取焦点元素或读取输入内容。
+        // 先检查应用授权，再访问控件。快捷键模式在触发前完全不读取文本。
         if (!PrivacyGuard.Allows(config, process, false, false)) { SubscribeText(null); return null; }
-        var element = AutomationElement.FocusedElement;
-        if (element == null) { SubscribeText(null); return null; }
-        var state = element.Current;
-        if (state.ProcessId != pid || !state.IsEnabled || !state.HasKeyboardFocus || state.IsOffscreen || state.IsPassword ||
-            (state.ControlType != ControlType.Edit && state.ControlType != ControlType.Document))
+        var focused = AutomationElement.FocusedElement;
+        if (focused == null) { SubscribeText(null); return null; }
+        var state = focused.Current;
+        if (state.ProcessId != pid || !state.IsEnabled || state.IsOffscreen || state.IsPassword || Sensitive(focused))
         { SubscribeText(null); return null; }
-        var metadata = state.AutomationId + " " + state.Name;
-        var sensitive = new[] { "password", "passwd", "secret", "api key", "apikey", "token", "密钥", "credit card", "creditcard", "cvv", "one-time", "otp", "密码", "密碼", "パスワード" }
-            .Any(x => metadata.Contains(x, StringComparison.OrdinalIgnoreCase));
-        if (!PrivacyGuard.Allows(config, process, state.IsPassword, sensitive)) { SubscribeText(null); return null; }
-        if (Native.IsComposing(foreground))
-            return new InputSnapshot("composition", "", new(0, 0, 0, 0), false, true);
+        if (Native.IsComposing(foreground)) return new InputSnapshot("composition", "", new(0, 0, 0, 0), false, true);
+        var element = focused;
         string? text = null;
+        var selection = false;
         var canWrite = false;
-        if (element.TryGetCurrentPattern(ValuePattern.Pattern, out var valueObject))
+        var controlBounds = Rect(state.BoundingRectangle);
+        var bounds = controlBounds;
+        if (config.Overlay.TriggerMode != "typing")
         {
-            var value = (ValuePattern)valueObject;
-            if (value.Current.IsReadOnly) { SubscribeText(null); return null; }
-            text = value.Current.Value;
-            canWrite = Native.CanVerifyCompositionForWrite(foreground, state.ClassName, state.NativeWindowHandle);
+            // 只读取 UIA 公开的实际选区，不改剪贴板，也不模拟 Ctrl+C。
+            var candidate = focused;
+            for (var level = 0; level < 5 && candidate != null; level++)
+            {
+                if (candidate.Current.ProcessId != pid) break;
+                if (candidate.Current.IsPassword || Sensitive(candidate)) return null;
+                if (candidate.TryGetCurrentPattern(TextPattern.Pattern, out var selectionObject))
+                {
+                    var ranges = ((TextPattern)selectionObject).GetSelection();
+                    if (ranges.Length == 1)
+                    {
+                        var selected = ranges[0].GetText(config.Translation.MaxInputCharacters + 1);
+                        if (!string.IsNullOrWhiteSpace(selected))
+                        {
+                            text = selected; selection = true; element = candidate;
+                            controlBounds = Rect(candidate.Current.BoundingRectangle);
+                            bounds = RangeBounds(ranges[0], controlBounds); break;
+                        }
+                    }
+                }
+                candidate = TreeWalker.ControlViewWalker.GetParent(candidate);
+            }
+            if (!selection && config.Overlay.TriggerMode == "selection") { SubscribeText(focused); return null; }
         }
-        else if (element.TryGetCurrentPattern(TextPattern.Pattern, out var textObject))
+        if (!selection)
         {
-            var pattern = (TextPattern)textObject;
-            if (pattern.DocumentRange.GetAttributeValue(TextPattern.IsReadOnlyAttribute) is not false) { SubscribeText(null); return null; }
-            text = pattern.DocumentRange.GetText(config.Translation.MaxInputCharacters + 1);
+            if (!state.HasKeyboardFocus || (state.ControlType != ControlType.Edit && state.ControlType != ControlType.Document))
+            { SubscribeText(null); return null; }
+            if (focused.TryGetCurrentPattern(ValuePattern.Pattern, out var valueObject))
+            {
+                var value = (ValuePattern)valueObject;
+                if (value.Current.IsReadOnly) { SubscribeText(null); return null; }
+                text = value.Current.Value;
+                canWrite = Native.CanVerifyCompositionForWrite(foreground, state.ClassName, state.NativeWindowHandle);
+            }
+            else if (focused.TryGetCurrentPattern(TextPattern.Pattern, out var textObject))
+            {
+                var pattern = (TextPattern)textObject;
+                if (pattern.DocumentRange.GetAttributeValue(TextPattern.IsReadOnlyAttribute) is not false) return null;
+                text = pattern.DocumentRange.GetText(config.Translation.MaxInputCharacters + 1);
+            }
+            if (focused.TryGetCurrentPattern(TextPattern.Pattern, out var anchorObject))
+            {
+                var ranges = ((TextPattern)anchorObject).GetSelection();
+                if (ranges.Length > 0)
+                {
+                    var range = ranges[0].Clone();
+                    if (range.GetBoundingRectangles().Length == 0) range.ExpandToEnclosingUnit(TextUnit.Character);
+                    bounds = RangeBounds(range, controlBounds);
+                }
+            }
         }
         if (text == null || text.Length > config.Translation.MaxInputCharacters) { SubscribeText(null); return null; }
-        // COM 读取期间发生焦点或窗口变化时，整个快照失效。
-        if (Native.GetForegroundWindow() != foreground || !Automation.Compare(element, AutomationElement.FocusedElement)) return null;
+        if (Native.GetForegroundWindow() != foreground || !Automation.Compare(focused, AutomationElement.FocusedElement)) return null;
         SubscribeText(element);
-        var r = state.BoundingRectangle;
-        var bounds = r.IsEmpty ? new InputRect(0, 0, 0, 0) : new InputRect(r.X, r.Y, r.Width, r.Height);
-        return new InputSnapshot($"{pid}:{foreground}:{string.Join('.', element.GetRuntimeId())}", text, bounds, canWrite);
+        return new InputSnapshot($"{pid}:{foreground}:{string.Join('.', element.GetRuntimeId())}:{(selection ? "selection" : "input")}",
+            text, bounds, canWrite, IsSelection: selection, ControlBounds: controlBounds);
+    }
+    private static bool Sensitive(AutomationElement element)
+    {
+        var metadata = element.Current.AutomationId + " " + element.Current.Name;
+        return new[] { "password", "passwd", "secret", "api key", "apikey", "token", "密钥", "credit card", "creditcard", "cvv", "one-time", "otp", "密码", "密碼", "パスワード" }
+            .Any(x => metadata.Contains(x, StringComparison.OrdinalIgnoreCase));
+    }
+    private static InputRect Rect(System.Windows.Rect value) => value.IsEmpty ? new(0, 0, 0, 0) : new(value.X, value.Y, value.Width, value.Height);
+    private static InputRect RangeBounds(TextPatternRange range, InputRect fallback)
+    {
+        var rectangles = range.GetBoundingRectangles();
+        return rectangles.Length > 0 && !rectangles[0].IsEmpty && rectangles[0].Width > 0 && rectangles[0].Height > 0 ? Rect(rectangles[0]) : fallback;
     }
 
     private void SubscribeText(AutomationElement? element)
@@ -110,12 +171,15 @@ internal sealed class InputObserver : IInputTarget, IDisposable
         if (subscribed != null && element != null && Automation.Compare(subscribed, element)) return;
         if (subscribed != null)
         {
-            try { Automation.RemoveAutomationEventHandler(TextPattern.TextChangedEvent, subscribed, textChanged); }
+            try { foreach (var eventId in new[] { TextPattern.TextChangedEvent, TextPattern.TextSelectionChangedEvent })
+                Automation.RemoveAutomationEventHandler(eventId, subscribed, textChanged); }
             catch (Exception e) when (IsUiaFailure(e)) { }
         }
         subscribed = null;
         if (element == null) return;
-        try { Automation.AddAutomationEventHandler(TextPattern.TextChangedEvent, element, TreeScope.Element, textChanged); subscribed = element; }
+        try { subscribed = element;
+            foreach (var eventId in new[] { TextPattern.TextChangedEvent, TextPattern.TextSelectionChangedEvent })
+                Automation.AddAutomationEventHandler(eventId, element, TreeScope.Element, textChanged); }
         catch (Exception e) when (IsUiaFailure(e)) { }
     }
     private void Unsubscribe()
@@ -126,7 +190,8 @@ internal sealed class InputObserver : IInputTarget, IDisposable
         catch (Exception e) when (IsUiaFailure(e)) { }
         focusSubscribed = false;
     }
-    public Task<InputSnapshot?> CaptureAsync(CancellationToken cancellationToken) => Enqueue(Capture, cancellationToken);
+    public Task<InputSnapshot?> CaptureAsync(CancellationToken cancellationToken) => Enqueue(() => Capture(), cancellationToken);
+    public Task<InputSnapshot?> RequestPreviewAsync(CancellationToken cancellationToken) => Enqueue(() => Capture(true), cancellationToken);
     public Task<bool> TryReplaceAsync(InputSnapshot expected, string translation, CancellationToken cancellationToken) => Enqueue(() =>
     {
         var now = Capture();
@@ -158,7 +223,7 @@ internal sealed class InputObserver : IInputTarget, IDisposable
         });
         return completion.Task;
     }
-    private static bool IsUiaFailure(Exception e) => e is ElementNotAvailableException or InvalidOperationException or
+    private static bool IsUiaFailure(Exception e) => e is ElementNotAvailableException or InvalidOperationException or NotSupportedException or
         System.Runtime.InteropServices.COMException or UnauthorizedAccessException or ArgumentException or System.ComponentModel.Win32Exception;
     public void Dispose() { stopping = true; /* 第三方 UIA 提供程序可能挂起后台调用；退出时不等待线程而阻塞程序。 */ }
 }

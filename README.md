@@ -4,12 +4,12 @@
 
 面向 Windows 10/11 的 C# / .NET 8 / WPF 桌面翻译助手。输入停顿后，通过所选 AI 服务翻译当前已授权输入框中的文本，在旁边显示译文。**自动操作只预览；原文仅在你主动请求并确认替换后才写入。**
 
-当前版本为 v0.2.0，提供 Windows 11 设置风格界面与所有应用监控模式。已完成 Windows x64 自包含打包，Linux、Windows 核心测试各 106 项通过，真实 Windows WPF 窗口检查 12 项通过。中文安装向导、五家真实账户翻译、跨应用与输入法兼容性仍需按下文验收。
+当前版本为 v0.3.0，重做简洁设置界面与图标资源，悬浮窗仅显示译文和少量图标，支持输入后自动出现、快捷键触发、选区触发。Linux 核心测试 120 项通过；Windows 界面、跨进程 UIA 与核心测试由发布流程验证，记录随版本提供。
 
 ## 下载安装包
 
-- [Windows x64 中文安装包](https://github.com/Linkyyy/TypeLingo/releases/download/v0.2.0/TypeLingo-Windows-x64.zip)
-- [完整源码 ZIP](https://github.com/Linkyyy/TypeLingo/releases/download/v0.2.0/TypeLingo-Source.zip)
+- [Windows x64 中文安装包](https://github.com/Linkyyy/TypeLingo/releases/download/v0.3.0/TypeLingo-Windows-x64.zip)
+- [完整源码 ZIP](https://github.com/Linkyyy/TypeLingo/releases/download/v0.3.0/TypeLingo-Source.zip)
 - [版本发布页面](https://github.com/Linkyyy/TypeLingo/releases)
 - [安装包备用下载](https://github.com/Linkyyy/TypeLingo/raw/refs/heads/main/downloads/TypeLingo-Windows-x64.zip)
 
@@ -30,7 +30,7 @@ dotnet run --project src/TypeLingo.App -c Release --no-build
 2. 输入密钥后，点击「查询可用模型」，从列表选择，或手动填写模型 ID。点击「测试翻译（固定短句）」发送 Hello 测试（可能产生少量 API 费用）。默认模型仅为可编辑起点，不会静默换成其他模型。
 3. 在「隐私与应用」明确勾选授权。默认开启「监控所有应用」，无需逐个填写进程名；密码框、敏感控件、排除的应用和伴译自身仍跳过。关闭该开关可改用指定进程允许列表，排除列表始终优先。
 4. 在「常规设置」设置界面语言（简体中文、英语、日语）与翻译方向：中译英、英译中、中译日、日译中、英译日、日译英，或自动识别后译成中/英/日。界面语言和翻译方向独立；还可选择自然、直译、商务、敬语风格。保存后关闭窗口，程序保留在系统托盘。
-5. 在允许应用中输入，停顿 500 ms 后显示预览。按 `Ctrl+Alt+Enter` 或点击「替换…」查看确认，再点击「确认替换」。取消、内容变化、焦点变化或控件不支持安全写入时不替换。
+5. 在「常规设置」选择悬浮窗出现方式：输入后自动出现（停顿 500 ms）、按快捷键出现（默认 `Ctrl+Alt+T`）、选中文字后出现。快捷键模式触发前不读取输入文本；触发后编辑或切换焦点会隐藏旧译文。选区仅通过 UIA 读取已选文字，不支持的控件跳过。选区译文只提供复制，不替换整段正文。按 `Ctrl+Alt+Enter` 或点击「替换…」查看确认，再点击「确认替换」。取消、内容变化、焦点变化或控件不支持安全写入时不替换。
 6. 托盘「暂停全部读取」或 `Ctrl+Alt+Space` 暂停整个读取与翻译流程；`Ctrl+Alt+C` 复制当前译文。快捷键可以修改，冲突会提示。
 
 所有应用模式或将浏览器加入允许列表，都会覆盖该进程的可访问输入框，无法按网站区分。密码字段与常见敏感标签会被排除，但无法识别任意敏感内容；处理敏感内容前可随时暂停。
@@ -63,19 +63,19 @@ dotnet publish src/TypeLingo.App -c Release -r win-x64 --self-contained true \
 
 | 能力 | 实现 |
 | --- | --- |
-| 设置界面 | Windows 11 风格左侧导航、设置搜索、面包屑标题、分组卡片、开关与深浅主题 |
+| 设置界面 | 简洁白底、线性图标、设置搜索、分隔行、黑色开关与浅/深/系统主题 |
 | 应用范围 | 默认覆盖全部可访问应用，可切换回指定进程；密码、敏感区域与排除项始终跳过 |
 | 输入监视 | 后台 MTA 上的 UI Automation 焦点与文本事件，加 300 ms 节流轮询；不记录全局按键 |
 | 实时请求 | 500 ms 防抖、700 ms 最小间隔、精确去重、取消、单个主请求、序号与配置校验 |
 | AI | 五家真实 API 协议，Claude / Gemini 使用原生接口，其余使用兼容聊天接口；非流式、模型查询与手填、固定短句测试、官方开通入口、超时和有限 429/5xx 重试 |
 | 多语言 | 简体中文 / English / 日本語即时切换并保存；九种翻译方向与翻译风格独立设置 |
 | 缓存 | 有界内存 LRU / TTL；可选 SQLite、默认关闭、DPAPI 加密、容量与过期清理、一键清除 |
-| 悬浮窗 | 不激活、不移走输入焦点、右/下/左/上定位、屏幕工作区约束、PerMonitorV2 DPI、深浅主题 |
+| 悬浮窗 | 紧凑半透明、输入/快捷键/选区触发、自动隐藏、不激活、避让光标与输入框、工作区与 DPI 约束 |
 | 主动替换 | 一次性确认票据，写入前再次检查目标、原文、焦点、授权、配置与 IME；仅使用 ValuePattern.SetValue |
 | 设置与统计 | 语言、风格、限流、防抖、API、缓存、悬浮窗、快捷键、应用允许/排除、授权、请求与缓存统计 |
 | 生命周期 | 托盘运行、暂停、清缓存、退出；释放 UIA 订阅；自身替换后的回声抑制 |
 
-对无法读取、只读或失效的输入框跳过操作。仅有 TextPattern 的可编辑控件可预览，但不写入。没有剪贴板自动粘贴后备、SendInput、模拟 Enter、自动提交、注入、驱动或提权逻辑。复制按钮仅在主动点击/按快捷键时覆盖剪贴板。
+对无法读取、只读或失效的输入框跳过操作。仅有 TextPattern 的可编辑控件可预览，但不写入。选区模式也支持公开 TextPattern 选区的只读文档或输入框，只复制译文。没有剪贴板自动粘贴后备、SendInput、模拟 Enter、自动提交、注入、驱动或提权逻辑。复制按钮仅在主动点击/按快捷键时覆盖剪贴板。
 
 ## API 与配置
 
@@ -97,9 +97,11 @@ dotnet publish src/TypeLingo.App -c Release -r win-x64 --self-contained true \
 
 ## 设置界面
 
-左侧分为主页、常规设置、AI 服务与模型、翻译缓存、外观与悬浮窗、快捷键、隐私与应用。顶部可搜索设置名称，例如「密钥」「字体」「缓存」，支持当前界面语言。右侧使用 Windows 11 风格卡片和控件，底部保存按钮始终可见。默认浅色主题，也可保存为深色主题。
+左侧分为主页、常规设置、AI 服务与模型、翻译缓存、外观与悬浮窗、快捷键、隐私与应用。顶部可搜索设置名称，例如「密钥」「字体」「缓存」，支持当前界面语言。右侧使用分隔行和浅灰控件，底部保存按钮始终可见。常规页提供浅色、深色和跟随系统三张主题卡片，可即时预览。设置、托盘、EXE 和悬浮窗均使用新的矢量图标与品牌图标。
 
-[查看实际 Windows 设置界面](https://github.com/Linkyyy/TypeLingo/releases/download/v0.2.0/settings-general.png) · [查看所有应用设置](https://github.com/Linkyyy/TypeLingo/releases/download/v0.2.0/settings-privacy.png)
+悬浮窗没有标题、语言标签和常驻状态栏。短译文自动收窄，长译文限制高度并滚动；默认背景不透明度 0.88、字体 14、最大宽度 320、8 秒后隐藏，鼠标悬停时恢复实色并暂停隐藏。文字不随背景变淡。可在「外观与悬浮窗」调整，隐藏秒数为 0 时保持显示。优先避开输入框，并尝试光标/选区四周及屏幕边缘；满屏内容无法保证零遮挡，可使用快捷键模式按需查看。
+
+[查看实际 Windows 设置界面](https://github.com/Linkyyy/TypeLingo/releases/download/v0.3.0/settings-general.png) · [查看所有应用设置](https://github.com/Linkyyy/TypeLingo/releases/download/v0.3.0/settings-privacy.png)
 
 ## 测试与手工验收
 
@@ -109,7 +111,7 @@ dotnet run --project tools/TypeLingo.UiSmoke -c Release -- artifacts/ui-smoke
 dotnet run --project tools/TypeLingo.InputLab
 ```
 
-UiSmoke 在真实 Windows WPF 中启动设置窗口，检查所有应用开关、导航搜索、多语言、预设、可编辑模型框和设置保存，并生成 PNG 截图。它不调用付费 API，也不读取其他应用内容。
+UiSmoke 在真实 Windows WPF 中检查设置保存、主题切换、悬浮窗尺寸与背景透明度，并生成 PNG。另启动独立的输入验收进程，通过真实跨进程 UIA 检查快捷键、只读选区、清除选区与密码跳过。仅访问测试窗口，不调用付费 API。
 
 InputLab 提供 A/B 多行输入、密码与只读控件，用真实 UIA 路径验收；它不是翻译模拟器。默认所有应用模式下无需单独添加 InputLab；也可关闭所有应用模式并只允许 **`TypeLingo.InputLab`**，然后，按 [Windows 验收清单](docs/ACCEPTANCE.md) 执行 A–H。自动测试包含防抖、缓存、取消、过时响应、置换确认、并发编辑、隐私、HTTP 错误与屏幕布局；[验证记录](docs/VALIDATION.md) 区分已执行与未执行项目。
 

@@ -15,7 +15,7 @@ internal sealed class HotkeyService : IDisposable
         foreach (var id in registered) Native.UnregisterHotKey(source.Handle, id);
         registered.Clear();
         var combinations = new HashSet<(uint, uint)>();
-        var bindings = new[] { settings.Replace, settings.Toggle, settings.Copy };
+        var bindings = new[] { settings.Replace, settings.Toggle, settings.Copy, settings.Preview };
         for (var i = 0; i < bindings.Length; i++)
         {
             if (!TryParse(bindings[i], out var modifiers, out var key) || !combinations.Add((modifiers, key)))
