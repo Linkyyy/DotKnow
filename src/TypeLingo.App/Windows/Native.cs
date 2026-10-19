@@ -5,6 +5,14 @@ namespace TypeLingo.App.Windows;
 internal static class Native
 {
     internal const int WmHotkey = 0x0312, WmMouseActivate = 0x21, MaNoActivate = 3;
+    [DllImport("dwmapi.dll")] private static extern int DwmSetWindowAttribute(nint hwnd, uint attribute, ref int value, uint size);
+    internal static void ApplyWindowAppearance(nint hwnd, bool dark)
+    {
+        if (hwnd == 0) return;
+        // Windows 10 会忽略不支持的圆角属性；不强制替换系统窗口按钮或改变原生缩放行为。
+        var theme = dark ? 1 : 0; DwmSetWindowAttribute(hwnd, 20, ref theme, 4);
+        var corner = 2; DwmSetWindowAttribute(hwnd, 33, ref corner, 4);
+    }
     [DllImport("user32.dll")] internal static extern nint GetForegroundWindow();
     [DllImport("user32.dll")] internal static extern uint GetWindowThreadProcessId(nint hwnd, out uint processId);
     [DllImport("user32.dll")] internal static extern bool GetGUIThreadInfo(uint id, ref GuiThreadInfo info);

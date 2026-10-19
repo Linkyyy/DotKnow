@@ -26,7 +26,7 @@
     "DiskTTLDays": 7
   },
   "Overlay": {
-    "DarkMode": true,
+    "DarkMode": false,
     "FontSize": 16,
     "Opacity": 0.97,
     "MaxWidth": 380,
@@ -43,5 +43,6 @@
     "keepass",
     "keepassxc",
     "bitwarden"
-  ]
+  ],
+  "MonitorAllApplications": true
 }

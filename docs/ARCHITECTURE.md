@@ -65,3 +65,11 @@ UIA 的跨进程调用无法提供原子的 compare-and-set；提供程序不可
 `ProviderCatalog` 保存五家服务的官方入口与可编辑默认设置。`ProviderApi` 按请求中的 Provider 分派兼容聊天、Claude Messages 和 Gemini generateContent 协议，共用超时、取消和有限重试。模型列表可选择，模型 ID 也可手动输入。
 
 密钥文件名包含服务商与完整 API 基址的哈希；查询、测试和实际翻译均按本次请求的配置读取对应密钥，不通过全局单一 Key 猜测认证信息。旧版 DeepSeek 密钥不能回退给其他服务。切换提供商会清空未保存的密钥输入。
+
+## v0.2.0 应用范围与设置界面
+
+MonitorAllApplications 默认开启；PrivacyGuard 同时支持所有应用和指定应用模式，隐私授权、总暂停、敏感控件和排除列表始终优先。InputObserver 的自身进程过滤与系统权限边界继续生效。
+
+设置窗口采用七个独立页面共享同一份未保存的表单状态；切换导航和搜索不会重建表单，不丢失模型或密钥输入。SettingsNavigation 只索引预定义设置标题和说明，不读取用户输入、API 密钥或译文。
+
+Controls/SettingCard 与 Styles/Win11.xaml 统一设置行、开关和输入控件，保留 WPF 原生键盘与自动化行为。UiSmoke 在 Windows 中直接显示设置窗口、执行交互检查并渲染视觉树；不以网页或静态示意图冒充应用截图。

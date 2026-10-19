@@ -4,6 +4,8 @@ public sealed record AppSettings
 {
     public string UiLanguage { get; init; } = "zh-CN";
     public bool PrivacyConsent { get; init; }
+    // 用户可以覆盖所有应用；排除项、敏感控件和总暂停仍优先执行。
+    public bool MonitorAllApplications { get; init; } = true;
     public AiSettings AI { get; init; } = new();
     public TranslationSettings Translation { get; init; } = new();
     public CacheSettings Cache { get; init; } = new();
@@ -75,7 +77,7 @@ public sealed record CacheSettings
 }
 public sealed record OverlaySettings
 {
-    public bool DarkMode { get; init; } = true;
+    public bool DarkMode { get; init; }
     public double FontSize { get; init; } = 16;
     public double Opacity { get; init; } = .97;
     public double MaxWidth { get; init; } = 380;
@@ -95,6 +97,6 @@ public static class PrivacyGuard
         static string Normalize(string name) => name.EndsWith(".exe", StringComparison.OrdinalIgnoreCase) ? name[..^4] : name;
         bool Has(string[] names) => names.Any(n => string.Equals(Normalize(n), Normalize(processName), StringComparison.OrdinalIgnoreCase));
         return settings.PrivacyConsent && settings.Translation.Enabled && !password && !sensitive &&
-               Has(settings.AllowedApplications) && !Has(settings.ExcludedApplications);
+               (settings.MonitorAllApplications || Has(settings.AllowedApplications)) && !Has(settings.ExcludedApplications);
     }
 }

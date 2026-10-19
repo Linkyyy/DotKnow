@@ -2,6 +2,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Interop;
 using System.Windows.Threading;
 using TypeLingo.App.Windows;
 using TypeLingo.Core;
@@ -30,6 +31,15 @@ public partial class SettingsWindow : Window
         this.service = service; this.statistics = statistics; this.save = save;
         this.getModels = getModels; this.testTranslation = testTranslation; this.clearCache = clearCache;
         InitializeComponent(); LoadSettings(); ShowMessage(service.LoadWarning ?? "");
+        SourceInitialized += (_, _) =>
+        {
+            Native.ApplyWindowAppearance(new WindowInteropHelper(this).Handle, service.Current.Overlay.DarkMode);
+            // 首次显示时适配高 DPI 或较小的工作区，不用固定最小高度把保存区挤出屏幕。
+            var area = SystemParameters.WorkArea;
+            MinWidth = Math.Min(820, area.Width); MinHeight = Math.Min(520, area.Height);
+            Width = Math.Min(1180, area.Width); Height = Math.Min(820, area.Height);
+        };
+        SizeChanged += (_, _) => SidebarColumn.Width = new GridLength(ActualWidth < 1040 ? 232 : 268);
         Closing += (_, e) => { e.Cancel = true; Hide(); };
         IsVisibleChanged += (_, _) =>
         {
@@ -39,6 +49,55 @@ public partial class SettingsWindow : Window
         timer.Tick += (_, _) => RefreshStatistics();
     }
     public void ShowMessage(string message) => MessageText.Text = UiText.Get(message);
+    private Dictionary<string, FrameworkElement> Pages => new()
+    {
+        ["home"] = PageHome, ["general"] = PageGeneral, ["ai"] = PageAi,
+        ["cache"] = PageCache, ["appearance"] = PageAppearance, ["hotkeys"] = PageHotkeys, ["privacy"] = PagePrivacy
+    };
+    private void Navigation_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        if (PageTitleText == null || NavigationList.SelectedItem is not ListBoxItem { Tag: string id }) return;
+        ShowSection(id);
+    }
+    private void ShowSection(string id)
+    {
+        var section = SettingsNavigation.Sections.First(x => x.Id == id);
+        foreach (var page in Pages) page.Value.Visibility = page.Key == id ? Visibility.Visible : Visibility.Collapsed;
+        PageTitleText.Text = UiText.Get(section.Title); PageDescriptionText.Text = UiText.Get(section.Description);
+        PageScroll.Visibility = Visibility.Visible; PageScroll.ScrollToTop();
+    }
+    private void Search_TextChanged(object sender, TextChangedEventArgs e)
+    { if (!loading && NavigationList != null) ApplySearch(); }
+    private void ApplySearch()
+    {
+        SearchPlaceholder.Visibility = SettingsSearchInput.Text.Length == 0 ? Visibility.Visible : Visibility.Collapsed;
+        var matches = SettingsNavigation.Search(SettingsSearchInput.Text, UiText.Language);
+        foreach (ListBoxItem item in NavigationList.Items) item.Visibility = matches.Contains((string)item.Tag) ? Visibility.Visible : Visibility.Collapsed;
+        NoResultsText.Visibility = matches.Count == 0 ? Visibility.Visible : Visibility.Collapsed;
+        if (matches.Count == 0)
+        {
+            PageScroll.Visibility = Visibility.Collapsed;
+            PageTitleText.Text = UiText.Get("搜索结果"); PageDescriptionText.Text = UiText.Get("未找到相关设置");
+        }
+        else if (NavigationList.SelectedItem is not ListBoxItem selected || !matches.Contains((string)selected.Tag))
+            NavigationList.SelectedItem = NavigationList.Items.Cast<ListBoxItem>().First(x => matches.Contains((string)x.Tag));
+        else ShowSection((string)selected.Tag);
+    }
+    private void OpenPage(string id)
+    {
+        SettingsSearchInput.Clear();
+        NavigationList.SelectedItem = NavigationList.Items.Cast<ListBoxItem>().First(x => (string)x.Tag == id);
+    }
+    private void OpenGeneral_Click(object sender, RoutedEventArgs e) => OpenPage("general");
+    private void OpenAi_Click(object sender, RoutedEventArgs e) => OpenPage("ai");
+    private void OpenPrivacy_Click(object sender, RoutedEventArgs e) => OpenPage("privacy");
+    private void Scope_Changed(object sender, RoutedEventArgs e) { if (!loading) RefreshScope(); }
+    private void RefreshScope() => AllowedApplicationsCard.Visibility = AllApplicationsCheck.IsChecked == true ? Visibility.Collapsed : Visibility.Visible;
+    private void Pause_Click(object sender, RoutedEventArgs e)
+    {
+        ((App)System.Windows.Application.Current).PauseMonitoring();
+        EnabledCheck.IsChecked = false; RefreshStatistics(); ShowMessage("已暂停所有读取。");
+    }
     private static string Selected(ComboBox combo) => combo.SelectedValue as string ?? "";
     private static string Number(double n) => n.ToString(CultureInfo.InvariantCulture);
     private static int Integer(string s) => int.Parse(s, CultureInfo.InvariantCulture);
@@ -68,6 +127,7 @@ public partial class SettingsWindow : Window
             var s = service.Current; UiText.Apply(s.UiLanguage);
             PopulateChoices(s.Translation.SourceLanguage, s.Translation.TargetLanguage, s.Translation.Mode, s.Overlay.Position, s.AI.Provider);
             EnabledCheck.IsChecked = s.Translation.Enabled; ConsentCheck.IsChecked = s.PrivacyConsent;
+            AllApplicationsCheck.IsChecked = s.MonitorAllApplications;
             DebounceInput.Text = s.Translation.DebounceMilliseconds.ToString(); IntervalInput.Text = s.Translation.MinimumRequestIntervalMilliseconds.ToString(); MaxInput.Text = s.Translation.MaxInputCharacters.ToString();
             BaseUrlInput.Text = s.AI.BaseUrl; ModelInput.ItemsSource = null; ModelInput.Text = s.AI.Model;
             TimeoutInput.Text = s.AI.TimeoutSeconds.ToString(); RetriesInput.Text = s.AI.MaxRetries.ToString();
@@ -80,6 +140,9 @@ public partial class SettingsWindow : Window
             providerRevision++;
         }
         finally { loading = false; }
+        RefreshScope();
+        if (NavigationList.SelectedItem == null) OpenPage("general");
+        ApplySearch();
     }
     private void UiLanguage_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
@@ -89,7 +152,7 @@ public partial class SettingsWindow : Window
         try
         {
             UiText.Apply(language); PopulateChoices(source, target, mode, position, provider);
-            RefreshKeyStatus(); RefreshStatistics(); MessageText.Text = TestStatus.Text = "";
+            RefreshKeyStatus(); RefreshStatistics(); ApplySearch(); MessageText.Text = TestStatus.Text = "";
         }
         finally { loading = false; }
     }
@@ -138,6 +201,7 @@ public partial class SettingsWindow : Window
         var candidate = new AppSettings
         {
             UiLanguage = Selected(UiLanguageInput), PrivacyConsent = ConsentCheck.IsChecked == true,
+            MonitorAllApplications = AllApplicationsCheck.IsChecked == true,
             Translation = new() { Enabled = EnabledCheck.IsChecked == true, SourceLanguage = Selected(SourceInput), TargetLanguage = Selected(TargetInput), Mode = Selected(ModeInput), DebounceMilliseconds = Integer(DebounceInput.Text), MinimumRequestIntervalMilliseconds = Integer(IntervalInput.Text), MaxInputCharacters = Integer(MaxInput.Text) },
             AI = SelectedAi() with { TimeoutSeconds = Integer(TimeoutInput.Text), MaxRetries = Integer(RetriesInput.Text) },
             Cache = new() { MemoryEnabled = MemoryCheck.IsChecked == true, MemoryMaxEntries = Integer(MemoryCapacityInput.Text), MemoryTTLMinutes = Integer(MemoryTtlInput.Text), DiskEnabled = DiskCheck.IsChecked == true, DiskMaxEntries = Integer(DiskCapacityInput.Text), DiskTTLDays = Integer(DiskTtlInput.Text) },
@@ -156,7 +220,9 @@ public partial class SettingsWindow : Window
         try
         {
             var config = ReadSettings(); var warning = save(config, KeyInput.Password); KeyInput.Clear(); RefreshKeyStatus();
-            ShowMessage(warning ?? (config.PrivacyConsent ? "已保存。仅监控允许列表中的应用。" : "已保存；未授权，所有文本读取保持暂停。"));
+            ShowMessage(warning ?? (!config.PrivacyConsent ? "已保存；未授权，所有文本读取保持暂停。" :
+                config.MonitorAllApplications ? "已保存。监控全部可访问应用，排除列表仍生效。" : "已保存。仅监控允许列表中的应用。"));
+            RefreshStatistics();
         }
         catch (Exception ex) when (ex is ArgumentException or FormatException or OverflowException) { ShowMessage(ex is ArgumentException ? ex.Message : "请输入有效数字（小数使用英文句点）。"); }
         catch (Exception) { ShowMessage("无法保存设置或加密密钥，请检查本地存储权限。"); }
@@ -208,6 +274,12 @@ public partial class SettingsWindow : Window
     private void RefreshStatistics()
     {
         var total = statistics.Successes + statistics.CacheHits;
+        HomeApiCount.Text = statistics.ApiCalls.ToString(CultureInfo.InvariantCulture);
+        HomeCacheCount.Text = statistics.CacheHits.ToString(CultureInfo.InvariantCulture);
+        HomeSuccessCount.Text = statistics.Successes.ToString(CultureInfo.InvariantCulture);
+        var current = service.Current;
+        HomeStateText.Text = UiText.Get(!current.PrivacyConsent ? "等待隐私授权" : current.Translation.Enabled ? "实时翻译已开启" : "实时翻译已暂停") +
+            " · " + UiText.Get(current.MonitorAllApplications ? "全部可访问应用" : "仅允许指定应用");
         StatisticsText.Text = UiText.Format("HTTP 请求 {0} · 本地命中 / 节省请求 {1}\n翻译成功 {2} · 失败 {3} · 命中率 {4}%\n平均 API 延迟 {5} ms · 输入词元 {6} / 输出词元 {7}",
             statistics.ApiCalls, statistics.CacheHits, statistics.Successes, statistics.Failures, total == 0 ? 0 : statistics.CacheHits * 100 / total,
             statistics.AverageLatencyMilliseconds.ToString("F0", CultureInfo.InvariantCulture), statistics.PromptTokens, statistics.CompletionTokens);

@@ -1,6 +1,7 @@
 using System.Net.Http;
 using System.Windows;
 using System.Windows.Media;
+using System.Windows.Interop;
 using TypeLingo.App.Windows;
 using TypeLingo.Core;
 using TypeLingo.Infrastructure;
@@ -89,10 +90,16 @@ public partial class App : System.Windows.Application
         settings.SetPaused(settings.Current.Translation.Enabled);
         _ = coordinator.ObserveAsync(null, true); overlay.Hide(); UpdateTray();
     }
+    internal void PauseMonitoring()
+    {
+        settings.SetPaused(true);
+        _ = coordinator.ObserveAsync(null, true); overlay.Hide(); UpdateTray();
+    }
     private void UpdateTray()
     {
         pauseItem.Checked = !settings.Current.Translation.Enabled;
-        tray.Text = UiText.Get(settings.Current.Translation.Enabled && settings.Current.PrivacyConsent ? "TypeLingo · 仅监控允许的应用" : "TypeLingo · 已暂停读取");
+        tray.Text = UiText.Get(!settings.Current.Translation.Enabled || !settings.Current.PrivacyConsent ? "TypeLingo · 已暂停读取" :
+            settings.Current.MonitorAllApplications ? "TypeLingo · 监控全部可访问应用" : "TypeLingo · 仅监控允许的应用");
         foreach (Forms.ToolStripItem item in tray.ContextMenuStrip!.Items)
             if (item.Tag is string text) item.Text = UiText.Get(text);
     }
@@ -105,10 +112,17 @@ public partial class App : System.Windows.Application
     private void ApplyTheme()
     {
         var dark = settings.Current.Overlay.DarkMode;
-        Resources["CanvasBrush"] = new SolidColorBrush((Color)ColorConverter.ConvertFromString(dark ? "#10161E" : "#F5F8FC"));
-        Resources["SurfaceBrush"] = new SolidColorBrush((Color)ColorConverter.ConvertFromString(dark ? "#1B2430" : "#E8EEF5"));
-        Resources["TextBrush"] = new SolidColorBrush((Color)ColorConverter.ConvertFromString(dark ? "#EEF4FA" : "#142333"));
-        Resources["MutedBrush"] = new SolidColorBrush((Color)ColorConverter.ConvertFromString(dark ? "#9BAEBF" : "#53667A"));
+        var palette = new Dictionary<string, (string Light, string Dark)>
+        {
+            ["CanvasBrush"] = ("#F3F3F3", "#202020"), ["SurfaceBrush"] = ("#FFFFFF", "#2B2B2B"),
+            ["CardBrush"] = ("#FBFBFB", "#2B2B2B"), ["BorderBrush"] = ("#E5E5E5", "#3A3A3A"),
+            ["HoverBrush"] = ("#F5F5F5", "#343434"), ["SelectionBrush"] = ("#E9E9E9", "#383838"),
+            ["TextBrush"] = ("#1A1A1A", "#F5F5F5"), ["MutedBrush"] = ("#666666", "#B8B8B8"),
+            ["AccentBrush"] = ("#0067C0", "#60CDFF"), ["AccentTextBrush"] = ("#FFFFFF", "#00324A"),
+            ["AccentSurfaceBrush"] = ("#E7F1FB", "#253641")
+        };
+        foreach (var pair in palette) Resources[pair.Key] = new SolidColorBrush((Color)ColorConverter.ConvertFromString(dark ? pair.Value.Dark : pair.Value.Light));
+        Native.ApplyWindowAppearance(new WindowInteropHelper(settingsWindow).Handle, dark);
     }
     protected override void OnExit(ExitEventArgs e)
     {

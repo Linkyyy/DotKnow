@@ -7,7 +7,7 @@ public sealed class CoordinatorTests
 {
     internal static AppSettings Config => new()
     {
-        PrivacyConsent = true, AllowedApplications = ["notepad"],
+        PrivacyConsent = true, MonitorAllApplications = false, AllowedApplications = ["notepad"],
         Translation = new() { DebounceMilliseconds = 100, MinimumRequestIntervalMilliseconds = 100 }
     };
     internal static InputSnapshot Input(string text, string identity = "A") => new(identity, text, new(10, 10, 100, 30));
