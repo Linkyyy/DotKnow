@@ -1,5 +1,5 @@
 <Window x:Class="TypeLingo.App.SettingsWindow" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:controls="clr-namespace:TypeLingo.App.Controls" Title="{DynamicResource 'TypeLingo · 伴译'}" Width="1180" Height="820" MinWidth="820" MinHeight="520" WindowStartupLocation="CenterScreen">
-  <Grid>
+  <Grid Background="{DynamicResource CanvasBrush}">
     <Grid.ColumnDefinitions><ColumnDefinition x:Name="SidebarColumn" Width="268" /><ColumnDefinition Width="*" /></Grid.ColumnDefinitions>
     <Grid Grid.Column="0" Margin="14,20,12,20">
       <Grid.RowDefinitions><RowDefinition Height="Auto" /><RowDefinition Height="Auto" /><RowDefinition Height="*" /><RowDefinition Height="Auto" /></Grid.RowDefinitions>

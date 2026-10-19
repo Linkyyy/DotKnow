@@ -56,11 +56,11 @@ public sealed class CacheAndPrivacyTests
             using (var cache = new CacheService(() => config, path, new TestProtector(), clock))
             {
                 await cache.PutAsync("a", new("PRIVATE_TRANSLATION"), default);
-                Assert.DoesNotContain("PRIVATE_TRANSLATION", Encoding.UTF8.GetString(File.ReadAllBytes(path)));
+                Assert.DoesNotContain("PRIVATE_TRANSLATION", ReadShared(path));
                 await cache.PutAsync("b", new("second"), default); await cache.PutAsync("c", new("third"), default);
                 Assert.Null(await cache.GetAsync("a", default));
             }
-            Assert.DoesNotContain("PRIVATE_TRANSLATION", Encoding.UTF8.GetString(File.ReadAllBytes(path)));
+            Assert.DoesNotContain("PRIVATE_TRANSLATION", ReadShared(path));
             using (var cache = new CacheService(() => config, path, new TestProtector(), clock))
             {
                 Assert.Equal("third", (await cache.GetAsync("c", default))?.Text);
@@ -103,6 +103,13 @@ public sealed class CacheAndPrivacyTests
         Assert.Throws<ArgumentException>(() => (new AppSettings { AI = new() { BaseUrl = "http://api.deepseek.com" } }).Validate());
         Assert.Throws<ArgumentException>(() => (new AppSettings { Translation = new() { DebounceMilliseconds = -1 } }).Validate());
         Assert.Throws<ArgumentException>(() => (new AppSettings { Overlay = new() { Opacity = double.NaN } }).Validate());
+    }
+    private static string ReadShared(string path)
+    {
+        // SQLite 在 Windows 上仍持有数据库写句柄；检查磁盘密文时必须允许共享读写。
+        using var stream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite | FileShare.Delete);
+        using var copy = new MemoryStream(); stream.CopyTo(copy);
+        return Encoding.UTF8.GetString(copy.ToArray());
     }
     private sealed class FakeClock : TimeProvider
     {

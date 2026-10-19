@@ -18,9 +18,10 @@ internal static class Program
     {
         var output = Path.GetFullPath(args.FirstOrDefault() ?? "artifacts/ui-smoke"); Directory.CreateDirectory(output);
         var temporary = Path.Combine(Path.GetTempPath(), "TypeLingo-UiSmoke-" + Guid.NewGuid().ToString("N"));
-        var app = new App.App(); app.InitializeComponent(); var checks = new List<string>();
+        var app = new App.App(); var checks = new List<string>();
         try
         {
+            app.InitializeComponent();
             var settings = new SettingsService(temporary, new WindowsProtector());
             settings.Save(new AppSettings());
             var window = new SettingsWindow(settings, new SessionStatistics(), (candidate, key) => { settings.Save(candidate, key); return null; },
@@ -57,6 +58,10 @@ internal static class Program
             Check(model.Text == "my-selected-model", "新版下拉框保留手动模型输入功能");
             Find<Button>("SaveSettingsButton").RaiseEvent(new RoutedEventArgs(Button.ClickEvent)); Pump(window);
             Check(settings.Current.MonitorAllApplications && settings.Current.AI.Model == "my-selected-model" && settings.Current.Translation.TargetLanguage == "en", "保存设置同时持久化应用范围、模型与翻译方向");
+            SelectPage("general"); var scroll = Find<ScrollViewer>("PageScroll");
+            scroll.ScrollToEnd(); Pump(window);
+            Check(scroll.ScrollableHeight > 0 && scroll.VerticalOffset > 0, "新样式保持设置内容的滚动功能");
+            scroll.ScrollToTop();
             foreach (var id in new[] { "general", "ai", "privacy" })
             {
                 SelectPage(id); Capture(window, Path.Combine(output, "settings-" + id + ".png"));
@@ -65,12 +70,12 @@ internal static class Program
             var save = Find<Button>("SaveSettingsButton"); var origin = save.TranslatePoint(new Point(), (UIElement)window.Content);
             Check(origin.Y + save.ActualHeight <= ((FrameworkElement)window.Content).ActualHeight, "较小窗口仍完整显示固定保存按钮");
             Capture(window, Path.Combine(output, "settings-small.png"));
-            File.WriteAllLines(Path.Combine(output, "界面验证结果.txt"), checks);
+            File.WriteAllLines(Path.Combine(output, "ui-validation.txt"), checks);
             window.Hide(); Console.WriteLine("WPF 界面检查全部通过：" + checks.Count); return 0;
         }
         catch (Exception error)
         {
-            File.WriteAllText(Path.Combine(output, "界面验证失败.txt"), error.ToString());
+            File.WriteAllText(Path.Combine(output, "ui-validation-failed.txt"), error.ToString());
             Console.Error.WriteLine("::error::" + error.ToString().Replace("\r", "").Replace("\n", "%0A")); return 1;
         }
         finally { app.Shutdown(); if (Directory.Exists(temporary)) Directory.Delete(temporary, true); }

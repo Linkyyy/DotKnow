@@ -11,7 +11,7 @@
 
 下载 TypeLingo-Windows-x64.zip 并完整解压，直接运行 TypeLingo.exe，或运行中文“安装到当前用户.cmd”。更新前先从系统托盘退出旧版。
 
-TypeLingo-Source.zip 为完整源码；SHA256SUMS.txt 用于核对两个压缩包。settings-general.png、settings-ai.png、settings-privacy.png 为 Windows WPF 实际渲染的设置页截图，界面验证结果.txt 记录窗口检查结果。
+TypeLingo-Source.zip 为完整源码；SHA256SUMS.txt 用于核对两个压缩包。settings-general.png、settings-ai.png、settings-privacy.png 为 Windows WPF 实际渲染的设置页截图，ui-validation.txt 记录窗口检查结果。
 
 ## 验证范围
 

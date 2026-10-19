@@ -23,6 +23,22 @@ jobs:
         with:
           global-json-file: global.json
       - run: dotnet restore TypeLingo.sln --locked-mode
+      - name: 验证 Windows 核心测试
+        shell: pwsh
+        run: |
+          dotnet test tests/TypeLingo.Tests -c Release --no-restore --logger "trx;LogFileName=windows-core.trx" --results-directory artifacts/ui-smoke
+          $testExit = $LASTEXITCODE
+          if (Test-Path artifacts/ui-smoke/windows-core.trx) {
+            [xml]$trx = Get-Content artifacts/ui-smoke/windows-core.trx -Raw
+            $counter = $trx.SelectSingleNode("//*[local-name()='Counters']")
+            "Windows 核心测试：总数 $($counter.total)，通过 $($counter.passed)，失败 $($counter.failed)" | Tee-Object -FilePath artifacts/ui-smoke/windows-core-results.txt
+            $trx.SelectNodes("//*[local-name()='UnitTestResult'][@outcome='Failed']") | ForEach-Object {
+              $message = $_.SelectSingleNode(".//*[local-name()='Message']").InnerText
+              Write-Host "::error::$($_.testName)：$message"
+              "$($_.testName)：$message" | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append -Encoding utf8
+            }
+          }
+          exit $testExit
       - run: dotnet run --project tools/TypeLingo.UiSmoke -c Release --no-restore -- artifacts/ui-smoke
       - uses: actions/upload-artifact@v4
         if: always()
@@ -66,6 +82,7 @@ jobs:
             downloads/SHA256SUMS.txt \
             artifacts/ui-smoke/*.png \
             artifacts/ui-smoke/*.txt \
+            artifacts/ui-smoke/*.trx \
             --verify-tag \
             --title "TypeLingo（伴译）$RELEASE_TAG 中文版" \
             --notes-file docs/RELEASE_NOTES.md "${EXTRA[@]}"
