@@ -1,2 +1,2 @@
-ec39adf5a4813fcd7e7593c70adc4451f02bfde8be0555d2d571fb30cf5b74c4  TypeLingo-Windows-x64.zip
-398513e7f98fec453da5d4e80ff59ffc1898101592b9eb1876e700f5ccb2de53  TypeLingo-Source.zip
+4a62ee101f0062dc7cd7d9a4eecfe453af772035b3fde83439344e40aab04136  TypeLingo-Windows-x64.zip
+85264c4d100c4c8bd25ef6a36859e8885774579bb7b4ae9fd83adb13e814ff1e  TypeLingo-Source.zip

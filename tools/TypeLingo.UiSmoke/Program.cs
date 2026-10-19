@@ -20,10 +20,10 @@ internal static class Program
         if (args.Length == 2 && args[0] == "--input-fixture") return InputFixture.Run(args[1]);
         var output = Path.GetFullPath(args.FirstOrDefault() ?? "artifacts/ui-smoke"); Directory.CreateDirectory(output);
         var temporary = Path.Combine(Path.GetTempPath(), "TypeLingo-UiSmoke-" + Guid.NewGuid().ToString("N"));
-        var app = new LayoutApplication(); var checks = new List<string>();
+        var app = new Application { ShutdownMode = ShutdownMode.OnExplicitShutdown }; var checks = new List<string>();
         try
         {
-            app.InitializeComponent();
+            app.Resources = new ResourceDictionary { Source = new Uri("pack://application:,,,/TypeLingo;component/Styles/Theme.xaml") };
             var settings = new SettingsService(temporary, new WindowsProtector());
             settings.Save(new AppSettings());
             var window = new SettingsWindow(settings, new SessionStatistics(), (candidate, key) => { settings.Save(candidate, key); return null; },
@@ -129,11 +129,6 @@ internal static class Program
     }
     private sealed class NoApiProvider : ITranslationProvider
     { public Task<TranslationResult> TranslateAsync(TranslationRequest request, CancellationToken token) => throw new InvalidOperationException("界面检查不应调用 API"); }
-    private sealed class LayoutApplication : App.App
-    {
-        // 仅托管真实设置与悬浮窗口，不启动托盘或读取运行器用户配置；输入路径另用独立进程验证。
-        protected override void OnStartup(StartupEventArgs e) { }
-    }
     private sealed class EmptyCache : ITranslationCache
     {
         public Task<TranslationResult?> GetAsync(string key, CancellationToken token) => Task.FromResult<TranslationResult?>(null);

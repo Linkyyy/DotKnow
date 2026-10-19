@@ -31,7 +31,7 @@ public sealed class SettingsService(string directory, IDataProtector protector)
             var text = File.ReadAllText(file);
             var candidate = JsonSerializer.Deserialize<AppSettings>(text) ?? throw new JsonException();
             using var document = JsonDocument.Parse(text);
-            if (document.RootElement.TryGetProperty("Overlay", out var overlay) && !overlay.TryGetProperty("Theme", out _))
+            if (document.RootElement.TryGetProperty("Overlay", out var overlay) && overlay.ValueKind == JsonValueKind.Object && !overlay.TryGetProperty("Theme", out _))
                 candidate = candidate with { Overlay = candidate.Overlay with { Theme = candidate.Overlay.DarkMode ? "dark" : "light" } };
             candidate.Validate(); Current = candidate;
         }

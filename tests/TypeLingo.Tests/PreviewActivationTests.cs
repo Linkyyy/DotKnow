@@ -71,6 +71,17 @@ public sealed class PreviewActivationTests
         }
         finally { Directory.Delete(directory, true); }
     }
+    [Fact] public void NullOverlayConfiguration_PausesWithoutCrashingDuringMigration()
+    {
+        var directory = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString()); Directory.CreateDirectory(directory);
+        try
+        {
+            File.WriteAllText(Path.Combine(directory, "settings.json"), "{\"PrivacyConsent\":true,\"Overlay\":null}");
+            var service = new SettingsService(directory, new TestProtector()); service.Load();
+            Assert.NotNull(service.LoadWarning); Assert.False(service.Current.Translation.Enabled); Assert.False(service.Current.PrivacyConsent);
+        }
+        finally { Directory.Delete(directory, true); }
+    }
     [Theory][InlineData("hotkey")][InlineData("selection")][InlineData("typing")]
     public void NewPreferences_RoundTripAndValidate(string trigger)
     {

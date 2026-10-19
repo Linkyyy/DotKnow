@@ -44,7 +44,7 @@ public partial class SettingsWindow : Window
         IsVisibleChanged += (_, _) =>
         {
             if (IsVisible) { LoadSettings(); timer.Start(); }
-            else { timer.Stop(); KeyInput.Clear(); UiText.Apply(service.Current.UiLanguage); ((App)System.Windows.Application.Current).ApplyTheme(service.Current.Overlay); }
+            else { timer.Stop(); KeyInput.Clear(); UiText.Apply(service.Current.UiLanguage); DesktopTheme.ApplyResources(service.Current.Overlay); }
         };
         timer.Tick += (_, _) => RefreshStatistics();
     }
@@ -53,7 +53,7 @@ public partial class SettingsWindow : Window
     {
         if (loading) return;
         var theme = service.Current.Overlay with { Theme = SelectedTheme() };
-        ((App)System.Windows.Application.Current).ApplyTheme(theme);
+        DesktopTheme.ApplyResources(theme);
         Native.ApplyWindowAppearance(new WindowInteropHelper(this).Handle, AppearanceTheme.IsDark(theme.Theme, DesktopTheme.IsDark));
     }
     private void CloseSettings_Click(object sender, RoutedEventArgs e) => Hide();
