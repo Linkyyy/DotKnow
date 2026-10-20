@@ -23,6 +23,15 @@ internal static class Program
         var output = Path.GetFullPath(args.FirstOrDefault() ?? "artifacts/ui-smoke"); Directory.CreateDirectory(output);
         var temporary = Path.Combine(Path.GetTempPath(), "TypeLingo-UiSmoke-" + Guid.NewGuid().ToString("N"));
         var app = new Application { ShutdownMode = ShutdownMode.OnExplicitShutdown }; var checks = new List<string>();
+        // Dispatcher 和退出清理中的异常可能不经过 Main 的 catch，仍需在 CI 中保留真实原因。
+        void ReportUnhandled(object? error)
+        {
+            var message = "Last successful check: " + checks.LastOrDefault() + "\n" + error;
+            try { File.WriteAllText(Path.Combine(output, "ui-unhandled.txt"), message); } catch (Exception) { }
+            Console.Error.WriteLine("::error::" + message.Replace("%", "%25").Replace("\r", "%0D").Replace("\n", "%0A"));
+        }
+        app.DispatcherUnhandledException += (_, e) => ReportUnhandled(e.Exception);
+        AppDomain.CurrentDomain.UnhandledException += (_, e) => ReportUnhandled(e.ExceptionObject);
         try
         {
             app.Resources = new ResourceDictionary { Source = new Uri("pack://application:,,,/TypeLingo;component/Styles/Theme.xaml") };
