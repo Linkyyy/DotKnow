@@ -131,20 +131,22 @@
           <ScrollViewer x:Name="PageScroll" Grid.Row="1" VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Disabled" Padding="0,0,10,24">
             <Grid x:Name="PagesHost">
               <StackPanel x:Name="PageHome" Visibility="Collapsed">
-                <Border Background="{DynamicResource HeroBrush}" CornerRadius="16" Padding="26" Margin="0,0,0,20">
+                <Border Background="{DynamicResource HeroBrush}" CornerRadius="16" Padding="26" Margin="0,0,0,20" x:Name="HomeHeroBorder">
                   <Grid>
                     <Grid.ColumnDefinitions>
                       <ColumnDefinition Width="*" />
                       <ColumnDefinition Width="72" />
                     </Grid.ColumnDefinitions>
                     <StackPanel>
-                      <TextBlock Text="TYPELINGO / YOUR DESKTOP COMPANION" FontSize="9" Foreground="{DynamicResource HeroMutedBrush}" Margin="0,0,0,20" />
-                      <TextBlock Text="{DynamicResource '选中一句，'}" FontSize="34" FontWeight="SemiBold" Foreground="{DynamicResource HeroTextBrush}" />
-                      <TextBlock Text="{DynamicResource '看懂世界。'}" FontSize="34" FontWeight="SemiBold" Foreground="{DynamicResource HighlightBrush}" Margin="0,0,0,15" />
+                      <TextBlock Text="TYPELINGO / YOUR DESKTOP COMPANION" FontSize="9" Foreground="{DynamicResource HeroMutedBrush}" Margin="0,0,0,20" x:Name="HomeHeroEyebrow" />
+                      <WrapPanel x:Name="HomeHeadlinePanel" Orientation="Vertical">
+                        <TextBlock Text="{DynamicResource '选中一句，'}" FontSize="34" FontWeight="SemiBold" Foreground="{DynamicResource HeroTextBrush}" x:Name="HomeHeadingFirst" />
+                        <TextBlock Text="{DynamicResource '看懂世界。'}" FontSize="34" FontWeight="SemiBold" Foreground="{DynamicResource HighlightBrush}" Margin="0,0,0,15" x:Name="HomeHeadingSecond" />
+                      </WrapPanel>
                       <TextBlock x:Name="HomeStateText" FontSize="11" Foreground="{DynamicResource HeroMutedBrush}" LineHeight="19" />
                       <Button x:Name="HomeStartButton" Content="{DynamicResource '开始使用'}" Click="HomeStart_Click" Style="{StaticResource HighlightButton}" HorizontalAlignment="Left" Margin="0,20,0,0" Padding="18,9" />
                     </StackPanel>
-                    <StackPanel Grid.Column="1" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0,34,0,0">
+                    <StackPanel Grid.Column="1" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0,34,0,0" x:Name="HomeLogoPanel">
                       <Image x:Name="HomeBrandImage" Source="pack://application:,,,/TypeLingo;component/Assets/typelingo.png" Width="58" Height="58" AutomationProperties.Name="TypeLingo Logo" />
                       <TextBlock Text="中 / EN / 日" FontSize="10" Foreground="{DynamicResource HeroMutedBrush}" HorizontalAlignment="Center" Margin="0,16,0,0" />
                     </StackPanel>
@@ -237,7 +239,7 @@
                     </Grid>
                   </Button>
                 </UniformGrid>
-                <Border Background="{DynamicResource AccentSurfaceBrush}" CornerRadius="10" Padding="16" Margin="0,22,0,0">
+                <Border Background="{DynamicResource AccentSurfaceBrush}" CornerRadius="10" Padding="16" Margin="0,22,0,0" x:Name="HomeNoticeBorder">
                   <TextBlock Text="{DynamicResource '默认划词，随选随译。查看并确认后，才会替换原文。'}" FontSize="11" Foreground="{DynamicResource MutedBrush}" LineHeight="19" />
                 </Border>
               </StackPanel>

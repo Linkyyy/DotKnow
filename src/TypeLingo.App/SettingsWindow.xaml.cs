@@ -48,6 +48,16 @@ public partial class SettingsWindow : Window
         {
             SidebarColumn.Width = new GridLength(ActualWidth < 820 ? 180 : ActualWidth < 940 ? 196 : 216);
             PaletteGrid.Columns = ActualWidth < 940 ? 2 : 4;
+            var compactHome = ActualHeight < 780;
+            HomeHeroEyebrow.Visibility = HomeNoticeBorder.Visibility = compactHome ? Visibility.Collapsed : Visibility.Visible;
+            HomeHeadlinePanel.Orientation = compactHome ? Orientation.Horizontal : Orientation.Vertical;
+            HomeHeadingFirst.FontSize = HomeHeadingSecond.FontSize = compactHome ? 28 : 34;
+            HomeHeadingFirst.Margin = new Thickness(0, 0, compactHome ? 6 : 0, 0);
+            HomeHeadingSecond.Margin = new Thickness(0, 0, 0, compactHome ? 10 : 15);
+            HomeHeroBorder.Padding = new Thickness(compactHome ? 22 : 26);
+            HomeStartButton.Margin = new Thickness(0, compactHome ? 14 : 20, 0, 0);
+            HomeLogoPanel.Margin = new Thickness(0, compactHome ? 0 : 34, 0, 0);
+            HomeLogoPanel.VerticalAlignment = compactHome ? VerticalAlignment.Center : VerticalAlignment.Top;
         };
         Closing += (_, e) => { e.Cancel = true; Hide(); };
         IsVisibleChanged += (_, _) =>

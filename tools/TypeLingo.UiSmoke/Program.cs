@@ -147,6 +147,20 @@ internal static class Program
             Check(((SolidColorBrush)app.Resources["CanvasBrush"]).Color == (Color)ColorConverter.ConvertFromString(restoredColors.Canvas),
                 "关闭窗口时恢复已保存的配色与明暗模式");
             window.Show(); SelectPage("home"); Capture(window, Path.Combine(output, "settings-home.png"));
+            if (window.ActualHeight >= 700 && window.ActualHeight < 780)
+            {
+                var lastAction = Find<System.Windows.Controls.Primitives.UniformGrid>("HomeQuickActions").Children.OfType<Button>().Last();
+                Check(Bounds(lastAction, Find<ScrollViewer>("PageScroll")).Bottom <= Find<ScrollViewer>("PageScroll").ActualHeight - 24,
+                    "常见笔记本高度下，四个首页快捷入口在首屏完整可见");
+            }
+            Find<Button>("HomeStartButton").RaiseEvent(new RoutedEventArgs(Button.ClickEvent)); Pump(window);
+            Check(Find<FrameworkElement>("PagePrivacy").Visibility == Visibility.Visible, "未授权时首页主按钮引导到隐私设置");
+            foreach (Button action in Find<System.Windows.Controls.Primitives.UniformGrid>("HomeQuickActions").Children)
+            {
+                SelectPage("home"); action.RaiseEvent(new RoutedEventArgs(Button.ClickEvent)); Pump(window);
+                Check(Find<FrameworkElement>("Page" + ((string)action.Tag switch { "general" => "General", "vocabulary" => "Vocabulary", "favorites" => "Favorites", _ => "Appearance" })).Visibility == Visibility.Visible,
+                    "首页快捷入口打开对应功能：" + action.Tag);
+            }
             SelectPage("vocabulary");
             Check(Find<TextBlock>("VocabularyCountText").Text.Contains("32159") && Find<TextBlock>("VocabularyCountText").Text.Contains("2441"),
                 "真实设置页面加载用户词库可用数和歧义数");
