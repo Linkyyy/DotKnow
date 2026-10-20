@@ -2050,5 +2050,45 @@
   "查看答案": {
     "en-US": "Reveal answer",
     "ja-JP": "回答を表示"
+  },
+  "划选助手": {
+    "en-US": "Selection assistant",
+    "ja-JP": "選択アシスタント"
+  },
+  "按所选出现方式查询，不会自动修改原文": {
+    "en-US": "Query using your chosen trigger without changing the original text.",
+    "ja-JP": "選択した方法で質問し、元の文章は自動変更しません。"
+  },
+  "允许读取选区；在线任务发送选区、指令和问题给所选 AI，纯翻译按离线回退设置处理": {
+    "en-US": "Allow selection reading. Online tasks send selected text, instructions and questions to your AI provider. Plain translation follows offline settings.",
+    "ja-JP": "選択内容の読み取りを許可します。オンラインタスクは選択内容・指示・質問を AI に送信し、通常の翻訳はオフライン設定に従います。"
+  },
+  "我同意读取选区，并按所选任务发送内容给 AI": {
+    "en-US": "I consent to reading selections and sending content for my chosen AI tasks.",
+    "ja-JP": "選択内容の読み取りと、選んだ AI タスクへの送信に同意します。"
+  },
+  "立即停止读取与查询，并隐藏面板": {
+    "en-US": "Stop reading and queries, and hide panels.",
+    "ja-JP": "読み取りと質問を停止し、パネルを非表示にします。"
+  },
+  "纯翻译题库命中时不发送文本。百科等在线任务发送选区、指令与问题给所选 AI。核对翻译替换范围时会在本机临时读取编辑框全文。": {
+    "en-US": "Offline translation hits do not send text. Online AI tasks send the selection, instructions and question to your provider. Safe replacement temporarily checks the full editor text locally.",
+    "ja-JP": "翻訳辞書に一致した場合は送信しません。オンライン AI タスクは選択内容・指示・質問を送信します。安全な置換の確認時は編集欄の全文をローカルで一時確認します。"
+  },
+  "密码框、敏感控件和排除列表始终跳过。仅支持公开文本选区的应用；不识别图片或扫描件。": {
+    "en-US": "Password fields, sensitive controls and exclusions are skipped. Apps must expose text selections; images and scans are unsupported.",
+    "ja-JP": "パスワード欄・機密コントロール・除外リストは常にスキップ。テキスト選択を公開するアプリのみ対応し、画像やスキャンは非対応です。"
+  },
+  "把新知识，留在本地。": {
+    "en-US": "Keep new knowledge close.",
+    "ja-JP": "新しい知識をローカルに。"
+  },
+  "主动收藏有用的回答和译文；保留原文与问题，仅在本机加密保存。": {
+    "en-US": "Save useful answers and translations with their original text and question, encrypted locally.",
+    "ja-JP": "役立つ回答や翻訳を、元の文章・質問と一緒にローカルで暗号化保存します。"
+  },
+  "显示答案": {
+    "en-US": "Reveal answer",
+    "ja-JP": "回答を表示"
   }
 }

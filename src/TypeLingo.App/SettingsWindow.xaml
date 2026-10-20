@@ -263,8 +263,8 @@
                 <TextBlock Text="{DynamicResource '百科等任务需要配置在线 API。离线优先、仅离线和自动积累只影响纯翻译；补充问题将作为 AI 任务处理。'}" TextWrapping="Wrap" Foreground="{DynamicResource MutedBrush}" FontSize="11" Margin="0,15,0,0"/>
               </StackPanel>
               <StackPanel x:Name="PageGeneral" Visibility="Collapsed">
-                <controls:SettingCard Title="{DynamicResource '实时翻译'}" Description="{DynamicResource '按所选出现方式翻译，不会自动修改原文'}">
-                  <CheckBox x:Name="EnabledCheck" Style="{StaticResource ToggleSwitch}" AutomationProperties.Name="{DynamicResource '实时翻译'}" />
+                <controls:SettingCard Title="{DynamicResource '划选助手'}" Description="{DynamicResource '按所选出现方式查询，不会自动修改原文'}">
+                  <CheckBox x:Name="EnabledCheck" Style="{StaticResource ToggleSwitch}" AutomationProperties.Name="{DynamicResource '划选助手'}" />
                 </controls:SettingCard>
                 <controls:SettingCard Title="{DynamicResource '界面语言'}" Description="{DynamicResource '独立于翻译语言，支持简体中文、英语和日语'}">
                   <ComboBox x:Name="UiLanguageInput" Width="180" AutomationProperties.Name="{DynamicResource '界面语言'}" DisplayMemberPath="Label" SelectedValuePath="Code" SelectionChanged="UiLanguage_SelectionChanged" />
@@ -609,27 +609,27 @@
                   <TextBox x:Name="ExcludedInput" Width="240" AutomationProperties.Name="{DynamicResource '排除的进程名'}" Height="80" AcceptsReturn="True" VerticalScrollBarVisibility="Auto" />
                 </controls:SettingCard>
                 <TextBlock Text="{DynamicResource '授权与保护'}" Style="{StaticResource SectionHeading}" />
-                <controls:SettingCard Title="{DynamicResource '隐私授权'}" Description="{DynamicResource '允许读取选区以查询本地题库；开启在线回退后，未命中内容会发送给所选 AI'}">
+                <controls:SettingCard Title="{DynamicResource '隐私授权'}" Description="{DynamicResource '允许读取选区；在线任务发送选区、指令和问题给所选 AI，纯翻译按离线回退设置处理'}">
                   <CheckBox x:Name="ConsentCheck" MaxWidth="270" AutomationProperties.Name="{DynamicResource '隐私授权'}">
-                    <TextBlock Text="{DynamicResource '我同意读取选区，并按在线回退设置发送待翻译内容'}" FontSize="13" />
+                    <TextBlock Text="{DynamicResource '我同意读取选区，并按所选任务发送内容给 AI'}" FontSize="13" TextWrapping="Wrap" />
                   </CheckBox>
                 </controls:SettingCard>
-                <controls:SettingCard Title="{DynamicResource '暂停所有读取'}" Description="{DynamicResource '立即停止监控与翻译，并隐藏悬浮窗'}">
+                <controls:SettingCard Title="{DynamicResource '暂停所有读取'}" Description="{DynamicResource '立即停止读取与查询，并隐藏面板'}">
                   <Button Content="{DynamicResource '立即暂停'}" Click="Pause_Click" />
                 </controls:SettingCard>
                 <Border Background="{DynamicResource AccentSurfaceBrush}" CornerRadius="6" Padding="16" Margin="0,14,0,0">
-                  <TextBlock Text="{DynamicResource '密码框、敏感控件和排除列表始终跳过。支持通过系统无障碍接口公开选区的应用；未公开文本的画面无法划词翻译。'}" FontSize="12" Foreground="{DynamicResource MutedBrush}" />
+                  <TextBlock Text="{DynamicResource '密码框、敏感控件和排除列表始终跳过。仅支持公开文本选区的应用；不识别图片或扫描件。'}" FontSize="12" Foreground="{DynamicResource MutedBrush}" />
                 </Border>
                 <Border Background="{DynamicResource AccentSurfaceBrush}" CornerRadius="6" Padding="16" Margin="0,14,0,0">
-                  <TextBlock Text="{DynamicResource '题库命中时不发送文本。允许在线回退后，未命中选区或当前行会发送给所选 AI。核对替换范围时会在本机临时读取编辑框全文。'}" FontSize="12" Foreground="{DynamicResource MutedBrush}" />
+                  <TextBlock Text="{DynamicResource '纯翻译题库命中时不发送文本。百科等在线任务发送选区、指令与问题给所选 AI。核对翻译替换范围时会在本机临时读取编辑框全文。'}" FontSize="12" Foreground="{DynamicResource MutedBrush}" />
                 </Border>
               </StackPanel>
               <StackPanel x:Name="PageFavorites" Visibility="Collapsed">
                 <Border Style="{StaticResource CardFrame}" Background="{DynamicResource AccentSurfaceBrush}" Margin="0,0,0,20">
                   <StackPanel>
                     <TextBlock Text="COLLECT A LITTLE. LEARN A LOT." Style="{StaticResource Eyebrow}" />
-                    <TextBlock Text="{DynamicResource '把好表达，留在本地。'}" FontSize="22" FontWeight="SemiBold" />
-                    <TextBlock Text="{DynamicResource '点击悬浮窗的星标保存原文与译文；仅在本机加密保存，不自动收藏。'}" Foreground="{DynamicResource MutedBrush}" Margin="0,9,0,13" FontSize="11" />
+                    <TextBlock Text="{DynamicResource '把新知识，留在本地。'}" FontSize="22" FontWeight="SemiBold" />
+                    <TextBlock Text="{DynamicResource '主动收藏有用的回答和译文；保留原文与问题，仅在本机加密保存。'}" Foreground="{DynamicResource MutedBrush}" Margin="0,9,0,13" FontSize="11" />
                     <TextBlock x:Name="FavoritesCountText" FontSize="13" Margin="0,0,0,12" />
                     <WrapPanel Margin="0,5,0,0">
                       <Button x:Name="StartReviewButton" Content="{DynamicResource '开始到期复习'}" Click="StartReview_Click" Style="{StaticResource PrimaryButton}" Margin="0,0,8,4" />
@@ -643,7 +643,7 @@
                     <ProgressBar x:Name="ReviewProgressBar" Height="3" Minimum="0" Maximum="1" Value="0" Margin="0,0,0,14" AutomationProperties.Name="{DynamicResource '复习进度'}" />
                     <TextBlock x:Name="ReviewOriginalText" FontSize="24" TextWrapping="Wrap" Margin="0,8,0,0" />
                     <TextBlock x:Name="ReviewTranslationText" FontSize="18" TextWrapping="Wrap" Visibility="Collapsed" Margin="0,14,0,0" />
-                    <Button x:Name="ShowAnswerButton" Content="{DynamicResource '显示译文'}" Click="ShowAnswer_Click" HorizontalAlignment="Left" Margin="0,16,0,0" Style="{StaticResource PrimaryButton}" />
+                    <Button x:Name="ShowAnswerButton" Content="{DynamicResource '显示答案'}" Click="ShowAnswer_Click" HorizontalAlignment="Left" Margin="0,16,0,0" Style="{StaticResource PrimaryButton}" />
                     <WrapPanel x:Name="ReviewRatingPanel" Visibility="Collapsed" Margin="0,16,0,0">
                       <Button x:Name="ReviewAgainButton" Content="{DynamicResource '再练一次'}" Click="ReviewAgain_Click" Margin="0,0,8,4" />
                       <Button x:Name="ReviewRememberedButton" Content="{DynamicResource '记住了'}" Click="ReviewRemembered_Click" Style="{StaticResource PrimaryButton}" Margin="0,0,0,4" />

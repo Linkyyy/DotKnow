@@ -16,11 +16,11 @@ def main():
     if not exe.is_file() or exe.read_bytes()[:2] != b"MZ":
         raise RuntimeError("请先发布 Windows x64 程序，再生成中文安装包。")
     digest = hashlib.sha256(exe.read_bytes()).hexdigest()
-    manifest = f"{digest}  TypeLingo.exe\r\n"
+    manifest = f"{digest}  DotKnow.exe\r\n"
     (output / "win-x64" / "文件校验.txt").write_text(manifest, encoding="utf-8")
-    windows_zip = output / "TypeLingo-Windows-x64.zip"
+    windows_zip = output / "DotKnow-Windows-x64.zip"
     with zipfile.ZipFile(windows_zip, "w", zipfile.ZIP_DEFLATED, compresslevel=9) as archive:
-        archive.write(exe, "TypeLingo.exe")
+        archive.write(exe, "DotKnow.exe")
         archive.writestr("文件校验.txt", manifest.encode("utf-8"))
         for file in sorted((root / "packaging").iterdir()):
             if file.is_file():
@@ -33,15 +33,15 @@ def main():
             for file in sorted((root / "docs" / directory).rglob("*")):
                 if file.is_file():
                     archive.write(file, file.relative_to(root).as_posix())
-    source_zip = output / "TypeLingo-Source.zip"
+    source_zip = output / "DotKnow-Source.zip"
     excluded = {"bin", "obj", ".git", "TestResults", "__pycache__", "node_modules", "dist", ".vercel", "test-results", "playwright-report"}
     with zipfile.ZipFile(source_zip, "w", zipfile.ZIP_DEFLATED, compresslevel=9) as archive:
         for directory in ["src", "tests", "tools", "docs", "data", "scripts", "packaging", ".github", "website"]:
             for file in sorted((root / directory).rglob("*")):
                 if file.is_file() and not excluded.intersection(file.relative_to(root).parts) and file.name != ".env" and not file.name.startswith(".env."):
-                    archive.write(file, "TypeLingo/" + file.relative_to(root).as_posix())
+                    archive.write(file, "DotKnow/" + file.relative_to(root).as_posix())
         for name in [".gitignore", "README.md", "TypeLingo.sln", "global.json", "Directory.Build.props"]:
-            archive.write(root / name, "TypeLingo/" + name)
+            archive.write(root / name, "DotKnow/" + name)
     for path in [windows_zip, source_zip]:
         with zipfile.ZipFile(path) as archive:
             if archive.testzip() is not None:

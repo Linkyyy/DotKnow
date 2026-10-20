@@ -1,162 +1,75 @@
-# TypeLingo · 伴译
+# 点知 · DotKnow
 
-**Select text. Translation follows.**
+**哪里不会，点哪里。**
 
-面向 Windows 10/11 的 C# / .NET 8 / WPF 桌面翻译助手。默认用鼠标拖选文字，松开并稳定后，优先查询本地题库，未命中时按设置调用 AI 翻译，在旁边显示译文；覆盖公开可访问文本选区的网页、文档与应用阅读区域，也支持输入框。**自动操作只预览；原文仅在你主动请求并确认替换后才写入。**
+像点读机一样的 Windows 桌面 AI 助手：在网页、文档和应用中划选文字，选择百科、翻译、解释、摘要、润色、代码解读，或输入自己的问题。用你选择的 AI 回答，随手复制、收藏，之后在本地复习。
 
-当前开发版本为 v0.4.0-preview.6：界面全面升级为官网风格，提供浅纸、深林、雾蓝、暮紫四套配色，与浅色／深色／跟随系统独立组合。首页、设置、词库、收藏复习、紧凑浮窗和托盘菜单统一配色。保留默认鼠标划词、离线优先、Loading、确认替换与本地收藏复习。使用见 [多主题界面](docs/UI_THEMES.md)，验证见 [验证记录](docs/VALIDATION.md)。v0.3.0 链接为此前稳定版。
+点知由 TypeLingo · 伴译升级而来。翻译依然是重要功能：中英日互译、离线词库优先、在线译文自动积累和确认替换继续保留。离线词库只用于纯翻译，百科等任务使用在线模型，不会污染词库。
 
-## 下载安装包
+当前版本：**v0.5.0-preview.1**，Windows 10 / 11 x64。图形继续使用已选定的 C 标志；界面和官网统一为浅纸、深林、雾蓝、暮紫四套配色，并支持浅色、深色和跟随系统。
 
-- [当前开发版 Windows x64（划词与离线题库）](https://github.com/Linkyyy/TypeLingo/raw/refs/heads/codex/typelingo-favorites-and-replacement/downloads/TypeLingo-Windows-x64.zip)
-- [此前稳定版 v0.3.0](https://github.com/Linkyyy/TypeLingo/releases/download/v0.3.0/TypeLingo-Windows-x64.zip)
-- [完整源码 ZIP](https://github.com/Linkyyy/TypeLingo/releases/download/v0.3.0/TypeLingo-Source.zip)
-- [版本发布页面](https://github.com/Linkyyy/TypeLingo/releases)
-- [安装包备用下载](https://github.com/Linkyyy/TypeLingo/raw/refs/heads/main/downloads/TypeLingo-Windows-x64.zip)
+## 下载和开始使用
 
-完整解压后直接运行 TypeLingo.exe，或运行「安装到当前用户.cmd」安装中文快捷方式。安装包内附中文说明。
+- [点知 Windows x64](https://github.com/Linkyyy/TypeLingo/raw/refs/heads/codex/typelingo-favorites-and-replacement/downloads/DotKnow-Windows-x64.zip)
+- [完整源码](https://github.com/Linkyyy/TypeLingo/raw/refs/heads/codex/typelingo-favorites-and-replacement/downloads/DotKnow-Source.zip)
+- [宣传素材与文案](https://github.com/Linkyyy/TypeLingo/raw/refs/heads/codex/typelingo-favorites-and-replacement/downloads/DotKnow-Promotion.zip)
+- [真实 Windows 界面](docs/UI_THEMES.md) · [验证记录](docs/VALIDATION.md)
 
-## 快速启动（Windows）
+完整解压后运行 **DotKnow.exe**。也可运行「安装到当前用户.cmd」，安装并创建点知快捷方式；不需要管理员权限或额外安装 .NET。更新前从系统托盘退出旧版点知或伴译。
 
-开发需 [.NET 8 SDK](https://dotnet.microsoft.com/download/dotnet/8.0)，版本见 `global.json`。普通用户运行，无需管理员权限。
+1. 在「隐私与应用」授权读取选区，按需选择全部应用或应用允许列表。
+2. 在「AI 服务与模型」选择 DeepSeek、OpenAI、Claude、Gemini 或通义千问，保存自己的 API Key 和可用模型。在线调用可能产生服务商费用。
+3. 在「任务与提示词」选默认任务和回答语言。新用户默认百科、划选后先显示任务和问题面板，点击查询才发送；也能改为立即执行默认预设。
+4. 在其他应用中划选文字。可直接使用预设，也可输入补充问题，按 **Ctrl+Enter** 查询。显示面板不会抢走原应用焦点，点击问题框后才开始输入，原选区会保留。
+5. 有用的回答可复制、收藏，在「本地收藏与复习」按卡片温习。继续提问围绕当前选区独立查询，不会自动发送之前的整段对话。
 
-```powershell
+只想离线翻译：选「翻译」预设，在「常规设置」选择自然风格和语言方向，在「离线题库」启用离线优先。选中“米饭”，目标日语可离线得到“ご飯”。不需要 API Key。内置 6,426 组中英日词条、32,159 条可用方向记录，不能代替任意句子的离线模型。
+
+旧用户升级后保留即时翻译模式。设置、API 密钥、个人题库、缓存和收藏继续使用 `%LOCALAPPDATA%\TypeLingo`；当前用户安装目录也继续使用旧目录以便升级。无须导出再导入。
+
+## 任务和提示词
+
+| 预设 | 用途 |
+| --- | --- |
+| 百科 | 概念定义、背景和例子 |
+| 翻译 | 中英日互译，离线优先与自动积累 |
+| 通俗解释 | 用容易理解的话和类比讲清楚 |
+| 提炼重点 | 概括选中文字的主旨和要点 |
+| 写作润色 | 改进语法、行文和表达 |
+| 代码解读 | 理解逻辑、输入输出和潜在问题 |
+| 自由提问 | 围绕选区输入自己的问题 |
+
+最多保存 20 套自定义提示词。只写任务指令，选区作为独立内容提供，无须占位符。内置预设只读；自定义版本可增删改，并可设为默认。提示词示例见 [中文预设](docs/PROMPT_PRESETS.md)，交互与兼容说明见 [划选助手](docs/ASSISTANT.md)。
+
+纯翻译使用原有词库与缓存键；在翻译任务中添加问题会转为在线 AI 任务，不会把解释写入词库。自动模式下的纯翻译仍支持点击译文、复核目标并确认后替换选区或当前行。提问面板的结果使用复制与收藏。
+
+## 适用范围与隐私
+
+支持向 Windows UI Automation 提供选区的阅读区和输入框。图片、扫描件、部分自绘控件、未公开选区的应用暂不支持，不包含 OCR。百科依赖模型已有知识，**没有实时联网检索、来源核验或整篇文档读取**；AI 可能出错。
+
+离线命中不发送网络请求。在线任务将选区、任务提示词与问题发送给你选择的服务商。内存缓存默认开启，磁盘缓存可选；个人词库与收藏使用当前 Windows 用户加密，清缓存不会删除它们。自定义提示词保存在本机配置文件中。导出的词库是明文。
+
+密码框、常见敏感标签、排除项和软件自身跳过。托盘和 **Ctrl+Alt+Space** 可暂停全部读取；**Ctrl+Alt+T** 显示查询面板，**Ctrl+Alt+C** 复制当前结果，**Ctrl+Alt+Enter** 为即时翻译准备替换确认。不会自动发送消息或执行代码。
+
+## 开发与验证
+
+.NET 8 / C# / WPF，SDK 版本见 `global.json`。
+
+```bash
+source scripts/dotnet-env.sh # 本云环境
 dotnet restore TypeLingo.sln --locked-mode
 dotnet build TypeLingo.sln -c Release --no-restore
 dotnet test tests/TypeLingo.Tests -c Release --no-build
-dotnet run --project src/TypeLingo.App -c Release --no-build
 ```
 
-1. 首次运行在「隐私与应用」同意读取选区。默认监控所有可访问应用，密码框、敏感控件和排除列表跳过；可关闭全部应用模式并填写允许的进程名。
-2. 「离线题库」默认优先本地匹配。内置词库无需 API Key；「自然翻译＋自动源语言＋目标日语」时选中“米饭”可得到“ご飯”。可关闭在线回退，只查询题库；也可独立关闭在线结果自动积累。
-3. 需要未命中时在线翻译，再到「AI」选择服务商、保存自己的 API Key 并选择账户可用模型。测试翻译只发送 Hello，可能产生少量 API 费用。服务商与地址的密钥分别加密保存。
-4. 「常规设置」选择界面语言、翻译方向和风格。内置题库均为自然风格；其他风格按实际匹配结果回退在线。修改后保存。
-5. 默认鼠标拖选文字并松开后翻译，覆盖公开可访问文本选区的网页、文档与阅读区域。拖选中不请求，清除选区后隐藏。只读选区可复制、收藏；可靠的编辑目标可确认后替换。设置里也能改为输入自动或快捷键模式。
-6. 托盘「暂停全部读取」或 `Ctrl+Alt+Space` 暂停；`Ctrl+Alt+T` 请求预览，`Ctrl+Alt+C` 复制，`Ctrl+Alt+Enter` 准备替换并确认。替换保留选区以外或当前行以外的内容。
-
-所有应用模式或将浏览器加入允许列表，都会覆盖该进程公开的文本选区和输入区域，无法按网站区分。密码字段与常见敏感标签会被排除，但无法识别任意敏感内容；处理敏感内容前可随时暂停。
-
-## 中文安装包与独立 EXE
+Windows 运行：`dotnet run --project src/TypeLingo.App -c Release`。Linux 可交叉编译，实际 WPF 和 UIA 验收在 Windows CI 上运行。
 
 ```powershell
 ./scripts/publish-windows.ps1
 python scripts/package-release.py
-# artifacts/TypeLingo-Windows-x64.zip
-# artifacts/TypeLingo-Source.zip
+python scripts/package-promotion.py
 ```
 
-解压 Windows 包后可直接运行 TypeLingo.exe，也可运行「安装到当前用户.cmd」校验并安装到当前用户的程序目录、生成中文快捷方式。安装向导不需要管理员权限，不修改安全策略，也不设置开机自启。安装与卸载说明均为中文。源码注释统一为中文，模型协议字段和多语言界面的实际文案按其用途保留。
+生成 `artifacts/DotKnow-Windows-x64.zip`、`DotKnow-Source.zip` 和 `DotKnow-Promotion.zip`。内部程序集和仓库名称暂保留 TypeLingo，保证资源地址、存储和旧版本兼容。自包含程序未签名，不含自动更新或 MSI。
 
-这是包含 .NET 运行时的 Windows x64 单文件包，不要求目标电脑安装 SDK。首次运行会由 .NET 解出原生组件，包括 SQLite。未启用裁剪，避免破坏 WPF / UIA。调试 PDB 不必随 EXE 分发。此构建未签名，包含中文当前用户安装/卸载脚本，尚无单独的 MSI 安装器或自动更新器。
-
-Linux 也能交叉发布：
-
-```bash
-dotnet publish src/TypeLingo.App -c Release -r win-x64 --self-contained true \
-  -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true \
-  -p:NuGetLockFilePath=packages.win-x64.lock.json -p:RestoreLockedMode=true \
-  -o artifacts/win-x64
-```
-
-普通构建与单文件发布使用不同的依赖锁文件，防止发布过程改变常规开发依赖图。GitHub Actions 已执行 Linux / Windows 构建和核心测试；发布流程在真实 Windows WPF 中验证设置窗口，并提供截图与测试报告。
-
-## 本地收藏与复习
-
-悬浮窗点击星标，主动保存当前原文、译文、语言方向和风格。主页在左侧导航首位；进入「本地收藏与复习」可搜索、复制、删除条目，或开始到期复习。复习先显示原文，点击「显示译文」后选择「再练一次」或「记住了」。前者 10 分钟后重试；后者按 1、3、7、14、30、60 天递增排期，进度跨重启保存。复习无需 API，可离线进行；翻译仍需连接所选 AI 服务。
-
-收藏不等同于缓存：`%LOCALAPPDATA%\TypeLingo\favorites.dpapi` 使用当前 Windows 用户 DPAPI 加密，主动保存原文与译文，清除翻译缓存不会删除收藏。相同内容、方向与风格去重，最多 5000 条；删除需确认。文件无法读取时保留原文件，不自动覆盖。
-
-「常规设置」→「翻译窗口显示时机」可选择「翻译中显示 Loading」或「翻译完成后显示」。后者等待结果就绪才打开悬浮窗，前者在输入稳定和请求阶段显示进度。焦点变化、暂停、成功和失败均结束进度状态；原有 `Overlay.ShowLoading` 配置继续兼容。
-
-品牌资源采用用户选定的 **C 双向对话**图形，以 `src/TypeLingo.App/Assets/typelingo-mark.svg` 为唯一主标，通过 `bash scripts/render-brand.sh` 生成程序 PNG／SVG、多尺寸 ICO 和透明黑白托盘图标（需 Python 3、Inkscape、ImageMagick）。EXE、窗口、首页和宣传图统一使用 C；托盘按系统任务栏主题选择黑标或白标，不受程序自身主题设置影响。
-
-宣传主图、社交方图、配套文案及素材说明见 [宣传素材](docs/promotion/README.md)。海报是产品交互示意，不是 Windows 实机截图。
-
-官网源码位于 [website/](website/README.md)，桌面／手机效果和 Vercel 部署入口见 [官网预览与部署](docs/website/README.md)。页面包含功能介绍、离线词库说明和可直接下载的 Windows 预览版链接。
-
-## 已实现
-
-| 能力 | 实现 |
-| --- | --- |
-| 设置界面 | 官网配色、C 矢量主标、卡片布局、可见键盘焦点、小窗口自适应；四配色 × 浅/深/系统模式 |
-| 应用范围 | 默认覆盖全部可访问应用，可切换回指定进程；密码、敏感区域与排除项始终跳过 |
-| 选区监视 | 后台 MTA 上的 UI Automation 鼠标命中、焦点与选区事件，加 300 ms 轮询；不读取剪贴板或记录全局按键 |
-| 实时请求 | 500 ms 防抖、700 ms 最小间隔、精确去重、取消、单个主请求、序号与配置校验 |
-| AI | 五家真实 API 协议，Claude / Gemini 使用原生接口，其余使用兼容聊天接口；非流式、模型查询与手填、固定短句测试、官方开通入口、超时和有限 429/5xx 重试 |
-| 多语言 | 简体中文 / English / 日本語即时切换并保存；九种翻译方向与翻译风格独立设置 |
-| 离线题库 | 内置 32,159 条六向记录、精确匹配、歧义隔离、默认优先、在线积累、个人增量加密、导入导出与人工编辑 |
-| 缓存 | 有界内存 LRU / TTL；可选 SQLite、默认关闭、DPAPI 加密、容量与过期清理、一键清除 |
-| 悬浮窗 | 紧凑半透明、输入/快捷键/选区触发、自动隐藏、不激活、避让光标与输入框、工作区与 DPI 约束 |
-| 主动替换 | 一次性确认票据，写入前再次检查目标、原文、焦点、授权、配置与 IME；仅使用 ValuePattern.SetValue |
-| 设置与统计 | 语言、风格、限流、防抖、API、缓存、悬浮窗、快捷键、应用允许/排除、授权、请求与缓存统计 |
-| 生命周期 | 托盘运行、暂停、清缓存、退出；释放 UIA 订阅；自身替换后的回声抑制 |
-
-对无法读取、只读或失效的输入框跳过操作。仅有 TextPattern 的可编辑控件可预览，但不写入。选区模式也支持公开 TextPattern 选区的只读文档或输入框，可复制和收藏译文；可编辑控件在能核对全文和精确范围时支持替换。没有剪贴板自动粘贴后备、SendInput、模拟 Enter、自动提交、注入、驱动或提权逻辑。复制按钮仅在主动点击/按快捷键时覆盖剪贴板。
-
-## API 与配置
-
-支持 DeepSeek、OpenAI、Claude（Anthropic）、Gemini（Google）和通义千问（阿里云百炼）。详见 [API 开通与模型选择](docs/API开通与模型选择.md)。模型列表使用真实服务响应，允许手动输入模型 ID；列表权限不足不妨碍使用正确的模型 ID 进行固定短句测试。
-
-每个服务有固定的官方开通入口，不会根据自定义 API 地址构造购买链接。密钥按服务商和 API 基址隔离。Claude 使用原生 Messages API，Gemini 使用原生 generateContent API，其他三个使用 Chat Completions；所有服务保留 HTTPS 校验并禁止自动跟随重定向。密钥不会放入 URL 或日志。
-
-本次环境未提供任何真实 API Key，五家服务均未进行真实账户付费调用。默认模型 ID 仅作初始示例，需以账户实际可用模型为准。生产代码调用真实接口，自动测试使用隔离 HTTP handler 验证序列化、请求头、响应与错误分支。
-
-设置保存在 `%LOCALAPPDATA%\TypeLingo`：
-
-- `settings.json`：不含 API Key 的普通配置；示例见 [docs/settings.example.json](docs/settings.example.json)。通常通过 UI 修改。
-- `api-key.<配置哈希>.dpapi`：按服务商与 API 基址分别保存的当前 Windows 用户 DPAPI 密钥。旧版 `api-key.dpapi` 只兼容原来的 DeepSeek 官方基址。迁移电脑/用户后应重新填写，不能把加密文件当成可移植凭证。
-- `translations.db`：主动开启磁盘缓存后创建；键为 SHA-256，译文 JSON 使用 DPAPI 加密，不保存原文。关闭缓存不会删除旧数据，需点击「清除全部缓存」。
-
-缓存键保留原文的空格、换行、标点，包含 Provider、Model、源语言、目标语言、风格、PromptVersion、原文及 Base URL。切换模型/语言/服务地址不会复用错误译文。本地缓存命中时完全不请求 API，与 DeepSeek 服务端上下文缓存独立。
-
-不写入原文、译文、API Key 或服务错误响应体日志。当前统计仅在进程内保留，退出清除内存；托盘暂停是本次会话的状态，跨重启需要在设置中关闭实时翻译并保存。
-
-## 设置界面
-
-左侧分为主页、常规设置、AI 服务与模型、翻译缓存、外观与悬浮窗、快捷键、隐私与应用。顶部可搜索设置名称，例如「密钥」「字体」「缓存」，支持当前界面语言。右侧使用分隔行和浅灰控件，底部保存按钮始终可见。常规页提供浅色、深色和跟随系统三张主题卡片，可即时预览。设置、托盘、EXE 和悬浮窗均使用新的矢量图标与品牌图标。
-
-悬浮窗没有标题、语言标签和常驻状态栏。短译文自动收窄，长译文限制高度并滚动；默认背景不透明度 0.88、字体 14、最大宽度 320、8 秒后隐藏，鼠标悬停时恢复实色并暂停隐藏。文字不随背景变淡。可在「外观与悬浮窗」调整，隐藏秒数为 0 时保持显示。优先避开输入框，并尝试光标/选区四周及屏幕边缘；满屏内容无法保证零遮挡，可使用快捷键模式按需查看。
-
-[查看实际 Windows 设置界面](https://github.com/Linkyyy/TypeLingo/releases/download/v0.3.0/settings-general.png) · [紧凑悬浮窗](https://github.com/Linkyyy/TypeLingo/releases/download/v0.3.0/overlay-compact.png) · [查看所有应用设置](https://github.com/Linkyyy/TypeLingo/releases/download/v0.3.0/settings-privacy.png)
-
-## 测试与手工验收
-
-```powershell
-dotnet test tests/TypeLingo.Tests -c Release --logger trx
-dotnet run --project tools/TypeLingo.UiSmoke -c Release -- artifacts/ui-smoke
-dotnet run --project tools/TypeLingo.InputLab
-```
-
-UiSmoke 在真实 Windows WPF 中检查设置保存、主题切换、悬浮窗尺寸与背景透明度，并生成 PNG。另启动独立的输入验收进程，通过真实跨进程 UIA 检查快捷键、只读选区、清除选区与密码跳过。仅访问测试窗口，不调用付费 API。
-
-InputLab 提供 A/B 多行输入、密码与只读控件，用真实 UIA 路径验收；它不是翻译模拟器。默认所有应用模式下无需单独添加 InputLab；也可关闭所有应用模式并只允许 **`TypeLingo.InputLab`**，然后，按 [Windows 验收清单](docs/ACCEPTANCE.md) 执行 A–H。自动测试包含防抖、缓存、取消、过时响应、置换确认、并发编辑、隐私、HTTP 错误与屏幕布局；[验证记录](docs/VALIDATION.md) 区分已执行与未执行项目。
-
-## 云开发
-
-当前云环境为 Linux，WPF/UIA 不能运行；可运行 Core / Infrastructure 测试并交叉构建 Windows 产物。
-
-```bash
-bash scripts/setup-cloud.sh
-source scripts/dotnet-env.sh
-dotnet test tests/TypeLingo.Tests -c Release --no-build
-```
-
-脚本使用 `/workspace/.dotnet` 和工作区 NuGet 缓存，通过微软官方 SHA-512 验证 SDK。`.NET 8` 的命名互斥锁还需要操作系统用户的 `/home/agent/.dotnet` 可写；受限任务应通过正常权限机制授予此目录访问，而不更改 HOME、证书或代理。每个任务已隔离，使用现有 checkout，不需要创建 Git worktree。
-
-云网络需软件包预设、`builds.dotnet.microsoft.com`、`api.nuget.org` 等下载域名。DeepSeek、OpenAI、Anthropic、Gemini 与通义千问所需 API 域名已加入环境配置草稿，需在环境设置中保存并发布后才可用于新配置。桌面密钥在 Windows 设置界面输入，不写到仓库，也不需要在聊天里发送。
-
-## 新版 Teams 与 WebView2 输入
-
-新版 Teams 使用独立的 WebView2 进程。现在按当前前台窗口及其真实 HWND 子树验证输入归属，允许宿主已获授权时读取其嵌入输入，无需全局允许 `msedgewebview2`。宿主或渲染进程的排除项、密码框、敏感控件、隐私授权和总暂停仍优先。
-
-仅支持 TextPattern 的可编辑输入也能在未选中文本时预览当前行。无法验证 ValuePattern 安全写入的富文本提供复制与收藏。建议保持「输入后自动出现」；若使用进程允许列表，新版 Teams 的宿主名称通常是 `ms-teams`。实际 Teams 版本与企业策略须在用户机器验收；本仓库以独立 WebView2 富文本、真实 UIA 和悬浮窗覆盖相同底层结构，不使用 Teams 登录或付费 API。
-
-## 架构与兼容性
-
-`src/TypeLingo.Core` 保存独立于 Windows 的协调、快照、隐私、定位与替换协议；`Infrastructure` 实现 HTTP、缓存及设置；`App` 实现 WPF、托盘、UIA、IMM、DPAPI 与热键。详见 [架构说明](docs/ARCHITECTURE.md)。
-
-UIA 并不覆盖所有 Chrome/Edge、Electron、聊天和富文本控件。只操作同权限、当前焦点的可编辑控件；不尝试突破其他程序的安全边界。多窗口、混合 DPI、现代记事本与具体 IME 需要逐项在真实 Windows 上验收。
-
-传统 IMM 组合输入可检测；现代 TSF/虚拟控件不保证公开组合状态。检测不到可靠组合状态时，中/日/韩输入布局下的非原生控件只预览/复制，不进行替换；原生 Edit/RichEdit 也必须取得可验证的 IMM 状态。预览依靠稳定停顿，个别 TSF 控件仍可能短暂预览未提交文字。UIA 无法提供跨进程原子比较并写入，因此仍有极小并发竞态；代码在 SetValue 前尽量贴近写入点复检，不能宣称对任意第三方控件具备事务保证。不可验证时请使用复制。
-
-尚未实现 Phase 3 的纠错和离线翻译模型等功能，也未完成所有 Phase 2 的跨应用兼容性认证与动画。扩展 Provider 可实现 `ITranslationProvider`，不用更改主要协调逻辑。
+官网源码在 [website](website/README.md)，支持 Vercel 部署，下载链接由版本清单统一生成，禁用 JavaScript 也可下载。当前环境尚未连接 Vercel 账户，部署状态见网站说明。品牌定位、推广文案和素材见 [宣传方案](docs/promotion/campaign.zh-CN.md)。

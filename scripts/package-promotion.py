@@ -12,13 +12,13 @@ for name in required:
         raise RuntimeError(f"缺少宣传素材：{name}")
 output = root / "artifacts"
 output.mkdir(exist_ok=True)
-archive = output / "TypeLingo-Promotion.zip"
+archive = output / "DotKnow-Promotion.zip"
 with zipfile.ZipFile(archive, "w", zipfile.ZIP_DEFLATED) as package:
-    for name in required:
-        package.write(source / name, "TypeLingo-Promotion/" + name)
+    for name in sorted(p.name for p in source.iterdir() if p.is_file()):
+        package.write(source / name, "DotKnow-Promotion/" + name)
 with zipfile.ZipFile(archive) as package:
     if package.testzip() is not None:
         raise RuntimeError("宣传素材压缩包校验失败")
 digest = hashlib.sha256(archive.read_bytes()).hexdigest()
-(output / "TypeLingo-Promotion.sha256").write_text(f"{digest}  {archive.name}\n", encoding="utf-8")
+(output / "DotKnow-Promotion.sha256").write_text(f"{digest}  {archive.name}\n", encoding="utf-8")
 print(f"已打包并校验 {archive.name}（{archive.stat().st_size:,} 字节）")
