@@ -4,6 +4,7 @@ using System.IO.Pipes;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
+using System.Windows.Input;
 using System.Windows.Threading;
 using TypeLingo.App.Windows;
 using TypeLingo.Core;
@@ -24,6 +25,11 @@ internal static class InputFixture
             Height = 100, Margin = new Thickness(16), IsToolBarVisible = false, Focusable = false };
         var panel = new StackPanel(); panel.Children.Add(input); panel.Children.Add(password); panel.Children.Add(rich); panel.Children.Add(reading);
         var window = new Window { Title = "伴译选区验收窗口", Width = 680, Height = 620, Content = panel, Topmost = true };
+        var mouseEvents = new List<string>();
+        reading.PreviewMouseDown += (_, e) => mouseEvents.Add("down:" + e.GetPosition(reading));
+        reading.PreviewMouseMove += (_, e) => { if (e.LeftButton == MouseButtonState.Pressed) mouseEvents.Add("move:" + e.GetPosition(reading)); };
+        reading.PreviewMouseUp += (_, e) => mouseEvents.Add("up:" + e.GetPosition(reading));
+        FrameworkElement ReadingScope() => (reading.Template.FindName("PART_ContentHost", reading) as ScrollViewer)?.Content as FrameworkElement ?? reading;
         window.Loaded += async (_, _) =>
         {
             try
@@ -46,7 +52,7 @@ internal static class InputFixture
                         reading.Focusable = false;
                         reading.Selection.Select(readingRun.ContentStart, readingRun.ContentEnd); input.Focus();
                         var rect = readingRun.ContentStart.GetCharacterRect(LogicalDirection.Forward);
-                        PointerFixture.Move(reading.PointToScreen(new Point(rect.Left + 20, rect.Top + rect.Height / 2)));
+                        PointerFixture.Move(ReadingScope().PointToScreen(new Point(rect.Left + 20, rect.Top + rect.Height / 2)));
                     }
                     else if (command == "reading-clear") { reading.Selection.Select(readingRun.ContentStart, readingRun.ContentStart); input.Focus(); }
                     else if (command == "reading-away") PointerFixture.Move(window.PointToScreen(new Point(window.ActualWidth - 12, window.ActualHeight - 45)));
@@ -56,7 +62,17 @@ internal static class InputFixture
                         // WPF 自身要求阅读器可聚焦才能处理真实鼠标拖选；上面的用例单独验证无键盘焦点的读取。
                         reading.Focusable = true;
                         var rect = command == "reading-start" ? readingRun.ContentStart.GetCharacterRect(LogicalDirection.Forward) : readingRun.ContentEnd.GetCharacterRect(LogicalDirection.Backward);
-                        PointerFixture.Move(reading.PointToScreen(new Point(command == "reading-start" ? rect.Left + 1 : rect.Right + 2, rect.Top + rect.Height / 2)));
+                        PointerFixture.Move(ReadingScope().PointToScreen(new Point(command == "reading-start" ? rect.Left + 1 : rect.Right + 2, rect.Top + rect.Height / 2)));
+                    }
+                    else if (command == "reading-state")
+                    {
+                        await writer.WriteLineAsync(System.Text.Json.JsonSerializer.Serialize(new {
+                            Text = reading.Selection.Text, Focus = Keyboard.FocusedElement?.GetType().Name, reading.IsKeyboardFocusWithin,
+                            reading.Focusable, window.IsActive, LeftButton = Mouse.LeftButton.ToString(), Events = mouseEvents,
+                            Start = readingRun.ContentStart.GetCharacterRect(LogicalDirection.Forward).ToString(),
+                            End = readingRun.ContentEnd.GetCharacterRect(LogicalDirection.Backward).ToString(),
+                            Scope = ReadingScope().GetType().Name }));
+                        continue;
                     }
                     else if (command == "writable-selection") { input.IsReadOnly = false; input.Text = "prefix selected phrase suffix"; input.Focus(); input.Select(7, 15); }
                     else if (command == "multiline") { input.IsReadOnly = false; input.Text = "first line\r\ncurrent line\r\nlast line"; input.Focus(); input.Select(15, 0); }
@@ -124,8 +140,10 @@ internal static class InputFixture
                 return last;
             }
             var dragged = WaitWithDispatcher(AfterRelease());
+            writer.WriteLine("reading-state");
+            var dragState = reader.ReadLineAsync().WaitAsync(TimeSpan.FromSeconds(10)).GetAwaiter().GetResult();
             check(dragged is { IsSelection: true, CanWrite: false } && dragged.Text.TrimEnd('\r', '\n') == "selected reading phrase",
-                "真实鼠标拖选并松开后捕获只读阅读区的完整选中文字：" + System.Text.Json.JsonSerializer.Serialize(dragged));
+                "真实鼠标拖选并松开后捕获只读阅读区的完整选中文字：" + System.Text.Json.JsonSerializer.Serialize(dragged) + "; fixture=" + dragState);
             Volatile.Write(ref config, config with { ExcludedApplications = [process.ProcessName] });
             check(Capture() == null, "阅读选区继续遵守进程排除项");
             Volatile.Write(ref config, config with { ExcludedApplications = [] });
