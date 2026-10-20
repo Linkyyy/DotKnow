@@ -95,6 +95,7 @@ internal static class Program
                 Check(exeIcon != null && exeIcon.Width >= 16, "Windows 可从自包含程序提取已嵌入的 C 图标");
             }
             Check(Find<RadioButton>("SystemThemeRadio").IsChecked == true, "默认主题可跟随 Windows 系统");
+            Check((string)Find<ComboBox>("TriggerInput").SelectedValue == "selection", "默认以鼠标划词触发，输入自动预览保留为可选项");
             Find<RadioButton>("DarkThemeRadio").IsChecked = true; Pump(window);
             Check(((SolidColorBrush)app.Resources["CanvasBrush"]).Color.R < 100 && ((SolidColorBrush)window.Foreground).Color.R > 240, "深色主题卡片即时切换实际资源");
             Capture(window, Path.Combine(output, "settings-dark.png"));

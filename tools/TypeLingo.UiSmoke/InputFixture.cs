@@ -19,8 +19,11 @@ internal static class InputFixture
         var input = new TextBox { Text = "prefix selected phrase suffix", AcceptsReturn = true, Height = 110, Margin = new Thickness(16) };
         var password = new PasswordBox { Password = "fixture-only-password", Margin = new Thickness(16) };
         var rich = new RichTextBox { Document = new FlowDocument(new Paragraph(new Run("rich editor current line"))), Height = 90, Margin = new Thickness(16) };
-        var panel = new StackPanel(); panel.Children.Add(input); panel.Children.Add(password); panel.Children.Add(rich);
-        var window = new Window { Title = "伴译选区验收窗口", Width = 640, Height = 480, Content = panel, Topmost = true };
+        var readingRun = new Run("selected reading phrase");
+        var reading = new FlowDocumentScrollViewer { Document = new FlowDocument(new Paragraph(readingRun)) { PagePadding = new Thickness(8), FontSize = 18 },
+            Height = 100, Margin = new Thickness(16), IsToolBarVisible = false, Focusable = false };
+        var panel = new StackPanel(); panel.Children.Add(input); panel.Children.Add(password); panel.Children.Add(rich); panel.Children.Add(reading);
+        var window = new Window { Title = "伴译选区验收窗口", Width = 680, Height = 620, Content = panel, Topmost = true };
         window.Loaded += async (_, _) =>
         {
             try
@@ -37,10 +40,25 @@ internal static class InputFixture
                     else if (command == "clear") { input.Focus(); input.Select(0, 0); }
                     else if (command == "password") password.Focus();
                     else if (command == "rich") { rich.Focus(); rich.CaretPosition = rich.Document.ContentStart.GetNextInsertionPosition(LogicalDirection.Forward)!; }
+                    else if (command == "reading")
+                    {
+                        reading.Selection.Select(readingRun.ContentStart, readingRun.ContentEnd); input.Focus();
+                        var rect = readingRun.ContentStart.GetCharacterRect(LogicalDirection.Forward);
+                        PointerFixture.Move(reading.PointToScreen(new Point(rect.Left + 20, rect.Top + rect.Height / 2)));
+                    }
+                    else if (command == "reading-clear") { reading.Selection.Select(readingRun.ContentStart, readingRun.ContentStart); input.Focus(); }
+                    else if (command == "reading-away") PointerFixture.Move(window.PointToScreen(new Point(window.ActualWidth - 12, window.ActualHeight - 45)));
+                    else if (command == "reading-start" || command == "reading-end")
+                    {
+                        var rect = command == "reading-start" ? readingRun.ContentStart.GetCharacterRect(LogicalDirection.Forward) : readingRun.ContentEnd.GetCharacterRect(LogicalDirection.Backward);
+                        PointerFixture.Move(reading.PointToScreen(new Point(rect.Left + (command == "reading-start" ? 1 : 5), rect.Top + rect.Height / 2)));
+                    }
                     else if (command == "writable-selection") { input.IsReadOnly = false; input.Text = "prefix selected phrase suffix"; input.Focus(); input.Select(7, 15); }
                     else if (command == "multiline") { input.IsReadOnly = false; input.Text = "first line\r\ncurrent line\r\nlast line"; input.Focus(); input.Select(15, 0); }
                     else if (command == "value") { await writer.WriteLineAsync(Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(input.Text))); continue; }
                     else if (command == "stop") { await writer.WriteLineAsync("ok"); app.Shutdown(); return; }
+                    if (command is "edit" or "select" or "clear" or "writable-selection" or "multiline")
+                        PointerFixture.Move(input.PointToScreen(new Point(30, 20)));
                     await Dispatcher.Yield(DispatcherPriority.ContextIdle);
                     await writer.WriteLineAsync("ok");
                 }
@@ -52,6 +70,7 @@ internal static class InputFixture
 
     public static void Verify(Action<bool, string> check)
     {
+        using var pointer = new PointerFixture();
         var pipeName = "TypeLingo-UIA-" + Guid.NewGuid().ToString("N");
         using var pipe = new NamedPipeServerStream(pipeName, PipeDirection.InOut, 1, PipeTransmissionMode.Byte, PipeOptions.Asynchronous);
         var start = new ProcessStartInfo(Environment.ProcessPath!) { UseShellExecute = false, CreateNoWindow = true };
@@ -80,6 +99,25 @@ internal static class InputFixture
             Command("select"); var selected = Capture();
             check(selected?.Text == "selected phrase" && selected.IsSelection && !selected.CanWrite, "只读输入框的真实选区可翻译，且不会替换正文");
             Command("clear"); check(Capture() == null, "清除选区后不读取或翻译整个文档");
+            Command("reading"); var reading = Capture();
+            check(reading?.Text == "selected reading phrase" && reading.IsSelection && !reading.CanWrite && reading.EditRange == null,
+                "非输入框阅读选区可从鼠标位置读取，不依赖键盘焦点，也不读取整篇正文");
+            Command("reading-away");
+            check(Capture()?.SameContent(reading) == true, "鼠标离开阅读文字后仍复核原选区，允许操作悬浮窗");
+            Command("reading-clear"); check(Capture() == null, "清除阅读选区后立即停止预览，不回退到全文或输入行");
+            Command("reading-start"); pointer.Press(); Command("reading-end");
+            check(Capture() == null, "鼠标按住拖选时不发送中间选区"); pointer.Release();
+            async Task<InputSnapshot?> AfterRelease()
+            {
+                for (var attempt = 0; attempt < 20; attempt++)
+                { var value = await observer.CaptureAsync(CancellationToken.None); if (value != null) return value; await Task.Delay(100); }
+                return null;
+            }
+            check(WaitWithDispatcher(AfterRelease()) is { IsSelection: true, CanWrite: false, Text: "selected reading phrase" },
+                "真实鼠标拖选并松开后捕获只读阅读区的完整选中文字");
+            Volatile.Write(ref config, config with { ExcludedApplications = [process.ProcessName] });
+            check(Capture() == null, "阅读选区继续遵守进程排除项");
+            Volatile.Write(ref config, config with { ExcludedApplications = [] });
             Command("writable-selection"); selected = Capture();
             check(selected is { IsSelection: true, CanWrite: true } && selected.EditRange?.Start == 7, "可编辑选区具有精确写入范围");
             check(WaitWithDispatcher(observer.TryReplaceAsync(selected!, "译文", CancellationToken.None)), "真实 UIA 可替换当前选区");

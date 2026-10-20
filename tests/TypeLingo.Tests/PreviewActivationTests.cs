@@ -67,7 +67,33 @@ public sealed class PreviewActivationTests
             File.WriteAllText(Path.Combine(directory, "settings.json"), "{\"Overlay\":{\"DarkMode\":" + (dark ? "true" : "false") + "}}");
             var service = new SettingsService(directory, new TestProtector()); service.Load();
             Assert.Null(service.LoadWarning); Assert.Equal(dark ? "dark" : "light", service.Current.Overlay.Theme);
-            Assert.Equal("typing", service.Current.Overlay.TriggerMode); Assert.Equal("Ctrl+Alt+T", service.Current.Hotkeys.Preview);
+            Assert.Equal("selection", service.Current.Overlay.TriggerMode); Assert.Equal("Ctrl+Alt+T", service.Current.Hotkeys.Preview);
+        }
+        finally { Directory.Delete(directory, true); }
+    }
+    [Fact] public async Task DefaultSelectionMode_DoesNotTranslateUnselectedTyping_AndClearingCancelsPreview()
+    {
+        var config = new AppSettings(); Assert.Equal("selection", config.Overlay.TriggerMode);
+        var gate = new PreviewActivation(); using var f = new CoordinatorTests.Fixture();
+        await f.Coordinator.ObserveAsync(gate.Filter(Input(), config.Overlay.TriggerMode));
+        Assert.Equal(0, f.Provider.Calls);
+        await f.Coordinator.ObserveAsync(gate.Filter(Input() with { IsSelection = true, CanWrite = false }, config.Overlay.TriggerMode));
+        Assert.Equal(1, f.Provider.Calls); Assert.NotNull(f.Coordinator.CurrentPreview);
+        await f.Coordinator.ObserveAsync(gate.Filter(Input(), config.Overlay.TriggerMode));
+        Assert.Null(f.Coordinator.CurrentPreview); Assert.Equal(1, f.Provider.Calls);
+    }
+    [Theory][InlineData("typing", "selection")][InlineData("selection", "selection")][InlineData("hotkey", "hotkey")]
+    public void LegacyTrigger_MigratesOnce_AndPreservesSubsequentUserChoice(string oldMode, string expected)
+    {
+        var directory = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString()); Directory.CreateDirectory(directory);
+        try
+        {
+            File.WriteAllText(Path.Combine(directory, "settings.json"), "{\"Overlay\":{\"TriggerMode\":\"" + oldMode + "\"}}");
+            var service = new SettingsService(directory, new TestProtector()); service.Load();
+            Assert.Null(service.LoadWarning); Assert.Equal(expected, service.Current.Overlay.TriggerMode);
+            service.Save(service.Current with { Overlay = service.Current.Overlay with { TriggerMode = "typing" } });
+            var reloaded = new SettingsService(directory, new TestProtector()); reloaded.Load();
+            Assert.Null(reloaded.LoadWarning); Assert.Equal("typing", reloaded.Current.Overlay.TriggerMode);
         }
         finally { Directory.Delete(directory, true); }
     }

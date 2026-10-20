@@ -81,3 +81,10 @@ PreviewActivation 将输入、快捷键和选区三种触发分开。快捷键�
 InputSnapshot 记录选区标记及输入区域边界；定位器优先避免光标/选区重叠，再比较输入区遮挡。背景透明度独立于文字；短译文自动尺寸、长译文滚动，DispatcherTimer 管理自动隐藏。设置、悬浮窗、EXE 和托盘使用统一自有矢量与 ICO 资源。
 
 UiSmoke 用布局宿主加载实际资源和窗口，不启动产品托盘；独立测试进程提供真实输入/只读选区/密码框，InputObserver 走生产 UIA 路径。
+
+
+## 默认阅读选区
+
+默认 TriggerMode 为 selection。InputObserver 先验证前台宿主，再对鼠标命中元素的 RawView 祖先路径查找 TextPattern 选区；不依赖焦点在阅读区域、不进行子树全文扫描。鼠标主键按住时暂停捕获，自有不激活悬浮窗的操作除外。已捕获的选区只在同一前台窗口和键盘焦点保持时复用，并在每次轮询中重新读取。只读选区不读取 DocumentRange 全文。ValuePattern 范围映射和写入仅限实际键盘焦点所在的编辑目标；任何焦点、内容或配置变化均使确认失效。
+
+Overlay.TriggerModeVersion 标记首次默认模式迁移：旧 typing 转为 selection，hotkey 保留；后续设置保存包含版本并保留用户的 typing 选择。

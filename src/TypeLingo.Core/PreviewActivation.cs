@@ -4,7 +4,7 @@ namespace TypeLingo.Core;
 public sealed class PreviewActivation
 {
     private InputSnapshot? requested;
-    private string mode = "typing";
+    private string mode = "selection";
     public bool ShouldCapture(string triggerMode)
     {
         if (mode != triggerMode) { Reset(); mode = triggerMode; }

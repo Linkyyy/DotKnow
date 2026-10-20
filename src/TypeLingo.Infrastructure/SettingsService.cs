@@ -33,6 +33,8 @@ public sealed class SettingsService(string directory, IDataProtector protector)
             using var document = JsonDocument.Parse(text);
             if (document.RootElement.TryGetProperty("Overlay", out var overlay) && overlay.ValueKind == JsonValueKind.Object && !overlay.TryGetProperty("Theme", out _))
                 candidate = candidate with { Overlay = candidate.Overlay with { Theme = candidate.Overlay.DarkMode ? "dark" : "light" } };
+            if (overlay.ValueKind == JsonValueKind.Object && !overlay.TryGetProperty("TriggerModeVersion", out _) && candidate.Overlay.TriggerMode == "typing")
+                candidate = candidate with { Overlay = candidate.Overlay with { TriggerMode = "selection" } };
             candidate.Validate(); Current = candidate;
         }
         catch (Exception e) when (e is JsonException or ArgumentException or IOException or UnauthorizedAccessException or NullReferenceException)

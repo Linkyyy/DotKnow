@@ -1318,5 +1318,57 @@
   "翻译完成后显示": {
     "en-US": "Show when translation is ready",
     "ja-JP": "翻訳完了後に表示"
+  },
+  "选中文字，即刻翻译": {
+    "en-US": "Select text to translate",
+    "ja-JP": "テキストを選んで翻訳"
+  },
+  "默认鼠标拖选并松开后翻译，支持网页、文档和应用阅读文本": {
+    "en-US": "By default, release a text selection to translate in webpages, documents and apps",
+    "ja-JP": "既定ではマウスでテキストを選択し、離すと翻訳。Web ページ、文書、アプリの閲覧に対応"
+  },
+  "选区稳定或输入停顿达到此时间后请求翻译": {
+    "en-US": "Translate after the selection or typed text settles for this duration",
+    "ja-JP": "選択範囲または入力がこの時間変化しなければ翻訳"
+  },
+  "优先放置在选中文字旁，空间不足时自动调整": {
+    "en-US": "Place beside the selected text; adjust when space is limited",
+    "ja-JP": "選択したテキストの近くに表示。空きスペースに応じて調整"
+  },
+  "阅读选区可预览、复制与收藏；可安全编辑的输入框还支持确认替换。": {
+    "en-US": "Preview, copy and save reading selections; supported editors also allow confirmed replacement.",
+    "ja-JP": "閲覧中の選択範囲は翻訳・コピー・保存に対応。安全に編集できる入力欄では確認後に置換できます。"
+  },
+  "默认 Ctrl+Alt+T；划词模式仅翻译选区，其他模式可翻译输入当前行": {
+    "en-US": "Default Ctrl+Alt+T; selection mode requires selected text; other modes can translate the current input line",
+    "ja-JP": "既定は Ctrl+Alt+T。選択モードは選択範囲のみ、他のモードでは入力中の行も翻訳"
+  },
+  "启用前同意将所选文字发送给所选 AI；输入模式发送当前行": {
+    "en-US": "Consent to send selected text to your AI service; typing mode sends the current line",
+    "ja-JP": "選択したテキストを AI に送信することに同意。入力モードでは現在の行を送信"
+  },
+  "我同意上传所选文字或输入当前行用于翻译": {
+    "en-US": "I agree to send selected text or the current input line for translation",
+    "ja-JP": "選択したテキストまたは入力中の行を翻訳のために送信することに同意します"
+  },
+  "密码框、敏感控件和排除列表始终跳过。支持通过系统无障碍接口公开选区的应用；未公开文本的画面无法划词翻译。": {
+    "en-US": "Password fields, sensitive controls and excluded apps are skipped. Apps must expose their selection through Windows accessibility; inaccessible text cannot be translated by selection.",
+    "ja-JP": "パスワード欄、機密コントロール、除外アプリは読み取りません。Windows のアクセシビリティ機能で選択範囲を公開するアプリに対応します。"
+  },
+  "默认仅发送所选文字，不自动翻译整页。输入模式发送当前行；核对替换范围时会在本机临时读取编辑框全文。可暂停或限定应用。": {
+    "en-US": "By default, only selected text is sent, never the whole page. Typing mode sends the current line; full editor text may be read locally to verify replacement ranges. Pause or restrict apps at any time.",
+    "ja-JP": "既定では選択したテキストのみを送信し、ページ全体は自動翻訳しません。入力モードでは現在の行を送信。置換範囲の確認時は入力欄全体を端末内で一時的に読み取ります。"
+  },
+  "鼠标选中后翻译（默认）": {
+    "en-US": "Translate selected text (default)",
+    "ja-JP": "マウス選択後に翻訳（既定）"
+  },
+  "当前控件不支持安全读取选区，请尝试其他文本。": {
+    "en-US": "This control does not expose a readable selection. Try other text.",
+    "ja-JP": "このコントロールの選択範囲は読み取れません。他のテキストをお試しください。"
+  },
+  "选择语言、翻译方向与划词偏好": {
+    "en-US": "Choose languages, translation direction and text selection preferences",
+    "ja-JP": "言語、翻訳方向、選択範囲の翻訳を設定"
   }
 }

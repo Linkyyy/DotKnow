@@ -135,7 +135,7 @@ public partial class SettingsWindow : Window
     private Choice Option(string code, string label) => new(code, UiText.Get(label));
     private void PopulateChoices(string source, string target, string mode, string position, string provider, string trigger, bool showLoading)
     {
-        TriggerInput.ItemsSource = new[] { Option("typing", "输入后自动出现"), Option("hotkey", "按快捷键出现"), Option("selection", "选中文字后出现") };
+        TriggerInput.ItemsSource = new[] { Option("selection", "鼠标选中后翻译（默认）"), Option("hotkey", "按快捷键出现"), Option("typing", "输入后自动出现") };
         TriggerInput.SelectedValue = trigger;
         PopupDisplayInput.ItemsSource = new[] { Option("loading", "翻译中显示 Loading"), Option("result", "翻译完成后显示") };
         PopupDisplayInput.SelectedValue = showLoading ? "loading" : "result";

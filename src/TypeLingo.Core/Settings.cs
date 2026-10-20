@@ -87,7 +87,9 @@ public sealed record OverlaySettings
     public double Opacity { get; init; } = .88;
     public double MaxWidth { get; init; } = 320;
     public string Position { get; init; } = "above";
-    public string TriggerMode { get; init; } = "typing";
+    public string TriggerMode { get; init; } = "selection";
+    // 首次升级将旧版输入自动预览切换为划词；之后保留用户重新选择的模式。
+    public int TriggerModeVersion { get; init; } = 1;
     public int AutoHideSeconds { get; init; } = 8;
 }
 public sealed record HotkeySettings

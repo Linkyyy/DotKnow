@@ -34,9 +34,10 @@ internal static class WebViewFixture
                 web.CoreWebView2.NavigationCompleted += (_, e) => navigated.TrySetResult(e.IsSuccess);
                 web.NavigateToString("""
                     <!doctype html><html><head><style>body{font:18px sans-serif;padding:20px}#compose{border:1px solid #888;padding:16px;min-height:120px;white-space:pre-wrap}input{margin-top:20px}</style></head>
-                    <body><p>Transcript outside composer: must not be translated.</p><div id="compose" role="textbox" aria-label="Message composer" aria-multiline="true" contenteditable="true"></div><input id="password" type="password" aria-label="Password" value="fixture-only"/>
+                    <body><p id="reading">Selected webpage reading text.</p><button id="toolbar">Reading toolbar</button><div id="compose" role="textbox" aria-label="Message composer" aria-multiline="true" contenteditable="true"></div><input id="password" type="password" aria-label="Password" value="fixture-only"/>
                     <script>const editor=document.getElementById('compose');editor.textContent='first line\nTeams-style input\nlast line';
-                    window.focusEditor=(start=14,end=start)=>{editor.focus();const range=document.createRange();range.setStart(editor.firstChild,start);range.setEnd(editor.firstChild,end);const s=window.getSelection();s.removeAllRanges();s.addRange(range);};</script></body></html>
+                    window.focusEditor=(start=14,end=start)=>{editor.focus();const range=document.createRange();range.setStart(editor.firstChild,start);range.setEnd(editor.firstChild,end);const s=window.getSelection();s.removeAllRanges();s.addRange(range);};
+                    window.selectReading=()=>{document.getElementById('toolbar').focus();const r=document.createRange();r.selectNodeContents(document.getElementById('reading'));const s=window.getSelection();s.removeAllRanges();s.addRange(r);};</script></body></html>
                     """);
                 if (!await navigated.Task.WaitAsync(TimeSpan.FromSeconds(20))) throw new InvalidOperationException("WebView2 navigation failed");
                 using var pipe = new NamedPipeClientStream(".", pipeName, PipeDirection.InOut, PipeOptions.Asynchronous);
@@ -54,6 +55,14 @@ internal static class WebViewFixture
                     else if (command == "edit") await Focus("editor.textContent='changed embedded input';focusEditor(22)");
                     else if (command == "password") await Focus("document.getElementById('password').focus()");
                     else if (command == "focus") await Focus("focusEditor()");
+                    else if (command == "reading")
+                    {
+                        await Focus("selectReading()");
+                        var rect = JsonDocument.Parse(await web.ExecuteScriptAsync("(()=>{const r=document.getElementById('reading').getBoundingClientRect();return {x:r.x+40,y:r.y+r.height/2}})()"));
+                        using (rect) PointerFixture.Move(web.PointToScreen(new Point(rect.RootElement.GetProperty("x").GetDouble(), rect.RootElement.GetProperty("y").GetDouble())));
+                    }
+                    else if (command == "reading-clear") await Focus("window.getSelection().removeAllRanges();document.getElementById('toolbar').focus()");
+                    else if (command == "reading-away") PointerFixture.Move(window.PointToScreen(new Point(window.ActualWidth - 12, window.ActualHeight - 45)));
                     else if (command == "stop") { await writer.WriteLineAsync("ok"); app.Shutdown(); return; }
                     await writer.WriteLineAsync("ok");
                 }
@@ -68,6 +77,7 @@ internal static class WebViewFixture
 
     public static void Verify(Action<bool, string> check, Action<Window, string> capture, string output)
     {
+        using var pointer = new PointerFixture();
         var pipeName = "TypeLingo-WebView2-" + Guid.NewGuid().ToString("N");
         using var pipe = new NamedPipeServerStream(pipeName, PipeDirection.InOut, 1, PipeTransmissionMode.Byte, PipeOptions.Asynchronous);
         var start = new ProcessStartInfo(Environment.ProcessPath!) { UseShellExecute = false, CreateNoWindow = true, RedirectStandardError = true };
@@ -87,6 +97,7 @@ internal static class WebViewFixture
                 if (InputFixture.WaitWithDispatcher(reader.ReadLineAsync()) != "ok") throw new InvalidOperationException("WebView2 fixture did not respond");
             }
             var config = new AppSettings { PrivacyConsent = true, MonitorAllApplications = false, AllowedApplications = [process.ProcessName],
+                Overlay = new() { TriggerMode = "typing" },
                 Translation = new() { DebounceMilliseconds = 100, MinimumRequestIntervalMilliseconds = 100 } };
             using var observer = new InputObserver(() => Volatile.Read(ref config));
             var automatic = new TaskCompletionSource<InputSnapshot>(TaskCreationOptions.RunContinuationsAsynchronously);
@@ -109,6 +120,32 @@ internal static class WebViewFixture
             overlay.Display(coordinator.CurrentPreview);
             check(overlay.IsVisible && ((TextBlock)overlay.FindName("TranslationText")).Text == "嵌入输入框测试译文", "真实 WebView2 输入可进入翻译预览并显示悬浮窗");
             capture(overlay, "webview2-preview.png"); overlay.Dismiss();
+            Volatile.Write(ref config, config with { Overlay = config.Overlay with { TriggerMode = "selection" } });
+            Command("focus");
+            check(InputFixture.WaitWithDispatcher(observer.CaptureAsync(CancellationToken.None)) == null, "默认划词模式不自动翻译 WebView2 输入行");
+            var selectedReading = new TaskCompletionSource<InputSnapshot>(TaskCreationOptions.RunContinuationsAsynchronously);
+            observer.SnapshotChanged += value => { if (value?.Text == "Selected webpage reading text.") selectedReading.TrySetResult(value); };
+            Command("reading");
+            var reading = InputFixture.WaitWithDispatcher(selectedReading.Task);
+            check(reading is { IsSelection: true, CanWrite: false, EditRange: null }, "网页阅读正文选区在工具栏持有键盘焦点时仍自动触发，且不允许写入");
+            using var readingCoordinator = new TranslationCoordinator(new FixtureProvider(), new EmptyCache(), () => config, new SessionStatistics());
+            InputFixture.WaitWithDispatcher(readingCoordinator.ObserveAsync(reading).ContinueWith(t => { t.GetAwaiter().GetResult(); return true; }));
+            var readingOverlay = new OverlayWindow(new ReplacementService(observer, readingCoordinator), () => config);
+            readingOverlay.Display(readingCoordinator.CurrentPreview);
+            check(readingOverlay.IsVisible && ((System.Windows.Controls.Button)readingOverlay.FindName("ReplaceButton")).Visibility == Visibility.Collapsed,
+                "网页选区实际显示译文并隐藏替换按钮");
+            capture(readingOverlay, "webview2-reading-selection.png"); readingOverlay.Dismiss();
+            Command("reading-away");
+            check(InputFixture.WaitWithDispatcher(observer.CaptureAsync(CancellationToken.None))?.SameContent(reading) == true, "鼠标离开网页选中文字后，阅读预览仍可使用");
+            Command("reading-clear");
+            async Task<bool> SelectionClears()
+            {
+                for (var attempt = 0; attempt < 30; attempt++)
+                { if (await observer.CaptureAsync(CancellationToken.None) == null) return true; await Task.Delay(100); }
+                return false;
+            }
+            check(InputFixture.WaitWithDispatcher(SelectionClears()), "取消网页选区后不翻译整页或工具栏");
+            Command("focus");
             Volatile.Write(ref config, config with { Overlay = config.Overlay with { TriggerMode = "hotkey" } });
             check(InputFixture.WaitWithDispatcher(observer.CaptureAsync(CancellationToken.None)) == null, "WebView2 快捷键模式在触发前不读取");
             check(InputFixture.WaitWithDispatcher(observer.RequestPreviewAsync(CancellationToken.None))?.Text == "Teams-style input", "WebView2 快捷键触发能读取当前行");
@@ -157,8 +194,8 @@ internal static class WebViewFixture
     {
         public Task<TranslationResult> TranslateAsync(TranslationRequest request, CancellationToken token)
         {
-            if (request.Text != "Teams-style input") throw new InvalidOperationException("Unexpected text outside composer line");
-            return Task.FromResult(new TranslationResult("嵌入输入框测试译文"));
+            var text = request.Text switch { "Teams-style input" => "嵌入输入框测试译文", "Selected webpage reading text." => "选中的网页阅读文本。", _ => throw new InvalidOperationException("Unexpected text outside fixture selection") };
+            return Task.FromResult(new TranslationResult(text));
         }
     }
     private sealed class EmptyCache : ITranslationCache
