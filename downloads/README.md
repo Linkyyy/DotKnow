@@ -1,6 +1,6 @@
-# v0.4.0-preview.1 候选交付包
+# v0.4.0-preview.2 候选交付包
 
-本开发分支提供更新后的候选安装包、源码和宣传素材。Linux 全量构建与 141 项核心测试已通过；Windows 核心测试、真实 WPF／UIA 已在 [本轮 CI](https://github.com/Linkyyy/TypeLingo/actions/runs/39351911006) 通过，尚未发布为稳定 Release。
+本包已更新为选定的 **C 双向对话 Logo**：程序、窗口、首页及黑白自适应托盘图标统一；两张宣传图和图标素材同步更新。Linux 构建与 141 项测试通过；本轮 [Windows 检查](https://github.com/Linkyyy/TypeLingo/actions/runs/39354969185) 也已通过，包含 C 图标资源和发布 EXE 图标提取。
 
 - [Windows x64 中文候选安装包](https://github.com/Linkyyy/TypeLingo/raw/refs/heads/codex/typelingo-favorites-and-replacement/downloads/TypeLingo-Windows-x64.zip)
 - [完整源码 ZIP](https://github.com/Linkyyy/TypeLingo/raw/refs/heads/codex/typelingo-favorites-and-replacement/downloads/TypeLingo-Source.zip)

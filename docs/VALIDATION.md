@@ -8,9 +8,9 @@
 | 程序与黑白托盘 ICO | 16、20、24、32、48、64、128、256 px 图层完整 |
 | 小尺寸 C 轮廓 | 黑白托盘的 16、20、24、32 px 均保留两个分离图形 |
 | 宣传横图／方图 | 已检查 C 主标、主要文案与“产品交互示意”标记 |
-| 本轮 Windows WPF／UIA／图标加载 | 等待本轮 push 后的 Windows Actions 运行 |
+| 本轮 Windows WPF／UIA／图标加载 | [本轮 Windows Actions](https://github.com/Linkyyy/TypeLingo/actions/runs/39354969185) 通过：核心测试、自包含发布、首页 C 资源、黑白托盘透明图标、发布 EXE 图标提取和 WPF／UIA |
 
-Windows UiSmoke 增加首页 C 图标原图加载、透明黑白托盘图标颜色与透明通道、已发布 EXE 图标提取检查。该检查调用生产 BrandAssets 资源加载路径。系统任务栏实机主题切换仍可按验收清单人工检查。
+Windows UiSmoke 已执行并通过：首页 C 图标原图加载、透明黑白托盘图标颜色与透明通道、已发布 EXE 图标提取检查。该检查调用生产 BrandAssets 资源加载路径。验证对应功能提交 `ddf4b1b`，后续仅更新说明与交付 ZIP。系统任务栏实机主题切换仍可按验收清单人工检查。
 
 以下为前一版本的历史结果，不能替代本轮 C 图标验证。
 
