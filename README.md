@@ -4,7 +4,7 @@
 
 面向 Windows 10/11 的 C# / .NET 8 / WPF 桌面翻译助手。输入停顿后，通过所选 AI 服务翻译当前已授权输入框中的文本，在旁边显示译文。**自动操作只预览；原文仅在你主动请求并确认替换后才写入。**
 
-当前开发版本为 v0.4.0-preview.2：采用选定的 C 双向对话 Logo，统一程序、窗口、首页与自适应黑白托盘图标，更新两张宣传图。支持主页置顶、选区／当前行替换、Loading 开关、本地加密收藏与卡片复习。Linux 全量构建和 141 项核心测试通过；本轮 Windows 构建、测试、C 图标加载及真实 WPF / UIA 检查也已通过，详见 [验证记录](docs/VALIDATION.md)。下方 v0.3.0 下载链接仍指向此前稳定版。
+当前开发版本为 v0.4.0-preview.3：修正设置 Tab 聚焦抖动和搜索框占位光标重叠，在「常规设置」中明确选择翻译中显示 Loading 或翻译完成后显示，并支持前台宿主中的独立 WebView2 渲染进程、TextPattern 富文本当前行预览。保留 C 品牌图标、选区／当前行替换与本地收藏复习。Linux 全量构建及 151 项核心测试通过，本轮 Windows 设置布局、真实 WebView2 富文本与 WPF / UIA 检查也已通过，见 [验证记录](docs/VALIDATION.md)。下方 v0.3.0 下载仍为此前稳定版。
 
 ## 下载安装包
 
@@ -65,7 +65,7 @@ dotnet publish src/TypeLingo.App -c Release -r win-x64 --self-contained true \
 
 收藏不等同于缓存：`%LOCALAPPDATA%\TypeLingo\favorites.dpapi` 使用当前 Windows 用户 DPAPI 加密，主动保存原文与译文，清除翻译缓存不会删除收藏。相同内容、方向与风格去重，最多 5000 条；删除需确认。文件无法读取时保留原文件，不自动覆盖。
 
-「外观与悬浮窗」中的「显示 Loading」默认开启。等待输入稳定和请求翻译期间显示进度，关闭后只显示结果；焦点变化、暂停、成功和失败均结束进度状态。
+「常规设置」→「翻译窗口显示时机」可选择「翻译中显示 Loading」或「翻译完成后显示」。后者等待结果就绪才打开悬浮窗，前者在输入稳定和请求阶段显示进度。焦点变化、暂停、成功和失败均结束进度状态；原有 `Overlay.ShowLoading` 配置继续兼容。
 
 品牌资源采用用户选定的 **C 双向对话**图形，以 `src/TypeLingo.App/Assets/typelingo-mark.svg` 为唯一主标，通过 `bash scripts/render-brand.sh` 生成程序 PNG／SVG、多尺寸 ICO 和透明黑白托盘图标（需 Python 3、Inkscape、ImageMagick）。EXE、窗口、首页和宣传图统一使用 C；托盘按系统任务栏主题选择黑标或白标，不受程序自身主题设置影响。
 
@@ -140,6 +140,12 @@ dotnet test tests/TypeLingo.Tests -c Release --no-build
 脚本使用 `/workspace/.dotnet` 和工作区 NuGet 缓存，通过微软官方 SHA-512 验证 SDK。`.NET 8` 的命名互斥锁还需要操作系统用户的 `/home/agent/.dotnet` 可写；受限任务应通过正常权限机制授予此目录访问，而不更改 HOME、证书或代理。每个任务已隔离，使用现有 checkout，不需要创建 Git worktree。
 
 云网络需软件包预设、`builds.dotnet.microsoft.com`、`api.nuget.org` 等下载域名。DeepSeek、OpenAI、Anthropic、Gemini 与通义千问所需 API 域名已加入环境配置草稿，需在环境设置中保存并发布后才可用于新配置。桌面密钥在 Windows 设置界面输入，不写到仓库，也不需要在聊天里发送。
+
+## 新版 Teams 与 WebView2 输入
+
+新版 Teams 使用独立的 WebView2 进程。现在按当前前台窗口及其真实 HWND 子树验证输入归属，允许宿主已获授权时读取其嵌入输入，无需全局允许 `msedgewebview2`。宿主或渲染进程的排除项、密码框、敏感控件、隐私授权和总暂停仍优先。
+
+仅支持 TextPattern 的可编辑输入也能在未选中文本时预览当前行。无法验证 ValuePattern 安全写入的富文本提供复制与收藏。建议保持「输入后自动出现」；若使用进程允许列表，新版 Teams 的宿主名称通常是 `ms-teams`。实际 Teams 版本与企业策略须在用户机器验收；本仓库以独立 WebView2 富文本、真实 UIA 和悬浮窗覆盖相同底层结构，不使用 Teams 登录或付费 API。
 
 ## 架构与兼容性
 

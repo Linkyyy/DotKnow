@@ -1,6 +1,6 @@
-# v0.4.0-preview.2 候选交付包
+# v0.4.0-preview.3 候选交付包
 
-本包已更新为选定的 **C 双向对话 Logo**：程序、窗口、首页及黑白自适应托盘图标统一；两张宣传图和图标素材同步更新。Linux 构建与 141 项测试通过；本轮 [Windows 检查](https://github.com/Linkyyy/TypeLingo/actions/runs/39354969185) 也已通过，包含 C 图标资源和发布 EXE 图标提取。
+本包修正设置 Tab 抖动和搜索光标，新增明确的翻译窗口显示时机选择，并修正新版 Teams／WebView2 的嵌入进程与富文本读取路径。C 图标与收藏复习保持可用。151 项核心测试与 [Windows WPF／WebView2／UIA 检查](https://github.com/Linkyyy/TypeLingo/actions/runs/39359244576) 已通过；实际 Teams 账户与企业版本仍需在用户机器确认。
 
 - [Windows x64 中文候选安装包](https://github.com/Linkyyy/TypeLingo/raw/refs/heads/codex/typelingo-favorites-and-replacement/downloads/TypeLingo-Windows-x64.zip)
 - [完整源码 ZIP](https://github.com/Linkyyy/TypeLingo/raw/refs/heads/codex/typelingo-favorites-and-replacement/downloads/TypeLingo-Source.zip)
