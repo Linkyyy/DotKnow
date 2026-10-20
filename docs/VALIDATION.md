@@ -5,14 +5,14 @@
 | Linux .NET 8 Release 全解决方案构建 | 通过，0 警告、0 错误 |
 | Linux 核心自动测试 | 141 通过、0 失败、0 跳过，当前 TRX 位于 TestResults/features.trx |
 | Windows x64 自包含交叉发布 | 本轮已执行，锁文件验证开启 |
-| Windows Core / WPF / UIA 执行 | 本机为 Linux，未执行；构建通过不代表 Windows 实机验收通过 |
+| Windows Core / WPF / UIA 执行 | [GitHub Actions 本轮运行](https://github.com/Linkyyy/TypeLingo/actions/runs/39351911006) 通过：核心测试、自包含发布、真实 WPF 与跨进程 UIA 均成功 |
 | 宣传图 | 主图与方图已检查；均为产品交互示意 |
 | 新独立 Logo | 尚未提供；现有 SVG 已同步为 PNG 与多尺寸 ICO，并接入程序 |
 | 付费 AI / 第三方应用 / 中日 IME | 未执行，须有对应账户及 Windows 环境 |
 
 新增核心测试覆盖当前行与 CRLF、重复文本的精确范围、跨行选区、emoji 偏移、全文变化使旧确认失效、点击旧预览拒绝写入、自身替换回声抑制，以及收藏的加密持久化、去重、删除、损坏保护、排期和 Loading 配置迁移。
 
-Windows UiSmoke 已扩展主页顺序、Loading 持久化与进度显示、星标收藏、揭示答案和复习排期。独立输入进程新增可编辑选区、当前行写入、保留其他内容及拒绝过时范围检查。这些新增 Windows 检查尚未在本机执行，待 push 后由 Windows CI 或实机运行；不要沿用下方旧版本的通过记录。
+Windows UiSmoke 已扩展主页顺序、Loading 持久化与进度显示、星标收藏、揭示答案和复习排期。独立输入进程新增可编辑选区、当前行写入、保留其他内容及拒绝过时范围检查。这些新增 Windows 检查已在上述 GitHub Actions Windows 运行器执行成功；Linux 本机没有运行 GUI。验证对应功能提交 `64831ab660a707fee4a1f4c96f81cc15e93537f1`，后续仅同步验证说明与交付 ZIP，功能代码保持一致。此处不是沿用下方旧版本记录。
 
 下面保留的是此前稳定版的历史证据，与本轮结果分开。
 

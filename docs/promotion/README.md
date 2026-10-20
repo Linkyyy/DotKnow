@@ -1,6 +1,6 @@
 # TypeLingo 宣传素材
 
-本目录包含可交付的中文宣传图与文案，基于本轮 v0.4.0-preview.1 开发功能整理。宣传图明确标注为产品交互示意；Windows 实机截图应在 Windows UiSmoke 通过后，从 Actions 附件获取。发布前请确认候选版本的 Windows 验收结果。
+本目录包含可交付的中文宣传图与文案，基于本轮 v0.4.0-preview.1 开发功能整理。宣传图明确标注为产品交互示意；Windows UiSmoke 已在 [本轮 Actions](https://github.com/Linkyyy/TypeLingo/actions/runs/39351911006) 通过，真实截图可从该运行的附件获取。正式发布前请继续检查目标第三方应用与真实中日 IME。
 
 | 文件 | 用途 |
 | --- | --- |

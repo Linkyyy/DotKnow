@@ -8,7 +8,7 @@
 - 统一现有 SVG、PNG、EXE 和托盘品牌资源；待提供独立新 Logo。
 - 加入中文宣传主图、复习方图、文案和打包脚本；海报标注为交互示意。
 
-本轮 Linux 核心测试 141 项通过；Windows GUI / UIA 新检查尚待运行。本候选包不自动替换既有稳定 Release。
+本轮 Linux 核心测试 141 项通过；Windows 核心测试、自包含发布和真实 WPF / UIA 新检查已通过（[运行记录](https://github.com/Linkyyy/TypeLingo/actions/runs/39351911006)）。本候选包不自动替换既有稳定 Release。
 
 ---
 
