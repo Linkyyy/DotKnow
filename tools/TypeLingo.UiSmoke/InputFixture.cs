@@ -51,7 +51,7 @@ internal static class InputFixture
                     else if (command == "reading-start" || command == "reading-end")
                     {
                         var rect = command == "reading-start" ? readingRun.ContentStart.GetCharacterRect(LogicalDirection.Forward) : readingRun.ContentEnd.GetCharacterRect(LogicalDirection.Backward);
-                        PointerFixture.Move(reading.PointToScreen(new Point(rect.Left + (command == "reading-start" ? 1 : 5), rect.Top + rect.Height / 2)));
+                        PointerFixture.Move(reading.PointToScreen(new Point(command == "reading-start" ? rect.Left + 1 : rect.Right + 2, rect.Top + rect.Height / 2)));
                     }
                     else if (command == "writable-selection") { input.IsReadOnly = false; input.Text = "prefix selected phrase suffix"; input.Focus(); input.Select(7, 15); }
                     else if (command == "multiline") { input.IsReadOnly = false; input.Text = "first line\r\ncurrent line\r\nlast line"; input.Focus(); input.Select(15, 0); }
@@ -109,12 +109,18 @@ internal static class InputFixture
             check(Capture() == null, "鼠标按住拖选时不发送中间选区"); pointer.Release();
             async Task<InputSnapshot?> AfterRelease()
             {
+                InputSnapshot? last = null;
                 for (var attempt = 0; attempt < 20; attempt++)
-                { var value = await observer.CaptureAsync(CancellationToken.None); if (value != null) return value; await Task.Delay(100); }
-                return null;
+                {
+                    last = await observer.CaptureAsync(CancellationToken.None);
+                    if (last?.Text.TrimEnd('\r', '\n') == "selected reading phrase") return last;
+                    await Task.Delay(100);
+                }
+                return last;
             }
-            check(WaitWithDispatcher(AfterRelease()) is { IsSelection: true, CanWrite: false, Text: "selected reading phrase" },
-                "真实鼠标拖选并松开后捕获只读阅读区的完整选中文字");
+            var dragged = WaitWithDispatcher(AfterRelease());
+            check(dragged is { IsSelection: true, CanWrite: false } && dragged.Text.TrimEnd('\r', '\n') == "selected reading phrase",
+                "真实鼠标拖选并松开后捕获只读阅读区的完整选中文字：" + System.Text.Json.JsonSerializer.Serialize(dragged));
             Volatile.Write(ref config, config with { ExcludedApplications = [process.ProcessName] });
             check(Capture() == null, "阅读选区继续遵守进程排除项");
             Volatile.Write(ref config, config with { ExcludedApplications = [] });
