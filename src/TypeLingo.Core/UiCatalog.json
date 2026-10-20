@@ -1302,5 +1302,21 @@
   "开启全部应用监控后，选区或光标所在行可能发送给所选 AI；范围核对会在本机临时读取输入框全文。私人内容可随时暂停或改为指定应用。": {
     "en-US": "With all-app monitoring, the selection or current line may be sent to the selected AI. Full editor text is read locally to verify ranges. Pause or restrict applications when handling private content.",
     "ja-JP": "全アプリ監視では選択範囲や現在の行を AI に送信します。範囲確認のため入力欄全文を端末内で一時的に読み取ります。私的な内容では一時停止または対象アプリを制限してください。"
+  },
+  "翻译窗口显示时机": {
+    "en-US": "Translation window display timing",
+    "ja-JP": "翻訳ウィンドウの表示タイミング"
+  },
+  "选择翻译中显示进度，或翻译完成后再显示窗口": {
+    "en-US": "Show progress while translating, or open the window when the result is ready",
+    "ja-JP": "翻訳中に進捗を表示するか、完了後にウィンドウを表示します"
+  },
+  "翻译中显示 Loading": {
+    "en-US": "Show loading while translating",
+    "ja-JP": "翻訳中から表示"
+  },
+  "翻译完成后显示": {
+    "en-US": "Show when translation is ready",
+    "ja-JP": "翻訳完了後に表示"
   }
 }

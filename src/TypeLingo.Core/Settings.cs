@@ -105,11 +105,16 @@ public static class AppearanceTheme
 
 public static class PrivacyGuard
 {
+    private static string Normalize(string name) => name.EndsWith(".exe", StringComparison.OrdinalIgnoreCase) ? name[..^4] : name;
+    private static bool Has(string[] names, string process) => names.Any(n => string.Equals(Normalize(n), Normalize(process), StringComparison.OrdinalIgnoreCase));
+    public static bool IsExcluded(AppSettings settings, string process) => Has(settings.ExcludedApplications, process);
     public static bool Allows(AppSettings settings, string processName, bool password, bool sensitive)
     {
-        static string Normalize(string name) => name.EndsWith(".exe", StringComparison.OrdinalIgnoreCase) ? name[..^4] : name;
-        bool Has(string[] names) => names.Any(n => string.Equals(Normalize(n), Normalize(processName), StringComparison.OrdinalIgnoreCase));
         return settings.PrivacyConsent && settings.Translation.Enabled && !password && !sensitive &&
-               (settings.MonitorAllApplications || Has(settings.AllowedApplications)) && !Has(settings.ExcludedApplications);
+               (settings.MonitorAllApplications || Has(settings.AllowedApplications, processName)) && !IsExcluded(settings, processName);
     }
+    // WebView2 的宿主授权用于所属前台窗口；嵌入进程的排除项仍然优先。
+    public static bool AllowsHostedInput(AppSettings settings, string host, string renderer, bool foregroundDescendant,
+        bool password = false, bool sensitive = false) => foregroundDescendant &&
+        Allows(settings, host, password, sensitive) && !IsExcluded(settings, renderer);
 }

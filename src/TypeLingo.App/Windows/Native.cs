@@ -15,6 +15,7 @@ internal static class Native
     }
     [DllImport("user32.dll")] internal static extern nint GetForegroundWindow();
     [DllImport("user32.dll")] internal static extern uint GetWindowThreadProcessId(nint hwnd, out uint processId);
+    [DllImport("user32.dll")] internal static extern bool IsChild(nint parent, nint child);
     [DllImport("user32.dll")] internal static extern bool GetGUIThreadInfo(uint id, ref GuiThreadInfo info);
     [DllImport("user32.dll", SetLastError = true)] internal static extern bool RegisterHotKey(nint hwnd, int id, uint modifiers, uint key);
     [DllImport("user32.dll")] internal static extern bool UnregisterHotKey(nint hwnd, int id);

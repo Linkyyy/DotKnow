@@ -92,9 +92,15 @@ public partial class SettingsWindow : Window
     }
     private void Search_TextChanged(object sender, TextChangedEventArgs e)
     { if (!loading && NavigationList != null) ApplySearch(); }
+    private void Search_FocusChanged(object sender, System.Windows.Input.KeyboardFocusChangedEventArgs e) => RefreshSearchPlaceholder();
+    private void RefreshSearchPlaceholder()
+    {
+        if (SearchPlaceholder != null)
+            SearchPlaceholder.Visibility = SettingsSearchInput.Text.Length == 0 && !SettingsSearchInput.IsKeyboardFocusWithin ? Visibility.Visible : Visibility.Collapsed;
+    }
     private void ApplySearch()
     {
-        SearchPlaceholder.Visibility = SettingsSearchInput.Text.Length == 0 ? Visibility.Visible : Visibility.Collapsed;
+        RefreshSearchPlaceholder();
         var matches = SettingsNavigation.Search(SettingsSearchInput.Text, UiText.Language);
         foreach (ListBoxItem item in NavigationList.Items) item.Visibility = matches.Contains((string)item.Tag) ? Visibility.Visible : Visibility.Collapsed;
         NoResultsText.Visibility = matches.Count == 0 ? Visibility.Visible : Visibility.Collapsed;
@@ -127,10 +133,12 @@ public partial class SettingsWindow : Window
     private static int Integer(string s) => int.Parse(s, CultureInfo.InvariantCulture);
     private static double Decimal(string s) => double.Parse(s, CultureInfo.InvariantCulture);
     private Choice Option(string code, string label) => new(code, UiText.Get(label));
-    private void PopulateChoices(string source, string target, string mode, string position, string provider, string trigger)
+    private void PopulateChoices(string source, string target, string mode, string position, string provider, string trigger, bool showLoading)
     {
         TriggerInput.ItemsSource = new[] { Option("typing", "输入后自动出现"), Option("hotkey", "按快捷键出现"), Option("selection", "选中文字后出现") };
         TriggerInput.SelectedValue = trigger;
+        PopupDisplayInput.ItemsSource = new[] { Option("loading", "翻译中显示 Loading"), Option("result", "翻译完成后显示") };
+        PopupDisplayInput.SelectedValue = showLoading ? "loading" : "result";
         UiLanguageInput.ItemsSource = new[] { new Choice("zh-CN", "简体中文"), new Choice("en-US", "English"), new Choice("ja-JP", "日本語") };
         UiLanguageInput.SelectedValue = UiText.Language;
         SourceInput.ItemsSource = new[] { Option("auto", "自动识别"), Option("zh", "中文"), Option("en", "英语"), Option("ja", "日语") };
@@ -151,7 +159,7 @@ public partial class SettingsWindow : Window
         try
         {
             var s = service.Current; UiText.Apply(s.UiLanguage);
-            PopulateChoices(s.Translation.SourceLanguage, s.Translation.TargetLanguage, s.Translation.Mode, s.Overlay.Position, s.AI.Provider, s.Overlay.TriggerMode);
+            PopulateChoices(s.Translation.SourceLanguage, s.Translation.TargetLanguage, s.Translation.Mode, s.Overlay.Position, s.AI.Provider, s.Overlay.TriggerMode, s.Overlay.ShowLoading);
             EnabledCheck.IsChecked = s.Translation.Enabled; ConsentCheck.IsChecked = s.PrivacyConsent;
             AllApplicationsCheck.IsChecked = s.MonitorAllApplications;
             DebounceInput.Text = s.Translation.DebounceMilliseconds.ToString(); IntervalInput.Text = s.Translation.MinimumRequestIntervalMilliseconds.ToString(); MaxInput.Text = s.Translation.MaxInputCharacters.ToString();
@@ -162,7 +170,6 @@ public partial class SettingsWindow : Window
             DiskCheck.IsChecked = s.Cache.DiskEnabled; DiskCapacityInput.Text = s.Cache.DiskMaxEntries.ToString(); DiskTtlInput.Text = s.Cache.DiskTTLDays.ToString();
             LightThemeRadio.IsChecked = s.Overlay.Theme == "light"; DarkThemeRadio.IsChecked = s.Overlay.Theme == "dark"; SystemThemeRadio.IsChecked = s.Overlay.Theme == "system";
             AutoHideInput.Text = s.Overlay.AutoHideSeconds.ToString(); PreviewHotkey.Text = s.Hotkeys.Preview; FontInput.Text = Number(s.Overlay.FontSize); WidthInput.Text = Number(s.Overlay.MaxWidth); OpacityInput.Text = Number(s.Overlay.Opacity);
-            ShowLoadingCheck.IsChecked = s.Overlay.ShowLoading;
             ReplaceHotkey.Text = s.Hotkeys.Replace; ToggleHotkey.Text = s.Hotkeys.Toggle; CopyHotkey.Text = s.Hotkeys.Copy;
             AllowedInput.Text = string.Join(", ", s.AllowedApplications); ExcludedInput.Text = string.Join(", ", s.ExcludedApplications); RefreshStatistics();
             providerRevision++;
@@ -175,11 +182,11 @@ public partial class SettingsWindow : Window
     private void UiLanguage_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
         if (loading || Selected(UiLanguageInput) is not { Length: > 0 } language) return;
-        var source = Selected(SourceInput); var target = Selected(TargetInput); var mode = Selected(ModeInput); var position = Selected(PositionInput); var provider = Selected(ProviderInput); var trigger = Selected(TriggerInput);
+        var source = Selected(SourceInput); var target = Selected(TargetInput); var mode = Selected(ModeInput); var position = Selected(PositionInput); var provider = Selected(ProviderInput); var trigger = Selected(TriggerInput); var showLoading = Selected(PopupDisplayInput) == "loading";
         loading = true;
         try
         {
-            UiText.Apply(language); PopulateChoices(source, target, mode, position, provider, trigger);
+            UiText.Apply(language); PopulateChoices(source, target, mode, position, provider, trigger, showLoading);
             RefreshKeyStatus(); RefreshStatistics(); ApplySearch(); MessageText.Text = TestStatus.Text = "";
         }
         finally { loading = false; }
@@ -233,7 +240,7 @@ public partial class SettingsWindow : Window
             Translation = new() { Enabled = EnabledCheck.IsChecked == true, SourceLanguage = Selected(SourceInput), TargetLanguage = Selected(TargetInput), Mode = Selected(ModeInput), DebounceMilliseconds = Integer(DebounceInput.Text), MinimumRequestIntervalMilliseconds = Integer(IntervalInput.Text), MaxInputCharacters = Integer(MaxInput.Text) },
             AI = SelectedAi() with { TimeoutSeconds = Integer(TimeoutInput.Text), MaxRetries = Integer(RetriesInput.Text) },
             Cache = new() { MemoryEnabled = MemoryCheck.IsChecked == true, MemoryMaxEntries = Integer(MemoryCapacityInput.Text), MemoryTTLMinutes = Integer(MemoryTtlInput.Text), DiskEnabled = DiskCheck.IsChecked == true, DiskMaxEntries = Integer(DiskCapacityInput.Text), DiskTTLDays = Integer(DiskTtlInput.Text) },
-            Overlay = new() { ShowLoading = ShowLoadingCheck.IsChecked == true, Theme = SelectedTheme(), DarkMode = SelectedTheme() == "dark", TriggerMode = Selected(TriggerInput), AutoHideSeconds = Integer(AutoHideInput.Text), FontSize = Decimal(FontInput.Text), MaxWidth = Decimal(WidthInput.Text), Opacity = Decimal(OpacityInput.Text), Position = Selected(PositionInput) },
+            Overlay = new() { ShowLoading = Selected(PopupDisplayInput) == "loading", Theme = SelectedTheme(), DarkMode = SelectedTheme() == "dark", TriggerMode = Selected(TriggerInput), AutoHideSeconds = Integer(AutoHideInput.Text), FontSize = Decimal(FontInput.Text), MaxWidth = Decimal(WidthInput.Text), Opacity = Decimal(OpacityInput.Text), Position = Selected(PositionInput) },
             Hotkeys = new() { Replace = ReplaceHotkey.Text.Trim(), Toggle = ToggleHotkey.Text.Trim(), Copy = CopyHotkey.Text.Trim(), Preview = PreviewHotkey.Text.Trim() },
             AllowedApplications = Split(AllowedInput.Text), ExcludedApplications = Split(ExcludedInput.Text)
         };

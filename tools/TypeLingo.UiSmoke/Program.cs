@@ -19,6 +19,7 @@ internal static class Program
     private static int Main(string[] args)
     {
         if (args.Length == 2 && args[0] == "--input-fixture") return InputFixture.Run(args[1]);
+        if (args.Length == 2 && args[0] == "--webview-fixture") return WebViewFixture.Run(args[1]);
         var output = Path.GetFullPath(args.FirstOrDefault() ?? "artifacts/ui-smoke"); Directory.CreateDirectory(output);
         var temporary = Path.Combine(Path.GetTempPath(), "TypeLingo-UiSmoke-" + Guid.NewGuid().ToString("N"));
         var app = new Application { ShutdownMode = ShutdownMode.OnExplicitShutdown }; var checks = new List<string>();
@@ -41,6 +42,32 @@ internal static class Program
             window.Show(); Pump(window);
             Check((string)((ListBoxItem)Find<ListBox>("NavigationList").Items[0]).Tag == "home" && Find<FrameworkElement>("PageHome").Visibility == Visibility.Visible, "主页位于导航顶部并默认打开");
             Check(window.IsVisible && window.ActualWidth >= 760, "真实 WPF 设置窗口已启动并完成布局");
+            var navigation = Find<ListBox>("NavigationList");
+            var items = navigation.Items.Cast<ListBoxItem>().ToArray();
+            Rect Bounds(FrameworkElement element, Visual parent) => element.TransformToAncestor(parent).TransformBounds(new Rect(element.RenderSize));
+            items[0].Focus(); Pump(window);
+            var rowBounds = items.Select(item => Bounds(item, navigation)).ToArray();
+            var labelBounds = items.Select(item => Bounds(((StackPanel)item.Content).Children.OfType<TextBlock>().Single(), navigation)).ToArray();
+            var viewportWidth = Find<ScrollViewer>("PageScroll").ViewportWidth;
+            foreach (var item in items)
+            {
+                item.Focus(); SelectPage((string)item.Tag);
+                Check(items.Select((row, i) => Bounds(row, navigation) == rowBounds[i] &&
+                    Bounds(((StackPanel)row.Content).Children.OfType<TextBlock>().Single(), navigation) == labelBounds[i]).All(x => x),
+                    "切换并聚焦 Tab 不改变导航行与文字坐标：" + item.Tag);
+                Check(Math.Abs(Find<ScrollViewer>("PageScroll").ViewportWidth - viewportWidth) < .1,
+                    "不同页面保持相同内容视口宽度：" + item.Tag);
+            }
+            SelectPage("home");
+            var search = Find<TextBox>("SettingsSearchInput"); search.Focus(); search.Clear(); Pump(window);
+            Check(Find<TextBlock>("SearchPlaceholder").Visibility == Visibility.Collapsed && search.CaretIndex == 0,
+                "空搜索框聚焦时隐藏占位文字，光标不与占位文字重叠");
+            search.Text = "密钥"; search.CaretIndex = 0; Pump(window);
+            var caret = search.GetRectFromCharacterIndex(0);
+            Check(!caret.IsEmpty && caret.Left < 24 && caret.Height > 8, "真实搜索光标位于输入区左侧");
+            search.Clear(); items[0].Focus(); Pump(window);
+            Check(Find<TextBlock>("SearchPlaceholder").Visibility == Visibility.Visible, "空搜索框失焦后恢复占位提示");
+            SelectPage("home");
             using (var icon = Application.GetResourceStream(new Uri("pack://application:,,,/TypeLingo;component/Assets/typelingo.ico")).Stream)
                 Check(window.Icon != null && icon.Length > 0, "设置窗口与托盘使用可加载的新图标资源");
             var homeLogo = Find<Image>("HomeBrandImage");
@@ -94,7 +121,7 @@ internal static class Program
             SelectPage("ai"); var model = Find<ComboBox>("ModelInput"); model.ApplyTemplate();
             var editor = (TextBox)(model.Template.FindName("PART_EditableTextBox", model) ?? throw new InvalidOperationException("模型编辑模板未连接"));
             editor.Text = "my-selected-model"; Pump(window);
-            Find<CheckBox>("ShowLoadingCheck").IsChecked = false;
+            Find<ComboBox>("PopupDisplayInput").SelectedValue = "result";
             Check(model.Text == "my-selected-model", "新版下拉框保留手动模型输入功能");
             Find<Button>("SaveSettingsButton").RaiseEvent(new RoutedEventArgs(Button.ClickEvent)); Pump(window);
             Check(!settings.Current.Overlay.ShowLoading, "Loading 开关可保存并持久化");
@@ -161,6 +188,7 @@ internal static class Program
                 Check(target.Writes == 1 && !clickable.IsVisible, "确认后点击译文流程只写入一次并隐藏");
             }
             InputFixture.Verify(Check);
+            WebViewFixture.Verify(Check, (w, name) => Capture(w, Path.Combine(output, name)), output);
             File.WriteAllLines(Path.Combine(output, "ui-validation.txt"), checks);
              Console.WriteLine("WPF 界面检查全部通过：" + checks.Count); return 0;
         }

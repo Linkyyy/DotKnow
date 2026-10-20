@@ -3,6 +3,7 @@ using System.IO;
 using System.IO.Pipes;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Documents;
 using System.Windows.Threading;
 using TypeLingo.App.Windows;
 using TypeLingo.Core;
@@ -17,8 +18,9 @@ internal static class InputFixture
         var app = new Application();
         var input = new TextBox { Text = "prefix selected phrase suffix", AcceptsReturn = true, Height = 110, Margin = new Thickness(16) };
         var password = new PasswordBox { Password = "fixture-only-password", Margin = new Thickness(16) };
-        var panel = new StackPanel(); panel.Children.Add(input); panel.Children.Add(password);
-        var window = new Window { Title = "伴译选区验收窗口", Width = 640, Height = 280, Content = panel, Topmost = true };
+        var rich = new RichTextBox { Document = new FlowDocument(new Paragraph(new Run("rich editor current line"))), Height = 90, Margin = new Thickness(16) };
+        var panel = new StackPanel(); panel.Children.Add(input); panel.Children.Add(password); panel.Children.Add(rich);
+        var window = new Window { Title = "伴译选区验收窗口", Width = 640, Height = 480, Content = panel, Topmost = true };
         window.Loaded += async (_, _) =>
         {
             try
@@ -34,6 +36,7 @@ internal static class InputFixture
                     else if (command == "select") { input.Text = "prefix selected phrase suffix"; input.IsReadOnly = true; input.Focus(); input.Select(7, 15); }
                     else if (command == "clear") { input.Focus(); input.Select(0, 0); }
                     else if (command == "password") password.Focus();
+                    else if (command == "rich") { rich.Focus(); rich.CaretPosition = rich.Document.ContentStart.GetNextInsertionPosition(LogicalDirection.Forward)!; }
                     else if (command == "writable-selection") { input.IsReadOnly = false; input.Text = "prefix selected phrase suffix"; input.Focus(); input.Select(7, 15); }
                     else if (command == "multiline") { input.IsReadOnly = false; input.Text = "first line\r\ncurrent line\r\nlast line"; input.Focus(); input.Select(15, 0); }
                     else if (command == "value") { await writer.WriteLineAsync(Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(input.Text))); continue; }
@@ -93,15 +96,18 @@ internal static class InputFixture
             check(ReadValue() == "first line\r\n当前行译文\r\nlast line", "当前行替换保留其他行和 CRLF");
             Command("multiline"); line = Capture(); Command("edit");
             check(!WaitWithDispatcher(observer.TryReplaceAsync(line!, "不应写入", CancellationToken.None)), "确认期间内容变化时拒绝旧范围写入");
+            Command("rich"); var rich = Capture();
+            check(rich?.Text == "rich editor current line" && !rich.CanWrite && !rich.IsSelection,
+                "仅提供 TextPattern 的真实富文本控件，无选区也能自动预览当前行");
             Command("password"); check(Capture(true) == null, "三种触发方式继续跳过真实密码框");
             Command("stop"); process.WaitForExit(5000);
         }
         finally { if (!process.HasExited) process.Kill(true); }
     }
-    internal static T WaitWithDispatcher<T>(Task<T> operation)
+    internal static T WaitWithDispatcher<T>(Task<T> operation, int timeoutSeconds = 10)
     {
         // 保持客户端 WPF 调度器运行，避免 UIA 在跨进程回调时等待已阻塞的界面线程。
-        var bounded = operation.WaitAsync(TimeSpan.FromSeconds(10));
+        var bounded = operation.WaitAsync(TimeSpan.FromSeconds(timeoutSeconds));
         var frame = new DispatcherFrame(); var dispatcher = Dispatcher.CurrentDispatcher;
         _ = bounded.ContinueWith(_ => dispatcher.BeginInvoke(new Action(() => frame.Continue = false)), TaskScheduler.Default);
         Dispatcher.PushFrame(frame); return bounded.GetAwaiter().GetResult();
