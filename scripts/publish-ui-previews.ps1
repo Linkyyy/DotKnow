@@ -1,11 +1,12 @@
-# 仅在真实 Windows 验收成功后，将测试截图发布到独立、按源码版本命名的预览分支。
+# 将真实 Windows 测试截图发布到独立、按源码版本命名的预览分支；明确标注验收状态。
 # 使用 checkout 配置的 Git 身份；不读取、不输出、不提交任何凭据。
 [CmdletBinding()]
 param([string]$SourceDirectory = 'artifacts/ui-smoke')
 $ErrorActionPreference = 'Stop'
 if ($env:GITHUB_SHA -notmatch '^[0-9a-f]{40}$' -or !$env:RUNNER_TEMP) { throw '仅供 GitHub Actions Windows 验收使用。' }
 $source = (Resolve-Path $SourceDirectory).Path
-if (!(Test-Path (Join-Path $source 'ui-validation.txt'))) { throw '缺少成功验收报告，拒绝发布预览。' }
+$passed = Test-Path (Join-Path $source 'ui-validation.txt')
+if (!$passed -and !(Test-Path (Join-Path $source 'ui-validation-failed.txt'))) { throw '缺少实际验收报告，拒绝发布预览。' }
 $branch = "refs/heads/codex/ui-preview-$($env:GITHUB_SHA)"
 $existing = git ls-remote --heads origin $branch
 if ($LASTEXITCODE -ne 0) { throw '无法检查预览分支。' }
@@ -17,8 +18,8 @@ try {
     $destination = Join-Path $preview 'docs/ui-preview'
     New-Item -ItemType Directory -Force $destination | Out-Null
     Get-ChildItem $source -Filter '*.png' | Copy-Item -Destination $destination
-    Copy-Item (Join-Path $source 'ui-validation.txt') $destination
-    @{ source_commit = $env:GITHUB_SHA; workflow_run = $env:GITHUB_RUN_ID; captured_on = 'Windows GitHub Actions'; data = 'isolated UI fixtures; no user data' } |
+    Get-ChildItem $source -Filter '*.txt' | Copy-Item -Destination $destination
+    @{ source_commit = $env:GITHUB_SHA; workflow_run = $env:GITHUB_RUN_ID; passed = $passed; captured_on = 'Windows GitHub Actions'; data = 'isolated UI fixtures; no user data' } |
         ConvertTo-Json | Set-Content (Join-Path $destination 'source.json') -Encoding utf8
     git -C $preview add -- docs/ui-preview
     git -C $preview -c 'user.name=github-actions[bot]' -c 'user.email=41898282+github-actions[bot]@users.noreply.github.com' commit -m 'Publish verified TypeLingo Windows UI previews'

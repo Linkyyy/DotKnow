@@ -77,7 +77,9 @@ internal static class Program
                 "空搜索框聚焦时隐藏占位文字，光标不与占位文字重叠");
             search.Text = "密钥"; search.CaretIndex = 0; Pump(window);
             var caret = search.GetRectFromCharacterIndex(0);
-            Check(!caret.IsEmpty && caret.Left < 24 && caret.Height > 8, "真实搜索光标位于输入区左侧");
+            Capture(window, Path.Combine(output, "settings-search.png"));
+            Check(!caret.IsEmpty && caret.Left < 24 && caret.Height > 8,
+                $"真实搜索光标位于输入区左侧（位置 {caret}，焦点 {search.IsKeyboardFocusWithin}，尺寸 {search.ActualWidth} × {search.ActualHeight}）");
             search.Clear(); items[0].Focus(); Pump(window);
             Check(Find<TextBlock>("SearchPlaceholder").Visibility == Visibility.Visible, "空搜索框失焦后恢复占位提示");
             SelectPage("home");
@@ -291,6 +293,10 @@ internal static class Program
         }
         catch (Exception error)
         {
+            File.WriteAllLines(Path.Combine(output, "ui-validation-partial.txt"), checks);
+            foreach (Window visible in app.Windows)
+                if (visible.IsVisible)
+                    try { Capture(visible, Path.Combine(output, "failed-" + visible.GetType().Name + ".png")); } catch (Exception) { }
             File.WriteAllText(Path.Combine(output, "ui-validation-failed.txt"), error.ToString());
             Console.Error.WriteLine("::error::" + error.ToString().Replace("\r", "").Replace("\n", "%0A")); return 1;
         }

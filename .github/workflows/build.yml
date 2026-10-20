@@ -37,6 +37,7 @@ jobs:
       - run: dotnet test tests/TypeLingo.Tests -c Release --no-build --logger trx
       - run: ./scripts/publish-windows.ps1
       - name: 运行真实 WPF 设置窗口验证
+        id: ui_smoke
         timeout-minutes: 5
         run: dotnet run --project tools/TypeLingo.UiSmoke -c Release --no-build -- artifacts/ui-smoke
       - uses: actions/upload-artifact@v4
@@ -44,8 +45,8 @@ jobs:
         with:
           name: TypeLingo-settings-ui
           path: artifacts/ui-smoke/
-      - name: 发布通过验收的界面预览
-        if: github.event_name == 'push' && github.ref == 'refs/heads/codex/typelingo-favorites-and-replacement'
+      - name: 发布界面预览与验收诊断
+        if: always() && steps.ui_smoke.outcome != 'skipped' && github.event_name == 'push' && github.ref == 'refs/heads/codex/typelingo-favorites-and-replacement'
         run: ./scripts/publish-ui-previews.ps1
       - run: python scripts/package-release.py
       - uses: actions/upload-artifact@v4
