@@ -1,6 +1,6 @@
-# v0.4.0-preview.4 候选交付包
+# v0.4.0-preview.5 候选交付包
 
-默认鼠标拖选文字后翻译，支持网页、只读文档和应用阅读区域的可访问选区，不要求阅读区域取得键盘焦点；拖选中不请求、清除选区后隐藏。输入自动和快捷键模式仍可选。保留 C 图标、Loading 选择与收藏复习。155 项核心测试及 [本轮 Windows WPF／WebView2／UIA](https://github.com/Linkyyy/TypeLingo/actions/runs/39385687722) 全部通过，见 [本轮记录](../docs/VALIDATION.md)。
+默认鼠标划词、离线题库优先。内置用户提供的 32,159 条中英日查询记录，未命中再按设置在线翻译；可仅查离线、自动积累在线结果和未来命中的缓存，并搜索编辑、导入导出题库。个人增量独立加密保存，没有有效期；清缓存不删题库。使用见 [离线题库](../docs/OFFLINE_VOCABULARY.md)，186 项核心测试及 [本轮 Windows 界面验收](https://github.com/Linkyyy/TypeLingo/actions/runs/39393587812) 全部通过，见 [本轮记录](../docs/VALIDATION.md)。
 
 - [Windows x64 中文候选安装包](https://github.com/Linkyyy/TypeLingo/raw/refs/heads/codex/typelingo-favorites-and-replacement/downloads/TypeLingo-Windows-x64.zip)
 - [完整源码 ZIP](https://github.com/Linkyyy/TypeLingo/raw/refs/heads/codex/typelingo-favorites-and-replacement/downloads/TypeLingo-Source.zip)
