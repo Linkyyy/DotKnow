@@ -85,7 +85,7 @@ public partial class SettingsWindow : Window
     private void Minimize_Click(object sender, RoutedEventArgs e) => WindowState = WindowState.Minimized;
     private void Navigate_Click(object sender, RoutedEventArgs e)
     { if (sender is FrameworkElement { Tag: string id } && Pages.ContainsKey(id)) OpenPage(id); }
-    private void HomeStart_Click(object sender, RoutedEventArgs e) => OpenPage(service.Current.PrivacyConsent ? "general" : "privacy");
+    private void HomeStart_Click(object sender, RoutedEventArgs e) => OpenPage(service.Current.PrivacyConsent ? "prompts" : "privacy");
     private void CloseSettings_Click(object sender, RoutedEventArgs e) => Hide();
     private void OpenConfig_Click(object sender, RoutedEventArgs e)
     {
@@ -100,7 +100,7 @@ public partial class SettingsWindow : Window
     public void ShowMessage(string message) => MessageText.Text = UiText.Get(message);
     private Dictionary<string, FrameworkElement> Pages => new()
     {
-        ["home"] = PageHome, ["general"] = PageGeneral, ["ai"] = PageAi,
+        ["home"] = PageHome, ["general"] = PageGeneral, ["ai"] = PageAi, ["prompts"] = PagePrompts,
         ["cache"] = PageCache, ["appearance"] = PageAppearance, ["hotkeys"] = PageHotkeys, ["privacy"] = PagePrivacy, ["favorites"] = PageFavorites, ["vocabulary"] = PageVocabulary
     };
     private void Navigation_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -164,9 +164,9 @@ public partial class SettingsWindow : Window
     private Choice Option(string code, string label) => new(code, UiText.Get(label));
     private void PopulateChoices(string source, string target, string mode, string position, string provider, string trigger, bool showLoading)
     {
-        TriggerInput.ItemsSource = new[] { Option("selection", "鼠标选中后翻译（默认）"), Option("hotkey", "按快捷键出现"), Option("typing", "输入后自动出现") };
+        TriggerInput.ItemsSource = new[] { Option("selection", "鼠标划选后出现（默认）"), Option("hotkey", "按快捷键出现"), Option("typing", "输入后自动出现") };
         TriggerInput.SelectedValue = trigger;
-        PopupDisplayInput.ItemsSource = new[] { Option("loading", "翻译中显示 Loading"), Option("result", "翻译完成后显示") };
+        PopupDisplayInput.ItemsSource = new[] { Option("loading", "查询中显示 Loading"), Option("result", "查询完成后显示") };
         PopupDisplayInput.SelectedValue = showLoading ? "loading" : "result";
         UiLanguageInput.ItemsSource = new[] { new Choice("zh-CN", "简体中文"), new Choice("en-US", "English"), new Choice("ja-JP", "日本語") };
         UiLanguageInput.SelectedValue = UiText.Language;
@@ -189,6 +189,7 @@ public partial class SettingsWindow : Window
         {
             var s = service.Current; UiText.Apply(s.UiLanguage);
             PopulateChoices(s.Translation.SourceLanguage, s.Translation.TargetLanguage, s.Translation.Mode, s.Overlay.Position, s.AI.Provider, s.Overlay.TriggerMode, s.Overlay.ShowLoading);
+            LoadAssistantSettings(s);
             EnabledCheck.IsChecked = s.Translation.Enabled; ConsentCheck.IsChecked = s.PrivacyConsent;
             AllApplicationsCheck.IsChecked = s.MonitorAllApplications;
             DebounceInput.Text = s.Translation.DebounceMilliseconds.ToString(); IntervalInput.Text = s.Translation.MinimumRequestIntervalMilliseconds.ToString(); MaxInput.Text = s.Translation.MaxInputCharacters.ToString();
@@ -218,7 +219,7 @@ public partial class SettingsWindow : Window
         loading = true;
         try
         {
-            UiText.Apply(language); PopulateChoices(source, target, mode, position, provider, trigger, showLoading);
+            UiText.Apply(language); PopulateChoices(source, target, mode, position, provider, trigger, showLoading); RefreshAssistantLanguage();
             RefreshKeyStatus(); RefreshStatistics(); ApplySearch(); MessageText.Text = TestStatus.Text = "";
         }
         finally { loading = false; }
@@ -269,6 +270,7 @@ public partial class SettingsWindow : Window
         {
             UiLanguage = Selected(UiLanguageInput), PrivacyConsent = ConsentCheck.IsChecked == true,
             MonitorAllApplications = AllApplicationsCheck.IsChecked == true,
+            Assistant = ReadAssistantSettings(),
             Translation = new() { Enabled = EnabledCheck.IsChecked == true, SourceLanguage = Selected(SourceInput), TargetLanguage = Selected(TargetInput), Mode = Selected(ModeInput), DebounceMilliseconds = Integer(DebounceInput.Text), MinimumRequestIntervalMilliseconds = Integer(IntervalInput.Text), MaxInputCharacters = Integer(MaxInput.Text) },
             AI = SelectedAi() with { TimeoutSeconds = Integer(TimeoutInput.Text), MaxRetries = Integer(RetriesInput.Text) },
             Cache = new() { MemoryEnabled = MemoryCheck.IsChecked == true, MemoryMaxEntries = Integer(MemoryCapacityInput.Text), MemoryTTLMinutes = Integer(MemoryTtlInput.Text), DiskEnabled = DiskCheck.IsChecked == true, DiskMaxEntries = Integer(DiskCapacityInput.Text), DiskTTLDays = Integer(DiskTtlInput.Text) },
@@ -349,7 +351,7 @@ public partial class SettingsWindow : Window
             var all = favorites.GetAll(); var due = favorites.GetDue().Count;
             var query = FavoritesSearchInput.Text.Trim();
             var matches = all.Where(x => x.Original.Contains(query, StringComparison.OrdinalIgnoreCase) ||
-                x.Translation.Contains(query, StringComparison.OrdinalIgnoreCase)).ToArray();
+                x.Translation.Contains(query, StringComparison.OrdinalIgnoreCase) || x.Question.Contains(query, StringComparison.OrdinalIgnoreCase)).ToArray();
             FavoritesList.ItemsSource = matches;
             FavoritesEmptyText.Visibility = matches.Length == 0 ? Visibility.Visible : Visibility.Collapsed;
             FavoritesEmptyPanel.Visibility = FavoritesEmptyText.Visibility;
@@ -392,7 +394,7 @@ public partial class SettingsWindow : Window
         }
         var entry = reviewQueue[reviewIndex];
         ReviewPanel.Visibility = Visibility.Visible;
-        ReviewOriginalText.Text = entry.Original; ReviewTranslationText.Text = entry.Translation;
+        ReviewOriginalText.Text = entry.Original + (entry.Question.Length > 0 ? "\n\n" + entry.Question : ""); ReviewTranslationText.Text = entry.Translation;
         ReviewTranslationText.Visibility = ReviewRatingPanel.Visibility = Visibility.Collapsed;
         ShowAnswerButton.Visibility = Visibility.Visible;
         ReviewProgressText.Text = UiText.Format("复习 {0} / {1}", reviewIndex + 1, reviewQueue.Count);
@@ -420,9 +422,9 @@ public partial class SettingsWindow : Window
         HomeCacheCount.Text = hits.ToString(CultureInfo.InvariantCulture);
         HomeSuccessCount.Text = total.ToString(CultureInfo.InvariantCulture);
         var current = service.Current;
-        SidebarStateText.Text = UiText.Get(!current.PrivacyConsent ? "等待隐私授权" : current.Translation.Enabled ? "实时翻译已开启" : "实时翻译已暂停");
-        HomeStartButton.Content = UiText.Get(current.PrivacyConsent ? "翻译偏好" : "开始使用");
-        HomeStateText.Text = UiText.Get(!current.PrivacyConsent ? "等待隐私授权" : current.Translation.Enabled ? "实时翻译已开启" : "实时翻译已暂停") +
+        SidebarStateText.Text = UiText.Get(!current.PrivacyConsent ? "等待隐私授权" : current.Translation.Enabled ? "划选助手已开启" : "划选助手已暂停");
+        HomeStartButton.Content = UiText.Get(current.PrivacyConsent ? "任务与提示词" : "开始使用");
+        HomeStateText.Text = UiText.Get(!current.PrivacyConsent ? "等待隐私授权" : current.Translation.Enabled ? "划选助手已开启" : "划选助手已暂停") +
             " · " + UiText.Get(current.MonitorAllApplications ? "全部可访问应用" : "仅允许指定应用");
         StatisticsText.Text = UiText.Format("HTTP 请求 {0} · 题库命中 {1} · 缓存命中 {2}\n在线成功 {3} · 失败 {4} · 本地命中率 {5}%\n平均 API 延迟 {6} ms · 输入词元 {7} / 输出词元 {8}",
             statistics.ApiCalls, statistics.VocabularyHits, statistics.CacheHits, statistics.Successes, statistics.Failures, total == 0 ? 0 : hits * 100 / total,

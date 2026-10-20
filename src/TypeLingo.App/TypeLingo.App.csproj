@@ -7,7 +7,10 @@
     <EnableWindowsTargeting>true</EnableWindowsTargeting>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <AssemblyName>TypeLingo</AssemblyName>
-    <Version>0.4.0-preview.6</Version>
+    <Version>0.5.0-preview.1</Version>
+    <Product>点知 · DotKnow</Product>
+    <Title>DotKnow</Title>
+    <Description>划选即问的桌面 AI 助手：哪里不会，点哪里。</Description>
     <ApplicationIcon>Assets/typelingo.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>

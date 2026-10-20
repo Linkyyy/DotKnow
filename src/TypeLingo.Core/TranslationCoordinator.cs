@@ -9,6 +9,7 @@ public sealed class TranslationCoordinator(ITranslationProvider provider, ITrans
     private CancellationTokenSource? pending;
     private InputSnapshot? current;
     private string? currentKey;
+    private AppSettings? requestSettings;
     private long sequence;
     private long lastRequestTimestamp;
     private Preview? preview;
@@ -19,7 +20,7 @@ public sealed class TranslationCoordinator(ITranslationProvider provider, ITrans
     public event Action<string>? StatusChanged;
     public Preview? CurrentPreview { get { lock (gate) return preview; } }
 
-    public Task ObserveAsync(InputSnapshot? snapshot, bool force = false)
+    public Task ObserveAsync(InputSnapshot? snapshot, bool force = false, TranslationRequest? taskRequest = null)
     {
         lock (gate)
         {
@@ -35,10 +36,12 @@ public sealed class TranslationCoordinator(ITranslationProvider provider, ITrans
                 suppression = (own.Identity, own.Text, own.FullText, snapshot); snapshot = null;
             }
             else if (snapshot != null) suppression = null;
-            var request = snapshot == null ? null : TranslationRequest.Create(config, snapshot.Text);
+            if (snapshot != null && taskRequest != null && taskRequest.Text != snapshot.Text)
+                throw new ArgumentException("查询内容必须与捕获的选区一致。");
+            var request = snapshot == null ? null : taskRequest ?? TranslationRequest.Create(config, snapshot.Text);
             if (!force && (current == null ? snapshot == null : current.SameContent(snapshot)) && currentKey == request?.CacheKey) return active;
             pending?.Cancel(); pending?.Dispose(); pending = null;
-            current = snapshot; currentKey = request?.CacheKey; preview = null; sequence++;
+            current = snapshot; currentKey = request?.CacheKey; requestSettings = config; preview = null; sequence++;
             PreviewChanged?.Invoke(null);
             if (snapshot == null) return active = Task.CompletedTask;
             var source = pending = new CancellationTokenSource();
@@ -55,12 +58,12 @@ public sealed class TranslationCoordinator(ITranslationProvider provider, ITrans
             TranslationResult? result = null;
             var origin = TranslationOrigin.Online;
             var savingFailed = false;
-            if (vocabulary != null && (config.Vocabulary.PreferOffline || !config.Vocabulary.AllowOnlineFallback))
+            if (request.IsTranslation && vocabulary != null && (config.Vocabulary.PreferOffline || !config.Vocabulary.AllowOnlineFallback))
             {
                 result = await vocabulary.FindAsync(request, token);
                 if (result != null) origin = TranslationOrigin.Vocabulary;
             }
-            if (result == null && !config.Vocabulary.AllowOnlineFallback)
+            if (request.IsTranslation && result == null && !config.Vocabulary.AllowOnlineFallback)
             { PublishStatus(id, "离线题库未命中，已关闭在线翻译。"); return; }
             if (result == null)
             {
@@ -79,16 +82,16 @@ public sealed class TranslationCoordinator(ITranslationProvider provider, ITrans
                     if (wait > 0) await Task.Delay(TimeSpan.FromMilliseconds(wait), token);
                     token.ThrowIfCancellationRequested();
                     lastRequestTimestamp = Environment.TickCount64;
-                    PublishStatus(id, "正在翻译…");
+                    PublishStatus(id, request.IsTranslation ? "正在翻译…" : "正在查询…");
                     result = await provider.TranslateAsync(request, token);
                     token.ThrowIfCancellationRequested();
-                    if (string.IsNullOrWhiteSpace(result.Text)) throw new TranslationException(TranslationError.InvalidResponse, "API 未返回有效译文。");
+                    if (string.IsNullOrWhiteSpace(result.Text)) throw new TranslationException(TranslationError.InvalidResponse, "API 未返回有效内容。");
                     try { await cache.PutAsync(request.CacheKey, result, token); }
                     catch (Exception) when (!token.IsCancellationRequested) { savingFailed = true; }
                 }
                 finally { singleRequest.Release(); }
             }
-            if (vocabulary != null && config.Vocabulary.AutoLearn && origin != TranslationOrigin.Vocabulary)
+            if (request.IsTranslation && vocabulary != null && config.Vocabulary.AutoLearn && origin != TranslationOrigin.Vocabulary)
             {
                 token.ThrowIfCancellationRequested();
                 try { await vocabulary.LearnAsync(request, result, token); }
@@ -105,7 +108,7 @@ public sealed class TranslationCoordinator(ITranslationProvider provider, ITrans
                 {
                     TranslationOrigin.Vocabulary => "离线题库 · 未调用 API",
                     TranslationOrigin.Cache => "本地缓存 · 未调用 API",
-                    _ => "译文就绪 · 原文保持不变"
+                    _ => request.IsTranslation ? "译文就绪 · 原文保持不变" : "回答就绪 · AI 生成"
                 });
             }
         }
@@ -119,7 +122,9 @@ public sealed class TranslationCoordinator(ITranslationProvider provider, ITrans
     {
         lock (gate) return !disposed && value.Sequence == sequence && preview == value &&
             settings().PrivacyConsent && settings().Translation.Enabled &&
-            TranslationRequest.Create(settings(), value.Snapshot.Text).CacheKey == value.Request.CacheKey;
+            (value.Request.IsTranslation
+                ? TranslationRequest.Create(settings(), value.Snapshot.Text).CacheKey == value.Request.CacheKey
+                : settings() == requestSettings);
     }
     public void SuppressOwnReplacement(InputSnapshot original, string translated)
     {

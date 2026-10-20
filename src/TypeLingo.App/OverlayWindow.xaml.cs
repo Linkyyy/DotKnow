@@ -49,7 +49,7 @@ public partial class OverlayWindow : Window
         TranslationText.Text = preview.Result.Text;
         TranslationText.FontSize = settings().Overlay.FontSize;
         RefreshLanguage();
-        CopyButton.Visibility = Visibility.Visible; CopyButton.IsEnabled = true; ReplaceButton.Visibility = preview.Snapshot.CanWrite ? Visibility.Visible : Visibility.Collapsed; ReplaceButton.IsEnabled = preview.Snapshot.CanWrite;
+        CopyButton.Visibility = Visibility.Visible; CopyButton.IsEnabled = true; ReplaceButton.Visibility = preview.Snapshot.CanWrite && preview.Request.IsTranslation ? Visibility.Visible : Visibility.Collapsed; ReplaceButton.IsEnabled = preview.Snapshot.CanWrite && preview.Request.IsTranslation;
         FavoriteButton.Visibility = saveFavorite == null ? Visibility.Collapsed : Visibility.Visible;
         FavoriteButton.IsEnabled = true;
         TranslationText.Cursor = preview.Snapshot.CanWrite ? Cursors.Hand : Cursors.Arrow;
@@ -156,7 +156,7 @@ public partial class OverlayWindow : Window
     private void Copy_Click(object sender, RoutedEventArgs e) => CopyTranslation();
     private async void Replace_Click(object sender, RoutedEventArgs e) => await RequestReplacementAsync();
     private async void Translation_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
-    { if (current?.Snapshot.CanWrite == true) { e.Handled = true; await RequestReplacementAsync(); } }
+    { if (current is { Snapshot.CanWrite: true, Request.IsTranslation: true }) { e.Handled = true; await RequestReplacementAsync(); } }
     private void Favorite_Click(object sender, RoutedEventArgs e)
     {
         if (current == null || saveFavorite == null) return;

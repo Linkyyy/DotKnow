@@ -1738,5 +1738,317 @@
   "柔和的丁香紫，给表达一点灵感": {
     "en-US": "A little lilac inspiration for your next thought.",
     "ja-JP": "柔らかなライラックで、表現にひらめきを。"
+  },
+  "点知": {
+    "en-US": "DotKnow",
+    "ja-JP": "点知"
+  },
+  "点知 · DotKnow": {
+    "en-US": "DotKnow",
+    "ja-JP": "点知 · DotKnow"
+  },
+  "点知 · 划选即问": {
+    "en-US": "DotKnow · Select and ask",
+    "ja-JP": "点知 · 選択して質問"
+  },
+  "哪里不会，": {
+    "en-US": "Something unclear?",
+    "ja-JP": "わからないところを、"
+  },
+  "点哪里。": {
+    "en-US": "Select and ask.",
+    "ja-JP": "選んで聞こう。"
+  },
+  "哪里不会，点哪里。": {
+    "en-US": "Something unclear? Select and ask.",
+    "ja-JP": "わからないところを、選んで聞こう。"
+  },
+  "任务与提示词": {
+    "en-US": "Tasks & prompts",
+    "ja-JP": "タスクとプロンプト"
+  },
+  "你的桌面点读机": {
+    "en-US": "Your desktop reading companion",
+    "ja-JP": "デスクトップの学習パートナー"
+  },
+  "划选不懂的内容，选择预设或输入问题。翻译依然在这里，离线词库只用于翻译模式。": {
+    "en-US": "Select something unclear, choose a task or ask a question. Translation keeps its offline vocabulary.",
+    "ja-JP": "疑問のある文章を選び、タスクや質問を指定。翻訳モードではオフライン辞書も使えます。"
+  },
+  "默认任务": {
+    "en-US": "Default task",
+    "ja-JP": "既定のタスク"
+  },
+  "划选之后": {
+    "en-US": "After selecting",
+    "ja-JP": "選択した後の動作"
+  },
+  "回答语言": {
+    "en-US": "Answer language",
+    "ja-JP": "回答言語"
+  },
+  "百科等任务的回答语言；翻译方向在常规设置中单独选择。": {
+    "en-US": "Language for AI answers. Translation languages are set separately under General.",
+    "ja-JP": "AI 回答の言語。翻訳方向は一般設定で指定します。"
+  },
+  "预设提示词": {
+    "en-US": "Prompt presets",
+    "ja-JP": "プロンプトのプリセット"
+  },
+  "新建提示词": {
+    "en-US": "New prompt",
+    "ja-JP": "プロンプトを追加"
+  },
+  "名称": {
+    "en-US": "Name",
+    "ja-JP": "名前"
+  },
+  "提示词名称": {
+    "en-US": "Prompt name",
+    "ja-JP": "プロンプト名"
+  },
+  "任务指令": {
+    "en-US": "Task instructions",
+    "ja-JP": "タスクの指示"
+  },
+  "只写希望 AI 如何回答；选中的文本会单独提供，无需填写占位符。内置预设只读，可新建自己的版本。": {
+    "en-US": "Describe how AI should respond. Selected text is provided separately; no placeholder is needed. Built-ins are read-only; create your own version.",
+    "ja-JP": "AI の回答方法を記入。選択テキストは別途送信するためプレースホルダーは不要です。内蔵プリセットは読み取り専用です。"
+  },
+  "保存此预设": {
+    "en-US": "Save preset",
+    "ja-JP": "プリセットを保存"
+  },
+  "删除此预设": {
+    "en-US": "Delete preset",
+    "ja-JP": "プリセットを削除"
+  },
+  "百科等任务需要配置在线 API。离线优先、仅离线和自动积累只影响纯翻译；补充问题将作为 AI 任务处理。": {
+    "en-US": "AI tasks need an online API. Offline priority, offline-only and vocabulary learning apply to plain translation. Additional questions use AI.",
+    "ja-JP": "AI タスクにはオンライン API が必要です。オフライン優先・オフライン限定・辞書への蓄積は通常の翻訳にのみ適用。追加質問は AI が処理します。"
+  },
+  "先选择任务或输入问题（推荐）": {
+    "en-US": "Choose a task or ask first (recommended)",
+    "ja-JP": "タスクを選択・質問を入力（推奨）"
+  },
+  "立即执行默认预设": {
+    "en-US": "Run default task immediately",
+    "ja-JP": "既定のタスクをすぐ実行"
+  },
+  "百科": {
+    "en-US": "Encyclopedia",
+    "ja-JP": "百科"
+  },
+  "翻译": {
+    "en-US": "Translate",
+    "ja-JP": "翻訳"
+  },
+  "通俗解释": {
+    "en-US": "Plain explanation",
+    "ja-JP": "やさしく説明"
+  },
+  "提炼重点": {
+    "en-US": "Key points",
+    "ja-JP": "要点をまとめる"
+  },
+  "写作润色": {
+    "en-US": "Polish writing",
+    "ja-JP": "文章を推敲"
+  },
+  "代码解读": {
+    "en-US": "Explain code",
+    "ja-JP": "コードを解説"
+  },
+  "自由提问": {
+    "en-US": "Ask anything",
+    "ja-JP": "自由に質問"
+  },
+  "选中的内容": {
+    "en-US": "Selected text",
+    "ja-JP": "選択した内容"
+  },
+  "选择任务": {
+    "en-US": "Choose task",
+    "ja-JP": "タスクを選択"
+  },
+  "开始查询": {
+    "en-US": "Ask AI",
+    "ja-JP": "質問する"
+  },
+  "补充问题（自由提问时必填）": {
+    "en-US": "Additional question (required for Ask anything)",
+    "ja-JP": "追加の質問（自由に質問では必須）"
+  },
+  "输入你的问题": {
+    "en-US": "Your question",
+    "ja-JP": "質問を入力"
+  },
+  "例如：用一个生活中的例子解释。Ctrl+Enter 发送": {
+    "en-US": "E.g. explain with an everyday example. Ctrl+Enter to send.",
+    "ja-JP": "例：日常の例で説明して。Ctrl+Enter で送信"
+  },
+  "选一个预设直接查询，或写下你的问题。": {
+    "en-US": "Choose a preset or write your question.",
+    "ja-JP": "プリセットを選ぶか、質問を入力してください。"
+  },
+  "查询结果": {
+    "en-US": "Answer",
+    "ja-JP": "回答"
+  },
+  "复制结果": {
+    "en-US": "Copy answer",
+    "ja-JP": "回答をコピー"
+  },
+  "收藏": {
+    "en-US": "Save",
+    "ja-JP": "保存"
+  },
+  "AI 回答可能有误；百科等任务需要在线模型，不提供实时联网检索。": {
+    "en-US": "AI can make mistakes. AI tasks need an online model; live web search is not provided.",
+    "ja-JP": "AI は誤る場合があります。AI タスクにはオンラインモデルが必要で、リアルタイムのウェブ検索は行いません。"
+  },
+  "选区已保留，输入问题不会读取其他内容。": {
+    "en-US": "Selection captured. Typing a question will not read other content.",
+    "ja-JP": "選択内容を保持しています。質問の入力中に他の内容は読み取りません。"
+  },
+  "翻译模式：沿用翻译方向、离线优先和自动积累设置。": {
+    "en-US": "Translation uses your language, offline priority and vocabulary settings.",
+    "ja-JP": "翻訳方向・オフライン優先・辞書への蓄積の設定を使用します。"
+  },
+  "在线 AI 任务：选区作为参考内容，提示词和补充问题决定回答方式。": {
+    "en-US": "Online AI task: the selected text is context; your prompt and question guide the answer.",
+    "ja-JP": "オンライン AI タスク。選択内容を参考に、プロンプトと質問に沿って回答します。"
+  },
+  "正在查询…": {
+    "en-US": "Working on your question…",
+    "ja-JP": "回答を作成中…"
+  },
+  "回答就绪 · AI 生成": {
+    "en-US": "Answer ready · AI generated",
+    "ja-JP": "回答しました · AI 生成"
+  },
+  "结果已复制": {
+    "en-US": "Answer copied",
+    "ja-JP": "回答をコピーしました"
+  },
+  "收藏失败，请检查本地存储权限。": {
+    "en-US": "Could not save. Check local storage permissions.",
+    "ja-JP": "保存できません。ローカル保存先の権限を確認してください。"
+  },
+  "所选提示词已不存在，请重新选择。": {
+    "en-US": "This prompt no longer exists. Choose another.",
+    "ja-JP": "このプロンプトは存在しません。選び直してください。"
+  },
+  "补充问题最多 4000 字。": {
+    "en-US": "Questions can contain up to 4,000 characters.",
+    "ja-JP": "追加の質問は 4,000 文字以内です。"
+  },
+  "请输入你想问的问题。": {
+    "en-US": "Enter your question.",
+    "ja-JP": "質問を入力してください。"
+  },
+  "自定义提示词最多 20 套；名称 1–40 字，提示词 1–6000 字，标识不能重复。": {
+    "en-US": "Up to 20 custom prompts; names 1–40 characters and instructions 1–6,000. IDs must be unique.",
+    "ja-JP": "カスタムプロンプトは最大 20 個。名前は 1～40 文字、指示は 1～6,000 文字。ID は重複不可です。"
+  },
+  "助手任务、划选动作或回答语言无效。": {
+    "en-US": "Invalid assistant task, selection action or answer language.",
+    "ja-JP": "タスク・選択後の動作・回答言語が無効です。"
+  },
+  "提示词已加入待保存设置，请点击保存设置。": {
+    "en-US": "Prompt updated. Click Save settings to keep it.",
+    "ja-JP": "プロンプトを更新しました。「設定を保存」で確定してください。"
+  },
+  "提示词已从待保存设置移除，请点击保存设置。": {
+    "en-US": "Prompt removed. Click Save settings to keep the change.",
+    "ja-JP": "プロンプトを削除しました。「設定を保存」で確定してください。"
+  },
+  "百科、翻译与自定义提问": {
+    "en-US": "Encyclopedia, translation & your questions",
+    "ja-JP": "百科・翻訳・自分の質問"
+  },
+  "把新知识，变成自己的。": {
+    "en-US": "Make new knowledge your own.",
+    "ja-JP": "新しい知識を自分のものに。"
+  },
+  "让点知更像你的桌面。": {
+    "en-US": "Make DotKnow feel at home.",
+    "ja-JP": "点知をあなたのデスクトップに。"
+  },
+  "默认划选即问。选预设，或写下自己的问题。翻译模式保留离线词库。": {
+    "en-US": "Select and ask. Choose a preset or write a question. Translation keeps its offline vocabulary.",
+    "ja-JP": "選択して質問。プリセットや自分の質問を指定。翻訳のオフライン辞書もそのまま。"
+  },
+  "完成查询": {
+    "en-US": "Answers",
+    "ja-JP": "回答数"
+  },
+  "划选助手已开启": {
+    "en-US": "Selection assistant is on",
+    "ja-JP": "選択アシスタントは有効"
+  },
+  "划选助手已暂停": {
+    "en-US": "Selection assistant is paused",
+    "ja-JP": "選択アシスタントは一時停止中"
+  },
+  "结果缓存": {
+    "en-US": "Answer cache",
+    "ja-JP": "回答キャッシュ"
+  },
+  "鼠标划选后出现（默认）": {
+    "en-US": "After mouse selection (default)",
+    "ja-JP": "マウスで選択後（既定）"
+  },
+  "自动查询窗口显示时机": {
+    "en-US": "Automatic answer display",
+    "ja-JP": "自動回答の表示タイミング"
+  },
+  "查询中显示 Loading": {
+    "en-US": "Show progress while working",
+    "ja-JP": "処理中に表示"
+  },
+  "查询完成后显示": {
+    "en-US": "Show when ready",
+    "ja-JP": "完了後に表示"
+  },
+  "显示查询面板": {
+    "en-US": "Show question panel",
+    "ja-JP": "質問パネルを表示"
+  },
+  "复制当前结果": {
+    "en-US": "Copy current answer",
+    "ja-JP": "現在の回答をコピー"
+  },
+  "开启划选助手": {
+    "en-US": "Enable selection assistant",
+    "ja-JP": "選択アシスタントを有効化"
+  },
+  "选区稳定或输入停顿达到此时间后执行自动任务": {
+    "en-US": "Wait this long after selection or typing stops before automatic tasks.",
+    "ja-JP": "選択や入力が止まってから自動タスクを実行するまでの待機時間。"
+  },
+  "超过长度限制时跳过读取": {
+    "en-US": "Skip content longer than this limit.",
+    "ja-JP": "この文字数を超える内容は読み取りません。"
+  },
+  "点知（或旧版伴译）已在系统托盘运行。": {
+    "en-US": "DotKnow (or TypeLingo) is already running in the tray.",
+    "ja-JP": "点知（または旧版 TypeLingo）はトレイで動作中です。"
+  },
+  "点知 · 已暂停读取": {
+    "en-US": "DotKnow · Paused",
+    "ja-JP": "点知 · 一時停止中"
+  },
+  "点知 · 监控全部可访问应用": {
+    "en-US": "DotKnow · All accessible apps",
+    "ja-JP": "点知 · アクセス可能なアプリ"
+  },
+  "点知 · 仅监控允许的应用": {
+    "en-US": "DotKnow · Allowed apps only",
+    "ja-JP": "点知 · 許可したアプリのみ"
+  },
+  "查看答案": {
+    "en-US": "Reveal answer",
+    "ja-JP": "回答を表示"
   }
 }

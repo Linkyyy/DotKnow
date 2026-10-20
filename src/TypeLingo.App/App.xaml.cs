@@ -19,6 +19,7 @@ public partial class App : System.Windows.Application
     private TranslationCoordinator coordinator = null!;
     private InputObserver observer = null!;
     private OverlayWindow overlay = null!;
+    private AssistantWindow assistant = null!;
     private SettingsWindow settingsWindow = null!;
     private HotkeyService hotkeys = null!;
     private System.Drawing.Icon? trayIconWhite;
@@ -31,7 +32,7 @@ public partial class App : System.Windows.Application
     {
         base.OnStartup(e);
         instance = new Mutex(true, @"Local\TypeLingo.CurrentUser", out var first);
-        if (!first) { System.Windows.MessageBox.Show(UiText.Get("TypeLingo 已在系统托盘运行。")); Shutdown(); return; }
+        if (!first) { System.Windows.MessageBox.Show(UiText.Get("点知（或旧版伴译）已在系统托盘运行。")); Shutdown(); return; }
         var protector = new DpapiProtector();
         var folder = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "TypeLingo");
         settings = new SettingsService(folder, protector); settings.Load();
@@ -45,6 +46,14 @@ public partial class App : System.Windows.Application
         var replacement = new ReplacementService(observer, coordinator);
         var favorites = new FavoriteStore(folder, protector);
         overlay = new OverlayWindow(replacement, () => settings.Current, preview => favorites.Add(preview));
+        assistant = new AssistantWindow(() => settings.Current, preview => favorites.Add(preview));
+        assistant.QueryRequested += async (snapshot, request) =>
+        {
+            var revision = assistant.QueryRevision;
+            try { await coordinator.ObserveAsync(snapshot, true, request); }
+            finally { if (assistant.QueryRevision == revision) assistant.CompleteQuery(); }
+        };
+        assistant.Dismissed += () => { _ = coordinator.ObserveAsync(null, true); };
         hotkeys = new HotkeyService();
         ProviderApi TestApi(AppSettings candidate, string newKey) => new(http, () => candidate,
             ai => string.IsNullOrWhiteSpace(newKey) ? settings.ReadKey(ai) : newKey.Trim(), statistics);
@@ -53,31 +62,38 @@ public partial class App : System.Windows.Application
             (candidate, key) => TestApi(candidate, key).TranslateAsync(TranslationRequest.Create(candidate, "Hello") with { SourceLanguage = "en" }, CancellationToken.None),
             async () => { await coordinator.ObserveAsync(null, true); await cache.ClearAsync(); }, favorites, vocabulary, () => { _ = coordinator.ObserveAsync(null, true); });
         _ = PrepareVocabularyAsync();
-        coordinator.PreviewChanged += preview => Ui(() => overlay.Display(preview));
-        coordinator.StatusChanged += status => Ui(() => { overlay.ShowStatus(status); overlay.Loading(latest, status); });
+        coordinator.PreviewChanged += preview => Ui(() =>
+        {
+            if (assistant.HasSession) assistant.Display(preview); else overlay.Display(preview);
+        });
+        coordinator.StatusChanged += status => Ui(() =>
+        {
+            if (assistant.HasSession) assistant.ShowStatus(status);
+            else { overlay.ShowStatus(status); overlay.Loading(latest, status); }
+        });
         observer.SnapshotChanged += snapshot =>
         {
             var capturedConfig = settings.Current;
             Ui(() =>
             {
                 if (!ReferenceEquals(capturedConfig, settings.Current)) return;
-                latest = snapshot;
-                if (snapshot != null) overlay.MoveAnchor(snapshot.Bounds, snapshot.ControlBounds);
-                _ = coordinator.ObserveAsync(snapshot);
+                // Clicking our question box changes focus; its session keeps the already captured selection.
+                if (assistant.HasSession && assistant.IsActive) return;
+                HandleSnapshot(snapshot);
             });
         };
         observer.StatusChanged += status => Ui(() => overlay.ShowStatus(status));
         hotkeys.Pressed += async id =>
         {
-            if (id == 1) await overlay.RequestReplacementAsync();
+            if (id == 1 && !assistant.HasSession) await overlay.RequestReplacementAsync();
             else if (id == 2) TogglePause();
-            else if (id == 3) overlay.CopyTranslation();
+            else if (id == 3) { if (assistant.HasSession) assistant.CopyAnswer(); else overlay.CopyTranslation(); }
             else if (id == 4)
             {
                 try
                 {
-                    latest = await observer.RequestPreviewAsync(CancellationToken.None);
-                    await coordinator.ObserveAsync(latest, true);
+                    if (assistant.HasSession && assistant.IsActive) { assistant.Activate(); return; }
+                    HandleSnapshot(await observer.RequestPreviewAsync(CancellationToken.None), true);
                 }
                 catch (Exception) { latest = null; await coordinator.ObserveAsync(null, true); overlay.ShowStatus("无法读取当前输入或选区，请切换应用后重试。"); }
             }
@@ -94,7 +110,7 @@ public partial class App : System.Windows.Application
         trayIconWhite = BrandAssets.CreateTrayIcon(true);
         trayIconBlack = BrandAssets.CreateTrayIcon(false);
         tray = new Forms.NotifyIcon { Icon = DesktopTheme.IsTaskbarDark ? trayIconWhite : trayIconBlack,
-            Text = "TypeLingo · 伴译", ContextMenuStrip = menu, Visible = true };
+            Text = "点知 · DotKnow", ContextMenuStrip = menu, Visible = true };
         tray.DoubleClick += (_, _) => ShowSettings();
         UiText.Changed += UpdateTray;
         DesktopTheme.Changed += UpdateTrayAppearance;
@@ -102,16 +118,36 @@ public partial class App : System.Windows.Application
         SystemEvents.UserPreferenceChanged += SystemThemeChanged;
         var hotkeyError = hotkeys.Register(settings.Current.Hotkeys);
         if (hotkeyError != null) settingsWindow.ShowMessage(hotkeyError);
-        if (!settings.Current.PrivacyConsent || (!settings.HasKey && !settings.Current.Vocabulary.PreferOffline && settings.Current.Vocabulary.AllowOnlineFallback) || settings.LoadWarning != null || hotkeyError != null) ShowSettings();
+        if (!settings.Current.PrivacyConsent || (!settings.HasKey && (settings.Current.Assistant.PresetId != "translate" ||
+            !settings.Current.Vocabulary.PreferOffline && settings.Current.Vocabulary.AllowOnlineFallback)) || settings.LoadWarning != null || hotkeyError != null) ShowSettings();
     }
     private async Task PrepareVocabularyAsync()
     {
         try { await vocabulary.InitializeAsync(); }
         catch (Exception) { Ui(() => settingsWindow.ShowMessage("离线题库无法初始化，原有文件已保留；请检查存储权限。")); }
     }
+    private void HandleSnapshot(InputSnapshot? snapshot, bool force = false)
+    {
+        var same = latest == null ? snapshot == null : latest.SameContent(snapshot);
+        latest = snapshot;
+        if (snapshot == null)
+        {
+            assistant.CancelSession(false); _ = coordinator.ObserveAsync(null, force); return;
+        }
+        if (!force && same) { overlay.MoveAnchor(snapshot.Bounds, snapshot.ControlBounds); return; }
+        assistant.CancelSession(false); overlay.Dismiss();
+        _ = coordinator.ObserveAsync(null, true);
+        var config = settings.Current;
+        if (config.Assistant.SelectionAction == "ask" || config.Assistant.PresetId == "ask")
+            assistant.Present(snapshot, activate: force);
+        else if (config.Assistant.PresetId != "translate")
+            assistant.Present(snapshot, autoRun: true);
+        else _ = coordinator.ObserveAsync(snapshot, force, AssistantPresets.CreateRequest(config, snapshot.Text));
+    }
     private string? SaveSettings(AppSettings candidate, string key)
     {
         settings.Save(candidate, key);
+        latest = null; assistant.CancelSession(false); overlay.Dismiss();
         UiText.Apply(candidate.UiLanguage);
         _ = coordinator.ObserveAsync(null, true); ApplyTheme(); UpdateTray();
         return hotkeys.Register(candidate.Hotkeys);
@@ -119,22 +155,28 @@ public partial class App : System.Windows.Application
     private void TogglePause()
     {
         settings.SetPaused(settings.Current.Translation.Enabled);
+        latest = null; assistant.CancelSession(false);
         _ = coordinator.ObserveAsync(null, true); overlay.Hide(); UpdateTray();
     }
     internal void PauseMonitoring()
     {
         settings.SetPaused(true);
+        latest = null; assistant.CancelSession(false);
         _ = coordinator.ObserveAsync(null, true); overlay.Hide(); UpdateTray();
     }
     private void UpdateTray()
     {
         pauseItem.Checked = !settings.Current.Translation.Enabled;
-        tray.Text = UiText.Get(!settings.Current.Translation.Enabled || !settings.Current.PrivacyConsent ? "TypeLingo · 已暂停读取" :
-            settings.Current.MonitorAllApplications ? "TypeLingo · 监控全部可访问应用" : "TypeLingo · 仅监控允许的应用");
+        tray.Text = UiText.Get(!settings.Current.Translation.Enabled || !settings.Current.PrivacyConsent ? "点知 · 已暂停读取" :
+            settings.Current.MonitorAllApplications ? "点知 · 监控全部可访问应用" : "点知 · 仅监控允许的应用");
         foreach (Forms.ToolStripItem item in tray.ContextMenuStrip!.Items)
             if (item.Tag is string text) item.Text = UiText.Get(text);
     }
-    private void ShowSettings() { settingsWindow.Show(); settingsWindow.Activate(); }
+    private void ShowSettings()
+    {
+        assistant.CancelSession(false); _ = coordinator.ObserveAsync(null, true); overlay.Dismiss();
+        settingsWindow.Show(); settingsWindow.Activate();
+    }
     private void UpdateTrayAppearance()
     { if (tray?.ContextMenuStrip is { } menu) TrayAppearance.Apply(menu); }
     private void Ui(Action action)

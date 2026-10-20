@@ -31,6 +31,9 @@ public sealed class SettingsService(string directory, IDataProtector protector)
             var text = File.ReadAllText(file);
             var candidate = JsonSerializer.Deserialize<AppSettings>(text) ?? throw new JsonException();
             using var document = JsonDocument.Parse(text);
+            // Keep existing installations in their translation workflow; new installations open the task picker.
+            if (!document.RootElement.TryGetProperty("Assistant", out _))
+                candidate = candidate with { Assistant = new() { PresetId = "translate", SelectionAction = "instant" } };
             if (document.RootElement.TryGetProperty("Overlay", out var overlay) && overlay.ValueKind == JsonValueKind.Object && !overlay.TryGetProperty("Theme", out _))
                 candidate = candidate with { Overlay = candidate.Overlay with { Theme = candidate.Overlay.DarkMode ? "dark" : "light" } };
             if (overlay.ValueKind == JsonValueKind.Object && !overlay.TryGetProperty("TriggerModeVersion", out _) && candidate.Overlay.TriggerMode == "typing")

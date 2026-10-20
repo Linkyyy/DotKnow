@@ -11,6 +11,7 @@ public sealed class ReplacementService(IInputTarget target, TranslationCoordinat
 {
     public async Task<ReplacementTicket?> PrepareAsync(CancellationToken cancellationToken = default)
     {
+        if (coordinator.CurrentPreview is { Request.IsTranslation: false }) return null;
         var before = await target.CaptureAsync(cancellationToken);
         if (before is not { CanWrite: true, IsComposing: false, IsSensitive: false } || string.IsNullOrWhiteSpace(before.Text)) return null;
         await coordinator.ObserveAsync(before);
@@ -23,7 +24,7 @@ public sealed class ReplacementService(IInputTarget target, TranslationCoordinat
 
     public async Task<bool> ConfirmAsync(ReplacementTicket ticket, CancellationToken cancellationToken = default)
     {
-        if (!ticket.Consume() || !coordinator.IsCurrent(ticket.Preview)) return false;
+        if (!ticket.Consume() || !ticket.Preview.Request.IsTranslation || !coordinator.IsCurrent(ticket.Preview)) return false;
         var live = await target.CaptureAsync(cancellationToken);
         if (!Same(ticket.Preview.Snapshot, live) || !coordinator.IsCurrent(ticket.Preview)) return false;
         var success = await target.TryReplaceAsync(ticket.Preview.Snapshot, ticket.Preview.Result.Text, cancellationToken);
@@ -32,7 +33,7 @@ public sealed class ReplacementService(IInputTarget target, TranslationCoordinat
     }
     public async Task<ReplacementTicket?> PreparePreviewAsync(Preview preview, CancellationToken cancellationToken = default)
     {
-        if (!coordinator.IsCurrent(preview) || preview.Snapshot is not { CanWrite: true, IsComposing: false, IsSensitive: false }) return null;
+        if (!preview.Request.IsTranslation || !coordinator.IsCurrent(preview) || preview.Snapshot is not { CanWrite: true, IsComposing: false, IsSensitive: false }) return null;
         var live = await target.CaptureAsync(cancellationToken);
         return Same(preview.Snapshot, live) && coordinator.IsCurrent(preview) ? new(preview) : null;
     }

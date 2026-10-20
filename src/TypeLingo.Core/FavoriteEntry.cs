@@ -2,7 +2,7 @@ namespace TypeLingo.Core;
 
 public sealed record FavoriteEntry(Guid Id, string Original, string Translation, string SourceLanguage,
     string TargetLanguage, string Mode, DateTimeOffset CreatedAt, DateTimeOffset DueAt,
-    int ReviewCount = 0, int IntervalDays = 0)
+    int ReviewCount = 0, int IntervalDays = 0, string TaskId = "translate", string Question = "")
 {
     public FavoriteEntry Review(bool remembered, DateTimeOffset now)
     {

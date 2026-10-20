@@ -15,10 +15,15 @@ public sealed record InputSnapshot(string Identity, string Text, InputRect Bound
 }
 
 public sealed record TranslationRequest(string Provider, string Model, string SourceLanguage,
-    string TargetLanguage, string Mode, string Text, string BaseUrl, string PromptVersion = "1")
+    string TargetLanguage, string Mode, string Text, string BaseUrl, string PromptVersion = "1",
+    string TaskId = "translate", string Instructions = "", string Question = "", string ResponseLanguage = "zh")
 {
+    public bool IsTranslation => TaskId == "translate" && Instructions.Length == 0 && Question.Length == 0;
     public string CacheKey => Convert.ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes(
-        JsonSerializer.Serialize(new[] { Provider, Model, SourceLanguage, TargetLanguage, Mode, PromptVersion, Text, BaseUrl }))));
+        JsonSerializer.Serialize(IsTranslation
+            ? new[] { Provider, Model, SourceLanguage, TargetLanguage, Mode, PromptVersion, Text, BaseUrl }
+            : new[] { Provider, Model, SourceLanguage, TargetLanguage, Mode, PromptVersion, Text, BaseUrl,
+                "assistant-v1", TaskId, Instructions, Question, ResponseLanguage }))));
 
     public static TranslationRequest Create(AppSettings settings, string text) => new(settings.AI.Provider,
         settings.AI.Model, settings.Translation.SourceLanguage, settings.Translation.TargetLanguage,

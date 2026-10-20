@@ -63,6 +63,7 @@ public sealed class VocabularyStore(string directory, IDataProtector protector, 
     }
     public async Task<TranslationResult?> FindAsync(TranslationRequest request, CancellationToken token)
     {
+        if (!request.IsTranslation) return null;
         await InitializeAsync(token).ConfigureAwait(false); await gate.WaitAsync(token).ConfigureAwait(false);
         try
         {
@@ -88,6 +89,7 @@ public sealed class VocabularyStore(string directory, IDataProtector protector, 
     }
     public async Task LearnAsync(TranslationRequest request, TranslationResult result, CancellationToken token)
     {
+        if (!request.IsTranslation) return;
         var entry = VocabularyEntry.From(request, result.Text) with { Origin = "learned" };
         if (!entry.IsValid) return;
         await InitializeAsync(token).ConfigureAwait(false); await gate.WaitAsync(token).ConfigureAwait(false);

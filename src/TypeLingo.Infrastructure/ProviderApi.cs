@@ -42,7 +42,7 @@ public sealed class ProviderApi(HttpClient client, Func<AppSettings> settings,
         if (request.Provider == "Anthropic") return new
         {
             model = request.Model, max_tokens = 4096, stream = false, system = prompt,
-            messages = new[] { new { role = "user", content = request.Text } }
+            messages = new[] { new { role = "user", content = TranslationPrompt.UserContent(request) } }
         };
         if (request.Provider == "Gemini")
         {
@@ -52,14 +52,14 @@ public sealed class ProviderApi(HttpClient client, Func<AppSettings> settings,
             return new
             {
                 systemInstruction = new { parts = new[] { new { text = prompt } } },
-                contents = new[] { new { role = "user", parts = new[] { new { text = request.Text } } } },
+                contents = new[] { new { role = "user", parts = new[] { new { text = TranslationPrompt.UserContent(request) } } } },
                 generationConfig = generation
             };
         }
         var body = new Dictionary<string, object>
         {
             ["model"] = request.Model, ["stream"] = false,
-            ["messages"] = new[] { new { role = "system", content = prompt }, new { role = "user", content = request.Text } }
+            ["messages"] = new[] { new { role = "system", content = prompt }, new { role = "user", content = TranslationPrompt.UserContent(request) } }
         };
         if (request.Provider == "DeepSeek") body["thinking"] = new { type = "disabled" };
         if (request.Provider == "Qwen") body["enable_thinking"] = false;

@@ -28,12 +28,13 @@ public sealed class FavoriteStore(string directory, IDataProtector protector, Fu
         {
             var entries = Read(); var request = preview.Request;
             var existing = entries.FirstOrDefault(x => x.Original == preview.Snapshot.Text && x.Translation == preview.Result.Text &&
-                x.SourceLanguage == request.SourceLanguage && x.TargetLanguage == request.TargetLanguage && x.Mode == request.Mode);
+                x.SourceLanguage == request.SourceLanguage && x.TargetLanguage == request.TargetLanguage && x.Mode == request.Mode &&
+                x.TaskId == request.TaskId && x.Question == request.Question);
             if (existing != null) return existing;
             if (entries.Count >= 5000) throw new InvalidOperationException("收藏已达 5000 条，请先删除部分内容。");
             var time = now();
             var entry = new FavoriteEntry(Guid.NewGuid(), preview.Snapshot.Text, preview.Result.Text,
-                request.SourceLanguage, request.TargetLanguage, request.Mode, time, time);
+                request.SourceLanguage, request.TargetLanguage, request.Mode, time, time, TaskId: request.TaskId, Question: request.Question);
             entries.Add(entry); Write(entries); return entry;
         }
     }

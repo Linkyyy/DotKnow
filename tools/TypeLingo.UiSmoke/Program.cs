@@ -297,6 +297,7 @@ internal static class Program
                 ((Button)clickable.FindName("ConfirmButton")).RaiseEvent(new RoutedEventArgs(Button.ClickEvent)); Pump(clickable);
                 Check(target.Writes == 1 && !clickable.IsVisible, "确认后点击译文流程只写入一次并隐藏");
             }
+            AssistantSmoke.Verify(window, settings, vocabulary, Check, (w, name) => Capture(w, Path.Combine(output, name)), temporary);
             var fixtureErrors = new List<Exception>();
             try { InputFixture.Verify(Check); } catch (Exception error) { fixtureErrors.Add(error); }
             try { WebViewFixture.Verify(Check, (w, name) => Capture(w, Path.Combine(output, name)), output); }

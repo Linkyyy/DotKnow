@@ -1,0 +1,31 @@
+<Window x:Class="TypeLingo.App.AssistantWindow" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:controls="clr-namespace:TypeLingo.App.Controls"
+        Title="{DynamicResource '点知 · 划选即问'}" Width="500" Height="660" MinWidth="360" MinHeight="420" ShowInTaskbar="False" ShowActivated="False" Topmost="True" Background="{DynamicResource CanvasBrush}" PreviewKeyDown="Window_PreviewKeyDown">
+  <Grid Margin="22,18,22,16">
+    <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="*"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
+    <Grid Margin="0,0,0,16"><Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+      <StackPanel Orientation="Horizontal"><controls:BrandMark Width="27" Height="27" Foreground="{DynamicResource AccentBrush}" Margin="0,0,10,0"/><StackPanel><TextBlock Text="{DynamicResource '点知 · DotKnow'}" FontSize="17" FontWeight="SemiBold"/><TextBlock Text="{DynamicResource '哪里不会，点哪里。'}" FontSize="10" Foreground="{DynamicResource MutedBrush}" Margin="0,4,0,0"/></StackPanel></StackPanel>
+      <Button Grid.Column="1" Style="{StaticResource OverlayIconButton}" Click="Dismiss_Click" AutomationProperties.Name="{DynamicResource '关闭'}"><controls:SymbolIcon Kind="close" Width="14" Height="14"/></Button>
+    </Grid>
+    <Border Grid.Row="1" Background="{DynamicResource AccentSurfaceBrush}" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" CornerRadius="10" Padding="12" Margin="0,0,0,14">
+      <StackPanel><TextBlock Text="{DynamicResource '选中的内容'}" FontSize="10" Foreground="{DynamicResource MutedBrush}" Margin="0,0,0,6"/><TextBox x:Name="SelectionText" IsReadOnly="True" TextWrapping="Wrap" MaxHeight="70" MinHeight="26" Padding="0" Background="Transparent" BorderThickness="0" VerticalScrollBarVisibility="Auto" AutomationProperties.Name="{DynamicResource '选中的内容'}"/></StackPanel>
+    </Border>
+    <StackPanel Grid.Row="2">
+      <Grid><Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions><ComboBox x:Name="TaskInput" DisplayMemberPath="Name" SelectedValuePath="Id" SelectionChanged="Task_SelectionChanged" AutomationProperties.Name="{DynamicResource '选择任务'}"/><Button x:Name="SubmitButton" Grid.Column="1" Content="{DynamicResource '开始查询'}" Style="{StaticResource PrimaryButton}" Click="Submit_Click" Margin="10,0,0,0" Padding="17,8"/></Grid>
+      <TextBlock x:Name="TaskDescription" FontSize="10" Foreground="{DynamicResource MutedBrush}" TextWrapping="Wrap" Margin="0,7,0,10"/>
+      <TextBlock Text="{DynamicResource '补充问题（自由提问时必填）'}" FontSize="11" Margin="0,0,0,6"/>
+      <TextBox x:Name="QuestionInput" Height="64" MaxLength="4000" AcceptsReturn="True" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto" AutomationProperties.Name="{DynamicResource '输入你的问题'}"/>
+      <TextBlock Text="{DynamicResource '例如：用一个生活中的例子解释。Ctrl+Enter 发送'}" FontSize="10" Foreground="{DynamicResource MutedBrush}" Margin="0,6,0,12"/>
+    </StackPanel>
+    <Border Grid.Row="3" Style="{StaticResource CardFrame}" Padding="12" Margin="0,0,0,10" MinHeight="70">
+      <Grid><TextBlock x:Name="EmptyText" Text="{DynamicResource '选一个预设直接查询，或写下你的问题。'}" TextWrapping="Wrap" Foreground="{DynamicResource MutedBrush}" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10"/>
+        <TextBox x:Name="AnswerText" IsReadOnly="True" Visibility="Collapsed" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Background="Transparent" BorderThickness="0" Padding="0" AutomationProperties.Name="{DynamicResource '查询结果'}"/>
+      </Grid>
+    </Border>
+    <StackPanel Grid.Row="4"><ProgressBar x:Name="QueryProgress" IsIndeterminate="True" Height="3" Visibility="Collapsed" Margin="0,0,0,8"/>
+      <Grid><Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions><TextBlock x:Name="QueryStatus" FontSize="10" Foreground="{DynamicResource MutedBrush}" TextWrapping="Wrap" VerticalAlignment="Center" Margin="0,0,10,0"/>
+        <StackPanel Grid.Column="1" Orientation="Horizontal"><Button x:Name="CopyAnswerButton" Content="{DynamicResource '复制结果'}" IsEnabled="False" Click="Copy_Click" Padding="10,6"/><Button x:Name="SaveAnswerButton" Content="{DynamicResource '收藏'}" IsEnabled="False" Click="Favorite_Click" Padding="10,6" Margin="7,0,0,0"/></StackPanel>
+      </Grid>
+      <TextBlock Text="{DynamicResource 'AI 回答可能有误；百科等任务需要在线模型，不提供实时联网检索。'}" FontSize="9" Foreground="{DynamicResource MutedBrush}" TextWrapping="Wrap" Margin="0,9,0,0"/>
+    </StackPanel>
+  </Grid>
+</Window>
