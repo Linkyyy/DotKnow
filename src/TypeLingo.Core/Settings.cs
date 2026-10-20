@@ -43,7 +43,7 @@ public sealed record AppSettings
             Overlay.FontSize is < 10 or > 32 || Overlay.MaxWidth is < 160 or > 800 ||
             Overlay.Opacity is < .4 or > 1 || !new[] { "right", "below", "left", "above" }.Contains(Overlay.Position) ||
             !new[] { "typing", "hotkey", "selection" }.Contains(Overlay.TriggerMode) ||
-            !new[] { "light", "dark", "system" }.Contains(Overlay.Theme) || Overlay.AutoHideSeconds is < 0 or > 120)
+            !new[] { "light", "dark", "system" }.Contains(Overlay.Theme) || !AppearancePalettes.Contains(Overlay.ColorTheme) || Overlay.AutoHideSeconds is < 0 or > 120)
             throw new ArgumentException("悬浮窗参数不在支持范围内。");
         if (AllowedApplications.Concat(ExcludedApplications).Any(x =>
                 string.IsNullOrWhiteSpace(x) || x.IndexOfAny(['/', '\\', ':', '*']) >= 0))
@@ -89,6 +89,7 @@ public sealed record OverlaySettings
 {
     public bool ShowLoading { get; init; } = true;
     public string Theme { get; init; } = "system";
+    public string ColorTheme { get; init; } = AppearancePalettes.DefaultId;
     // 保留旧配置字段；读取旧版设置时迁移到 Theme。
     public bool DarkMode { get; init; }
     public double FontSize { get; init; } = 14;

@@ -1,5 +1,11 @@
 name: 构建与测试
-on: [push, pull_request, workflow_dispatch]
+on:
+  push:
+    branches-ignore: ['codex/ui-preview-*']
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
 jobs:
   core:
     runs-on: ubuntu-latest
@@ -19,6 +25,8 @@ jobs:
           path: artifacts/TypeLingo-Promotion.*
   windows:
     runs-on: windows-latest
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-dotnet@v4
@@ -36,6 +44,9 @@ jobs:
         with:
           name: TypeLingo-settings-ui
           path: artifacts/ui-smoke/
+      - name: 发布通过验收的界面预览
+        if: github.event_name == 'push' && github.ref == 'refs/heads/codex/typelingo-favorites-and-replacement'
+        run: ./scripts/publish-ui-previews.ps1
       - run: python scripts/package-release.py
       - uses: actions/upload-artifact@v4
         with:

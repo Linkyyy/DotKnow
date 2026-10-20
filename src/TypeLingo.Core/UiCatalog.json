@@ -1574,5 +1574,169 @@
   "HTTP 请求 {0} · 题库命中 {1} · 缓存命中 {2}\n在线成功 {3} · 失败 {4} · 本地命中率 {5}%\n平均 API 延迟 {6} ms · 输入词元 {7} / 输出词元 {8}": {
     "en-US": "HTTP requests {0} · Vocabulary hits {1} · Cache hits {2}\nOnline successes {3} · Failures {4} · Local hit rate {5}%\nAverage API latency {6} ms · Input tokens {7} / Output tokens {8}",
     "ja-JP": "HTTP リクエスト {0} · 辞書ヒット {1} · キャッシュヒット {2}\nオンライン成功 {3} · 失敗 {4} · ローカルヒット率 {5}%\n平均 API 遅延 {6} ms · 入力トークン {7} / 出力トークン {8}"
+  },
+  "享受生活中的小美好。": {
+    "en-US": "Enjoy the little things.",
+    "ja-JP": "日々の小さな幸せを楽しもう。"
+  },
+  "你的工作台": {
+    "en-US": "YOUR WORKSPACE",
+    "ja-JP": "ワークスペース"
+  },
+  "即时预览；保存后保留，关闭窗口恢复已保存的外观。": {
+    "en-US": "Preview changes instantly. Save to keep them; closing restores your saved appearance.",
+    "ja-JP": "変更はすぐにプレビューされます。保存すると保持され、閉じると保存済みの外観に戻ります。"
+  },
+  "四套配色，每一套都支持浅色、深色与跟随系统。": {
+    "en-US": "Four palettes, each with light, dark and system modes.",
+    "ja-JP": "4つの配色すべてで、ライト・ダーク・システム設定を選べます。"
+  },
+  "复习进度": {
+    "en-US": "Review progress",
+    "ja-JP": "復習の進捗"
+  },
+  "外观主题": {
+    "en-US": "Appearance",
+    "ja-JP": "外観テーマ"
+  },
+  "官网同款": {
+    "en-US": "Website original",
+    "ja-JP": "公式サイトと同じ"
+  },
+  "常用的，留在本地。": {
+    "en-US": "Keep the familiar close.",
+    "ja-JP": "よく使う言葉は、手元に。"
+  },
+  "开始使用": {
+    "en-US": "Get started",
+    "ja-JP": "はじめる"
+  },
+  "把好表达，变成自己的。": {
+    "en-US": "Make good expressions yours.",
+    "ja-JP": "よい表現を、自分のものに。"
+  },
+  "把好表达，留在本地。": {
+    "en-US": "Keep good expressions close.",
+    "ja-JP": "よい表現を、手元に残そう。"
+  },
+  "收藏与复习": {
+    "en-US": "Favorites & review",
+    "ja-JP": "お気に入りと復習"
+  },
+  "明暗模式": {
+    "en-US": "Light & dark",
+    "ja-JP": "明るさの設定"
+  },
+  "暮紫": {
+    "en-US": "Lavender",
+    "ja-JP": "ラベンダー"
+  },
+  "最小化": {
+    "en-US": "Minimize",
+    "ja-JP": "最小化"
+  },
+  "本地命中": {
+    "en-US": "Local matches",
+    "ja-JP": "ローカルの一致"
+  },
+  "本次运行": {
+    "en-US": "THIS SESSION",
+    "ja-JP": "今回のセッション"
+  },
+  "柔和丁香": {
+    "en-US": "Soft lilac",
+    "ja-JP": "柔らかなライラック"
+  },
+  "每一次理解，都算数。": {
+    "en-US": "Every little understanding counts.",
+    "ja-JP": "小さな理解を、一つずつ。"
+  },
+  "浅纸": {
+    "en-US": "Paper",
+    "ja-JP": "ペーパー"
+  },
+  "浮窗显示": {
+    "en-US": "Overlay display",
+    "ja-JP": "翻訳ウィンドウの表示"
+  },
+  "深林": {
+    "en-US": "Forest",
+    "ja-JP": "フォレスト"
+  },
+  "清透蓝灰": {
+    "en-US": "Calm blue grey",
+    "ja-JP": "澄んだブルーグレー"
+  },
+  "界面外观": {
+    "en-US": "App appearance",
+    "ja-JP": "アプリの外観"
+  },
+  "看懂世界。": {
+    "en-US": "Understand the world.",
+    "ja-JP": "世界を理解する。"
+  },
+  "翻译偏好": {
+    "en-US": "Translation preferences",
+    "ja-JP": "翻訳の設定"
+  },
+  "翻译浮窗预览": {
+    "en-US": "Translation overlay preview",
+    "ja-JP": "翻訳ウィンドウのプレビュー"
+  },
+  "自定义外观": {
+    "en-US": "Personalize",
+    "ja-JP": "外観をカスタマイズ"
+  },
+  "自然草木": {
+    "en-US": "Botanical greens",
+    "ja-JP": "自然なグリーン"
+  },
+  "让伴译更像你的桌面。": {
+    "en-US": "Make yourself at home.",
+    "ja-JP": "デスクトップになじむ外観へ。"
+  },
+  "语言、风格与划词方式": {
+    "en-US": "Language, style & selection",
+    "ja-JP": "言語・スタイル・選択方法"
+  },
+  "选中一句，": {
+    "en-US": "Select a thought.",
+    "ja-JP": "言葉を選んで、"
+  },
+  "选择你的配色": {
+    "en-US": "Find your palette",
+    "ja-JP": "好きな配色を選ぶ"
+  },
+  "配色、明暗与悬浮窗样式": {
+    "en-US": "Palettes, light & dark, and overlay styling",
+    "ja-JP": "配色・明るさ・翻訳ウィンドウのスタイル"
+  },
+  "配色将同步应用到设置、收藏和翻译浮窗。": {
+    "en-US": "Your palette follows you across the app.",
+    "ja-JP": "設定・お気に入り・翻訳ウィンドウに同じ配色を適用します。"
+  },
+  "雾蓝": {
+    "en-US": "Ocean",
+    "ja-JP": "オーシャン"
+  },
+  "默认划词，随选随译。查看并确认后，才会替换原文。": {
+    "en-US": "Select text to translate. Replacement always waits for your confirmation.",
+    "ja-JP": "選んだ言葉をすぐ翻訳。原文の置き換えは、確認してから。"
+  },
+  "米白与荧光绿，延续官网风格": {
+    "en-US": "Warm paper and fresh lime, just like the website.",
+    "ja-JP": "公式サイトと同じ、生成りとライムグリーン。"
+  },
+  "低饱和草木绿，让阅读安静下来": {
+    "en-US": "Quiet botanical greens for unhurried reading.",
+    "ja-JP": "落ち着いた草木のグリーンで、穏やかな読書を。"
+  },
+  "清透的蓝灰，为专注留一点空间": {
+    "en-US": "Clear blue greys, with room to focus.",
+    "ja-JP": "澄んだブルーグレーで、集中できる余白を。"
+  },
+  "柔和的丁香紫，给表达一点灵感": {
+    "en-US": "A little lilac inspiration for your next thought.",
+    "ja-JP": "柔らかなライラックで、表現にひらめきを。"
   }
 }

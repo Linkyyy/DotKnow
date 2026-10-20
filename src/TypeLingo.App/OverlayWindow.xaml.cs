@@ -32,6 +32,8 @@ public partial class OverlayWindow : Window
         };
         SizeChanged += (_, _) => Position();
         UiText.Changed += RefreshLanguage;
+        DesktopTheme.Changed += ApplyTransparency;
+        Closed += (_, _) => { UiText.Changed -= RefreshLanguage; DesktopTheme.Changed -= ApplyTransparency; hideTimer.Stop(); };
         hideTimer.Tick += (_, _) => { if (!IsMouseOver && ticket == null) Dismiss(); };
         IsVisibleChanged += (_, _) => { if (!IsVisible) hideTimer.Stop(); };
     }
@@ -80,6 +82,7 @@ public partial class OverlayWindow : Window
             message is "等待输入稳定…" or "正在翻译…" or "本地缓存 · 未调用 API" or "离线题库 · 未调用 API" or "译文就绪 · 原文保持不变") return;
         anchor = snapshot.Bounds; avoid = snapshot.ControlBounds;
         LoadingProgress.Visibility = Visibility.Collapsed;
+        OriginText.Visibility = Visibility.Collapsed;
         TranslationText.Text = UiText.Get("翻译暂不可用"); ShowStatus(message);
         CopyButton.Visibility = ReplaceButton.Visibility = FavoriteButton.Visibility = Visibility.Collapsed;
         ConfigureBubble(); Show(); UpdateLayout(); Position(); RestartTimer();
@@ -89,8 +92,7 @@ public partial class OverlayWindow : Window
         var config = settings().Overlay;
         MaxWidth = Math.Max(config.MaxWidth, ticket == null ? 120 : 340);
         MaxHeight = ticket == null ? 240 : 500;
-        TranslationText.MaxWidth = Math.Max(32, MaxWidth - 68 -
-            (ReplaceButton.Visibility == Visibility.Visible ? 24 : 0) - (FavoriteButton.Visibility == Visibility.Visible ? 24 : 0));
+        TranslationText.MaxWidth = Math.Max(64, MaxWidth - 64);
         TranslationText.FontSize = config.FontSize;
         ApplyTransparency();
     }
@@ -100,7 +102,7 @@ public partial class OverlayWindow : Window
         var color = ((SolidColorBrush)FindResource("CanvasBrush")).Color;
         color.A = (byte)Math.Round(255 * (IsMouseOver || ticket != null ? 1 : settings().Overlay.Opacity));
         Bubble.Background = new SolidColorBrush(color);
-        Actions.Opacity = IsMouseOver ? 1 : .55;
+        Actions.Opacity = IsMouseOver ? 1 : .8;
     }
     private void RestartTimer()
     {

@@ -33,11 +33,11 @@ def main():
             if file.is_file():
                 archive.write(file, file.relative_to(root).as_posix())
     source_zip = output / "TypeLingo-Source.zip"
-    excluded = {"bin", "obj", ".git", "TestResults", "__pycache__"}
+    excluded = {"bin", "obj", ".git", "TestResults", "__pycache__", "node_modules", "dist", ".vercel", "test-results", "playwright-report"}
     with zipfile.ZipFile(source_zip, "w", zipfile.ZIP_DEFLATED, compresslevel=9) as archive:
-        for directory in ["src", "tests", "tools", "docs", "data", "scripts", "packaging", ".github"]:
+        for directory in ["src", "tests", "tools", "docs", "data", "scripts", "packaging", ".github", "website"]:
             for file in sorted((root / directory).rglob("*")):
-                if file.is_file() and not excluded.intersection(file.relative_to(root).parts):
+                if file.is_file() and not excluded.intersection(file.relative_to(root).parts) and file.name != ".env" and not file.name.startswith(".env."):
                     archive.write(file, "TypeLingo/" + file.relative_to(root).as_posix())
         for name in [".gitignore", "README.md", "TypeLingo.sln", "global.json", "Directory.Build.props"]:
             archive.write(root / name, "TypeLingo/" + name)

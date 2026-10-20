@@ -42,9 +42,13 @@ public partial class SettingsWindow : Window
             // 首次显示时适配高 DPI 或较小的工作区，不用固定最小高度把保存区挤出屏幕。
             var area = SystemParameters.WorkArea;
             MinWidth = Math.Min(760, area.Width); MinHeight = Math.Min(520, area.Height);
-            Width = Math.Min(900, area.Width); Height = Math.Min(760, area.Height);
+            Width = Math.Min(1040, area.Width); Height = Math.Min(820, area.Height);
         };
-        SizeChanged += (_, _) => SidebarColumn.Width = new GridLength(ActualWidth < 820 ? 176 : 190);
+        SizeChanged += (_, _) =>
+        {
+            SidebarColumn.Width = new GridLength(ActualWidth < 820 ? 180 : ActualWidth < 940 ? 196 : 216);
+            PaletteGrid.Columns = ActualWidth < 940 ? 2 : 4;
+        };
         Closing += (_, e) => { e.Cancel = true; Hide(); };
         IsVisibleChanged += (_, _) =>
         {
@@ -54,13 +58,24 @@ public partial class SettingsWindow : Window
         timer.Tick += (_, _) => RefreshStatistics();
     }
     private string SelectedTheme() => DarkThemeRadio.IsChecked == true ? "dark" : LightThemeRadio.IsChecked == true ? "light" : "system";
+    private RadioButton[] PaletteChoices => [PaperPaletteRadio, ForestPaletteRadio, OceanPaletteRadio, LavenderPaletteRadio];
+    private string SelectedPalette() => PaletteChoices.FirstOrDefault(x => x.IsChecked == true)?.Tag as string ?? AppearancePalettes.DefaultId;
     private void Theme_Changed(object sender, RoutedEventArgs e)
     {
         if (loading) return;
-        var theme = service.Current.Overlay with { Theme = SelectedTheme() };
-        DesktopTheme.ApplyResources(theme);
-        Native.ApplyWindowAppearance(new WindowInteropHelper(this).Handle, AppearanceTheme.IsDark(theme.Theme, DesktopTheme.IsDark));
+        ApplySelectedAppearance();
     }
+    private void ApplySelectedAppearance()
+    {
+        var theme = service.Current.Overlay with { Theme = SelectedTheme(), ColorTheme = SelectedPalette() };
+        DesktopTheme.ApplyResources(theme);
+        var handle = new WindowInteropHelper(this).Handle;
+        if (handle != 0) Native.ApplyWindowAppearance(handle, AppearanceTheme.IsDark(theme.Theme, DesktopTheme.IsDark));
+    }
+    private void Minimize_Click(object sender, RoutedEventArgs e) => WindowState = WindowState.Minimized;
+    private void Navigate_Click(object sender, RoutedEventArgs e)
+    { if (sender is FrameworkElement { Tag: string id } && Pages.ContainsKey(id)) OpenPage(id); }
+    private void HomeStart_Click(object sender, RoutedEventArgs e) => OpenPage(service.Current.PrivacyConsent ? "general" : "privacy");
     private void CloseSettings_Click(object sender, RoutedEventArgs e) => Hide();
     private void OpenConfig_Click(object sender, RoutedEventArgs e)
     {
@@ -87,6 +102,7 @@ public partial class SettingsWindow : Window
     {
         var section = SettingsNavigation.Sections.First(x => x.Id == id);
         foreach (var page in Pages) page.Value.Visibility = page.Key == id ? Visibility.Visible : Visibility.Collapsed;
+        PageHeader.Visibility = id == "home" ? Visibility.Collapsed : Visibility.Visible;
         PageTitleText.Text = UiText.Get(section.Title); PageDescriptionText.Text = UiText.Get(section.Description);
         PageScroll.Visibility = Visibility.Visible; PageScroll.ScrollToTop();
         if (id == "favorites") RefreshFavorites();
@@ -108,6 +124,7 @@ public partial class SettingsWindow : Window
         NoResultsText.Visibility = matches.Count == 0 ? Visibility.Visible : Visibility.Collapsed;
         if (matches.Count == 0)
         {
+            PageHeader.Visibility = Visibility.Visible;
             PageScroll.Visibility = Visibility.Collapsed;
             PageTitleText.Text = UiText.Get("搜索结果"); PageDescriptionText.Text = UiText.Get("未找到相关设置");
         }
@@ -172,12 +189,14 @@ public partial class SettingsWindow : Window
             DiskCheck.IsChecked = s.Cache.DiskEnabled; DiskCapacityInput.Text = s.Cache.DiskMaxEntries.ToString(); DiskTtlInput.Text = s.Cache.DiskTTLDays.ToString();
             PreferOfflineCheck.IsChecked = s.Vocabulary.PreferOffline; AutoLearnCheck.IsChecked = s.Vocabulary.AutoLearn; OnlineFallbackCheck.IsChecked = s.Vocabulary.AllowOnlineFallback;
             LightThemeRadio.IsChecked = s.Overlay.Theme == "light"; DarkThemeRadio.IsChecked = s.Overlay.Theme == "dark"; SystemThemeRadio.IsChecked = s.Overlay.Theme == "system";
+            foreach (var choice in PaletteChoices) choice.IsChecked = (string)choice.Tag == s.Overlay.ColorTheme;
             AutoHideInput.Text = s.Overlay.AutoHideSeconds.ToString(); PreviewHotkey.Text = s.Hotkeys.Preview; FontInput.Text = Number(s.Overlay.FontSize); WidthInput.Text = Number(s.Overlay.MaxWidth); OpacityInput.Text = Number(s.Overlay.Opacity);
             ReplaceHotkey.Text = s.Hotkeys.Replace; ToggleHotkey.Text = s.Hotkeys.Toggle; CopyHotkey.Text = s.Hotkeys.Copy;
             AllowedInput.Text = string.Join(", ", s.AllowedApplications); ExcludedInput.Text = string.Join(", ", s.ExcludedApplications); RefreshStatistics();
             providerRevision++;
         }
         finally { loading = false; }
+        ApplySelectedAppearance();
         RefreshScope();
         if (NavigationList.SelectedItem == null) OpenPage("home");
         ApplySearch();
@@ -244,7 +263,7 @@ public partial class SettingsWindow : Window
             AI = SelectedAi() with { TimeoutSeconds = Integer(TimeoutInput.Text), MaxRetries = Integer(RetriesInput.Text) },
             Cache = new() { MemoryEnabled = MemoryCheck.IsChecked == true, MemoryMaxEntries = Integer(MemoryCapacityInput.Text), MemoryTTLMinutes = Integer(MemoryTtlInput.Text), DiskEnabled = DiskCheck.IsChecked == true, DiskMaxEntries = Integer(DiskCapacityInput.Text), DiskTTLDays = Integer(DiskTtlInput.Text) },
             Vocabulary = new() { PreferOffline = PreferOfflineCheck.IsChecked == true, AutoLearn = AutoLearnCheck.IsChecked == true, AllowOnlineFallback = OnlineFallbackCheck.IsChecked == true },
-            Overlay = new() { ShowLoading = Selected(PopupDisplayInput) == "loading", Theme = SelectedTheme(), DarkMode = SelectedTheme() == "dark", TriggerMode = Selected(TriggerInput), AutoHideSeconds = Integer(AutoHideInput.Text), FontSize = Decimal(FontInput.Text), MaxWidth = Decimal(WidthInput.Text), Opacity = Decimal(OpacityInput.Text), Position = Selected(PositionInput) },
+            Overlay = new() { ShowLoading = Selected(PopupDisplayInput) == "loading", Theme = SelectedTheme(), ColorTheme = SelectedPalette(), DarkMode = SelectedTheme() == "dark", TriggerMode = Selected(TriggerInput), AutoHideSeconds = Integer(AutoHideInput.Text), FontSize = Decimal(FontInput.Text), MaxWidth = Decimal(WidthInput.Text), Opacity = Decimal(OpacityInput.Text), Position = Selected(PositionInput) },
             Hotkeys = new() { Replace = ReplaceHotkey.Text.Trim(), Toggle = ToggleHotkey.Text.Trim(), Copy = CopyHotkey.Text.Trim(), Preview = PreviewHotkey.Text.Trim() },
             AllowedApplications = Split(AllowedInput.Text), ExcludedApplications = Split(ExcludedInput.Text)
         };
@@ -323,6 +342,7 @@ public partial class SettingsWindow : Window
                 x.Translation.Contains(query, StringComparison.OrdinalIgnoreCase)).ToArray();
             FavoritesList.ItemsSource = matches;
             FavoritesEmptyText.Visibility = matches.Length == 0 ? Visibility.Visible : Visibility.Collapsed;
+            FavoritesEmptyPanel.Visibility = FavoritesEmptyText.Visibility;
             FavoritesCountText.Text = UiText.Format("共 {0} 条收藏 · {1} 条待复习", all.Count, due);
             StartReviewButton.IsEnabled = due > 0;
         }
@@ -366,6 +386,8 @@ public partial class SettingsWindow : Window
         ReviewTranslationText.Visibility = ReviewRatingPanel.Visibility = Visibility.Collapsed;
         ShowAnswerButton.Visibility = Visibility.Visible;
         ReviewProgressText.Text = UiText.Format("复习 {0} / {1}", reviewIndex + 1, reviewQueue.Count);
+        ReviewProgressBar.Maximum = Math.Max(1, reviewQueue.Count);
+        ReviewProgressBar.Value = reviewIndex;
     }
     private void ShowAnswer_Click(object sender, RoutedEventArgs e)
     {
@@ -388,6 +410,8 @@ public partial class SettingsWindow : Window
         HomeCacheCount.Text = hits.ToString(CultureInfo.InvariantCulture);
         HomeSuccessCount.Text = total.ToString(CultureInfo.InvariantCulture);
         var current = service.Current;
+        SidebarStateText.Text = UiText.Get(!current.PrivacyConsent ? "等待隐私授权" : current.Translation.Enabled ? "实时翻译已开启" : "实时翻译已暂停");
+        HomeStartButton.Content = UiText.Get(current.PrivacyConsent ? "翻译偏好" : "开始使用");
         HomeStateText.Text = UiText.Get(!current.PrivacyConsent ? "等待隐私授权" : current.Translation.Enabled ? "实时翻译已开启" : "实时翻译已暂停") +
             " · " + UiText.Get(current.MonitorAllApplications ? "全部可访问应用" : "仅允许指定应用");
         StatisticsText.Text = UiText.Format("HTTP 请求 {0} · 题库命中 {1} · 缓存命中 {2}\n在线成功 {3} · 失败 {4} · 本地命中率 {5}%\n平均 API 延迟 {6} ms · 输入词元 {7} / 输出词元 {8}",

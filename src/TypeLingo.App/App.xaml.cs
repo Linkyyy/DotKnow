@@ -97,6 +97,7 @@ public partial class App : System.Windows.Application
             Text = "TypeLingo · 伴译", ContextMenuStrip = menu, Visible = true };
         tray.DoubleClick += (_, _) => ShowSettings();
         UiText.Changed += UpdateTray;
+        DesktopTheme.Changed += UpdateTrayAppearance;
         ApplyTheme(); UpdateTray();
         SystemEvents.UserPreferenceChanged += SystemThemeChanged;
         var hotkeyError = hotkeys.Register(settings.Current.Hotkeys);
@@ -134,6 +135,8 @@ public partial class App : System.Windows.Application
             if (item.Tag is string text) item.Text = UiText.Get(text);
     }
     private void ShowSettings() { settingsWindow.Show(); settingsWindow.Activate(); }
+    private void UpdateTrayAppearance()
+    { if (tray?.ContextMenuStrip is { } menu) TrayAppearance.Apply(menu); }
     private void Ui(Action action)
     {
         if (Dispatcher.HasShutdownStarted) return;
@@ -154,6 +157,7 @@ public partial class App : System.Windows.Application
         observer?.Dispose(); coordinator?.Dispose(); hotkeys?.Dispose();
         tray?.Dispose(); trayIconWhite?.Dispose(); trayIconBlack?.Dispose(); http.Dispose();
         SystemEvents.UserPreferenceChanged -= SystemThemeChanged;
+        DesktopTheme.Changed -= UpdateTrayAppearance;
         UiText.Changed -= UpdateTray;
         // 后台 API 与 UIA 调用可能仍在退出；进程结束会释放缓存文件句柄。
         instance?.Dispose(); base.OnExit(e);
