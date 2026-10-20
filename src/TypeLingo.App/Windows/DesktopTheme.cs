@@ -21,12 +21,11 @@ internal static class DesktopTheme
         foreach (var pair in palette) System.Windows.Application.Current.Resources[pair.Key] = new SolidColorBrush((Color)ColorConverter.ConvertFromString(dark ? pair.Value.Dark : pair.Value.Light));
         return dark;
     }
-    public static bool IsDark
+    public static bool IsDark => IsThemeDark("AppsUseLightTheme");
+    public static bool IsTaskbarDark => IsThemeDark("SystemUsesLightTheme");
+    private static bool IsThemeDark(string name)
     {
-        get
-        {
-            try { return Registry.GetValue(@"HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Themes\Personalize", "AppsUseLightTheme", 1) is int value && value == 0; }
-            catch (Exception) { return false; }
-        }
+        try { return Registry.GetValue(@"HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Themes\Personalize", name, 1) is int value && value == 0; }
+        catch (Exception) { return false; }
     }
 }

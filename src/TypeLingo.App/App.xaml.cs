@@ -20,7 +20,8 @@ public partial class App : System.Windows.Application
     private OverlayWindow overlay = null!;
     private SettingsWindow settingsWindow = null!;
     private HotkeyService hotkeys = null!;
-    private System.Drawing.Icon? trayIcon;
+    private System.Drawing.Icon? trayIconWhite;
+    private System.Drawing.Icon? trayIconBlack;
     private Forms.NotifyIcon tray = null!;
     private Forms.ToolStripMenuItem pauseItem = null!;
     private readonly HttpClient http = new(new HttpClientHandler { AllowAutoRedirect = false }) { Timeout = Timeout.InfiniteTimeSpan, MaxResponseContentBufferSize = 2 * 1024 * 1024 };
@@ -87,9 +88,10 @@ public partial class App : System.Windows.Application
             catch (Exception) { ShowSettings(); }
         }).Tag = "清除缓存";
         menu.Items.Add(new Forms.ToolStripSeparator()); menu.Items.Add("退出", null, (_, _) => Shutdown()).Tag = "退出";
-        using (var iconStream = GetResourceStream(new Uri("pack://application:,,,/TypeLingo;component/Assets/typelingo.ico", UriKind.Absolute)).Stream)
-            trayIcon = new System.Drawing.Icon(iconStream);
-        tray = new Forms.NotifyIcon { Icon = trayIcon, Text = "TypeLingo · 伴译", ContextMenuStrip = menu, Visible = true };
+        trayIconWhite = BrandAssets.CreateTrayIcon(true);
+        trayIconBlack = BrandAssets.CreateTrayIcon(false);
+        tray = new Forms.NotifyIcon { Icon = DesktopTheme.IsTaskbarDark ? trayIconWhite : trayIconBlack,
+            Text = "TypeLingo · 伴译", ContextMenuStrip = menu, Visible = true };
         tray.DoubleClick += (_, _) => ShowSettings();
         UiText.Changed += UpdateTray;
         ApplyTheme(); UpdateTray();
@@ -129,8 +131,11 @@ public partial class App : System.Windows.Application
         if (Dispatcher.HasShutdownStarted) return;
         if (Dispatcher.CheckAccess()) action(); else Dispatcher.BeginInvoke(action);
     }
-    private void SystemThemeChanged(object sender, UserPreferenceChangedEventArgs e)
-    { if (settings.Current.Overlay.Theme == "system") Ui(() => ApplyTheme()); }
+    private void SystemThemeChanged(object sender, UserPreferenceChangedEventArgs e) => Ui(() =>
+    {
+        if (settings.Current.Overlay.Theme == "system") ApplyTheme();
+        if (tray != null) tray.Icon = DesktopTheme.IsTaskbarDark ? trayIconWhite : trayIconBlack;
+    });
     internal void ApplyTheme(OverlaySettings? configuration = null)
     {
         var dark = DesktopTheme.ApplyResources(configuration ?? settings.Current.Overlay);
@@ -139,7 +144,7 @@ public partial class App : System.Windows.Application
     protected override void OnExit(ExitEventArgs e)
     {
         observer?.Dispose(); coordinator?.Dispose(); hotkeys?.Dispose();
-        tray?.Dispose(); trayIcon?.Dispose(); http.Dispose();
+        tray?.Dispose(); trayIconWhite?.Dispose(); trayIconBlack?.Dispose(); http.Dispose();
         SystemEvents.UserPreferenceChanged -= SystemThemeChanged;
         UiText.Changed -= UpdateTray;
         // 后台 API 与 UIA 调用可能仍在退出；进程结束会释放缓存文件句柄。

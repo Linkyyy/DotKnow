@@ -6,7 +6,7 @@ import zipfile
 
 root = Path(__file__).resolve().parents[1]
 source = root / "docs" / "promotion"
-required = ["hero.png", "review-square.png", "logo.svg", "logo.png", "README.md", "copy.zh-CN.md", "generation-notes.md"]
+required = ["hero.png", "review-square.png", "logo.svg", "logo.png", "app-icon.png", "app-icon.ico", "tray-black.ico", "tray-white.ico", "README.md", "copy.zh-CN.md", "generation-notes.md"]
 for name in required:
     if not (source / name).is_file():
         raise RuntimeError(f"缺少宣传素材：{name}")

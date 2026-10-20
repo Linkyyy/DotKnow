@@ -4,7 +4,7 @@
 
 面向 Windows 10/11 的 C# / .NET 8 / WPF 桌面翻译助手。输入停顿后，通过所选 AI 服务翻译当前已授权输入框中的文本，在旁边显示译文。**自动操作只预览；原文仅在你主动请求并确认替换后才写入。**
 
-当前开发版本为 v0.4.0-preview.1：主页置顶、选区／当前行替换、Loading 开关、本地加密收藏与卡片复习。Linux 全量构建和 141 项核心测试已通过；本轮 Windows 构建、测试及真实 WPF / UIA 检查也已通过，详见 [验证记录](docs/VALIDATION.md)。下方 v0.3.0 下载链接仍指向此前稳定版。
+当前开发版本为 v0.4.0-preview.2：采用选定的 C 双向对话 Logo，统一程序、首页和自适应黑白托盘图标，更新两张宣传图。保留主页置顶、选区／当前行替换、Loading 开关、本地加密收藏与卡片复习。Linux 全量构建和 141 项核心测试已通过；前版 Windows 构建、测试及真实 WPF / UIA 检查已通过；本轮品牌资源检查进度，详见 [验证记录](docs/VALIDATION.md)。下方 v0.3.0 下载链接仍指向此前稳定版。
 
 ## 下载安装包
 
@@ -67,7 +67,7 @@ dotnet publish src/TypeLingo.App -c Release -r win-x64 --self-contained true \
 
 「外观与悬浮窗」中的「显示 Loading」默认开启。等待输入稳定和请求翻译期间显示进度，关闭后只显示结果；焦点变化、暂停、成功和失败均结束进度状态。
 
-品牌资源以 `src/TypeLingo.App/Assets/typelingo.svg` 为源，通过 `bash scripts/render-brand.sh` 同步生成 PNG 和多尺寸 ICO（需 Inkscape、ImageMagick）。EXE、托盘与设置页共用这套资源。新独立 Logo 尚未提供，本轮沿用仓库 SVG。
+品牌资源采用用户选定的 **C 双向对话**图形，以 `src/TypeLingo.App/Assets/typelingo-mark.svg` 为唯一主标，通过 `bash scripts/render-brand.sh` 生成程序 PNG／SVG、多尺寸 ICO 和透明黑白托盘图标（需 Python 3、Inkscape、ImageMagick）。EXE、窗口、首页和宣传图统一使用 C；托盘按系统任务栏主题选择黑标或白标，不受程序自身主题设置影响。
 
 宣传主图、社交方图、配套文案及素材说明见 [宣传素材](docs/promotion/README.md)。海报是产品交互示意，不是 Windows 实机截图。
 

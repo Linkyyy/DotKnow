@@ -43,6 +43,30 @@ internal static class Program
             Check(window.IsVisible && window.ActualWidth >= 760, "真实 WPF 设置窗口已启动并完成布局");
             using (var icon = Application.GetResourceStream(new Uri("pack://application:,,,/TypeLingo;component/Assets/typelingo.ico")).Stream)
                 Check(window.Icon != null && icon.Length > 0, "设置窗口与托盘使用可加载的新图标资源");
+            var homeLogo = Find<Image>("HomeBrandImage");
+            Check(homeLogo.Source is BitmapSource bitmap && bitmap.PixelWidth == 512 && homeLogo.Width == 58,
+                "首页加载 C 方案图标原始资源并完整显示");
+            foreach (var darkTaskbar in new[] { false, true })
+            {
+                using var trayIcon = BrandAssets.CreateTrayIcon(darkTaskbar);
+                using var pixels = trayIcon.ToBitmap();
+                var solid = new List<System.Drawing.Color>(); var clear = 0;
+                for (var y = 0; y < pixels.Height; y++)
+                    for (var x = 0; x < pixels.Width; x++)
+                    {
+                        var pixel = pixels.GetPixel(x, y);
+                        if (pixel.A > 128) solid.Add(pixel);
+                        if (pixel.A == 0) clear++;
+                    }
+                Check(solid.Count > 80 && clear > 80 && solid.All(c => darkTaskbar ? c.R > 240 && c.G > 240 && c.B > 240 : c.R < 40 && c.G < 40 && c.B < 40),
+                    darkTaskbar ? "深色任务栏加载透明白色 C 托盘图标" : "浅色任务栏加载透明黑色 C 托盘图标");
+            }
+            var publishedExe = Path.GetFullPath("artifacts/win-x64/TypeLingo.exe");
+            if (File.Exists(publishedExe))
+            {
+                using var exeIcon = System.Drawing.Icon.ExtractAssociatedIcon(publishedExe);
+                Check(exeIcon != null && exeIcon.Width >= 16, "Windows 可从自包含程序提取已嵌入的 C 图标");
+            }
             Check(Find<RadioButton>("SystemThemeRadio").IsChecked == true, "默认主题可跟随 Windows 系统");
             Find<RadioButton>("DarkThemeRadio").IsChecked = true; Pump(window);
             Check(((SolidColorBrush)app.Resources["CanvasBrush"]).Color.R < 100 && ((SolidColorBrush)window.Foreground).Color.R > 240, "深色主题卡片即时切换实际资源");
