@@ -1,0 +1,584 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#f7f8f2" />
+    <meta
+      name="description"
+      content="TypeLingo 伴译，一款 Windows 划词翻译工具。中英日互译，默认离线词库优先，支持自选 AI、本地收藏和卡片复习。直接下载 Windows 版本。"
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="TypeLingo 伴译 — 选中一句，看懂世界。" />
+    <meta
+      property="og:description"
+      content="划词即译，离线优先。让阅读、表达与记忆自然相连。适用于 Windows 10 / 11。"
+    />
+    <meta property="og:image" content="/assets/social.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="icon" href="/favicon.ico" sizes="any" />
+    <link rel="icon" type="image/svg+xml" href="/assets/mark.svg" />
+    <link rel="apple-touch-icon" href="/assets/app-icon.png" />
+    <link rel="stylesheet" href="/src/style.css" />
+    <title>TypeLingo 伴译 — 选中一句，看懂世界。</title>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">跳转至正文</a>
+    <header class="header">
+      <div class="container nav-bar">
+        <a class="brand" href="#" aria-label="TypeLingo 伴译首页"
+          ><img src="/assets/mark.svg" width="35" height="35" alt="" /><span
+            >TypeLingo<span class="brand-cn">伴译</span></span
+          ></a
+        >
+        <button
+          class="menu-toggle"
+          aria-label="打开导航"
+          aria-controls="navigation"
+          aria-expanded="false"
+        >
+          <span></span><span></span>
+        </button>
+        <nav id="navigation" aria-label="主导航">
+          <a href="#features">为什么是伴译</a><a href="#offline">离线词库</a
+          ><a href="#faq">常见问题</a>
+          <a class="nav-download" href="#download"
+            >下载 Windows 版 <span aria-hidden="true">↗</span></a
+          >
+        </nav>
+      </div>
+    </header>
+
+    <main id="main">
+      <section class="hero container" aria-labelledby="hero-title">
+        <div class="hero-copy">
+          <a class="release-pill" href="#download"
+            ><span class="status-dot"></span>
+            <span data-version>0.4.0-preview.5</span> 现已可用
+            <span aria-hidden="true">↗</span></a
+          >
+          <h1 id="hero-title">
+            选中一句，<br /><span class="highlight">看懂世界。</span>
+          </h1>
+          <p class="hero-description">
+            阅读不必来回切换，表达不再卡在语言。<br
+              class="desktop-br"
+            />TypeLingo 伴译，让翻译出现在你需要的地方。
+          </p>
+          <div class="hero-actions">
+            <a
+              class="button button-dark"
+              data-download="windows"
+              href="/download"
+              ><svg viewBox="0 0 24 24" aria-hidden="true">
+                <path
+                  d="M3 5.5 10.5 4.5v7H3Zm9-1.3L21 3v8.5h-9ZM3 13h7.5v7L3 19Zm9 0h9v8l-9-1.2Z"
+                  fill="currentColor"
+                /></svg
+              >下载 Windows 版 <span aria-hidden="true">↓</span></a
+            ><a class="text-link" href="#experience"
+              >先体验一下 <span aria-hidden="true">↗</span></a
+            >
+          </div>
+          <p class="download-note">
+            Windows 10 / 11 · x64 · <span data-size>67.4 MB</span
+            ><br />当前为预览版 · 解压即可使用
+          </p>
+          <div class="hero-caption">
+            <span class="tiny-line"></span
+            ><span>你的阅读节奏，值得被保留。</span>
+          </div>
+        </div>
+
+        <div class="hero-stage" id="experience" aria-label="翻译交互示意">
+          <div class="stage-topline">
+            <span
+              ><span class="live-dot"></span> A LITTLE HELP. A BIGGER
+              WORLD.</span
+            ><span>01 / 03</span>
+          </div>
+          <div class="demo-tabs" role="tablist" aria-label="切换使用场景">
+            <button
+              role="tab"
+              aria-selected="true"
+              aria-controls="demo-panel"
+              id="tab-read"
+              tabindex="0"
+              data-scene="read"
+            >
+              随心读
+            </button>
+            <button
+              role="tab"
+              aria-selected="false"
+              aria-controls="demo-panel"
+              id="tab-write"
+              tabindex="-1"
+              data-scene="write"
+            >
+              自在写
+            </button>
+            <button
+              role="tab"
+              aria-selected="false"
+              aria-controls="demo-panel"
+              id="tab-learn"
+              tabindex="-1"
+              data-scene="learn"
+            >
+              慢慢记
+            </button>
+          </div>
+          <div
+            class="demo-workspace"
+            role="tabpanel"
+            id="demo-panel"
+            aria-labelledby="tab-read"
+            tabindex="0"
+          >
+            <div class="document-window">
+              <div class="document-toolbar">
+                <div class="window-dots"><i></i><i></i><i></i></div>
+                <span id="demo-document-name">一封来自远方的信</span
+                ><span aria-hidden="true">↗</span>
+              </div>
+              <div class="document-content">
+                <span class="document-eyebrow" id="demo-eyebrow"
+                  >A NOTE FOR TODAY</span
+                >
+                <h2 id="demo-heading">Good things take time.</h2>
+                <p id="demo-context">
+                  There is a whole world out there.<br />Take a breath, stay
+                  curious, and
+                </p>
+                <p class="selected-line">
+                  <span id="demo-source">enjoy the little things.</span
+                  ><svg
+                    class="demo-cursor"
+                    viewBox="0 0 24 28"
+                    aria-hidden="true"
+                  >
+                    <path
+                      d="m3 2 18 16-9 1-4 7Z"
+                      fill="#202722"
+                      stroke="white"
+                      stroke-width="2"
+                    />
+                  </svg>
+                </p>
+                <div class="document-ghost-lines" aria-hidden="true">
+                  <span></span><span></span>
+                </div>
+              </div>
+            </div>
+            <div class="translation-window">
+              <div class="translation-top">
+                <span class="mini-brand"
+                  ><img
+                    src="/assets/mark.svg"
+                    width="21"
+                    height="21"
+                    alt=""
+                  />伴译</span
+                ><span class="language-pair" id="demo-pair"
+                  >英语 <span aria-hidden="true">→</span> 中文</span
+                >
+              </div>
+              <p class="translation-result" id="demo-result" aria-live="polite">
+                享受生活中的小美好。
+              </p>
+              <div class="translation-bottom">
+                <span class="result-origin" id="demo-origin"
+                  >自然表达 · 交互示意</span
+                >
+                <div class="demo-tools">
+                  <button
+                    class="icon-button"
+                    id="demo-copy"
+                    aria-label="复制示例译文"
+                    title="复制译文"
+                  >
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                      <rect x="8" y="8" width="12" height="13" rx="2" />
+                      <path
+                        d="M15 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h3"
+                      />
+                    </svg></button
+                  ><button
+                    class="icon-button"
+                    id="demo-favorite"
+                    aria-label="收藏示例译文"
+                    aria-pressed="false"
+                    title="收藏示例"
+                  >
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                      <path
+                        d="m12 3 2.8 5.8 6.4.9-4.6 4.5 1.1 6.3L12 17.5l-5.7 3 1.1-6.3L2.8 9.7l6.4-.9Z"
+                      />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="stage-bottom">
+            <span>划词 · 翻译 · 收藏 · 复习</span
+            ><span>点击上方标签试试看 <span aria-hidden="true">↑</span></span>
+          </div>
+          <p class="illustration-note">网页交互示意，非软件截图</p>
+        </div>
+      </section>
+
+      <div class="spec-strip">
+        <div class="container spec-inner">
+          <span>为日常的每一次理解</span>
+          <div>
+            <span>中文 <b>中</b></span
+            ><i aria-hidden="true">↔</i><span>English <b>A</b></span
+            ><i aria-hidden="true">↔</i><span>日本語 <b>あ</b></span>
+          </div>
+          <span>在熟悉的 Windows 上。</span>
+        </div>
+      </div>
+
+      <section
+        class="features container section-space"
+        id="features"
+        aria-labelledby="features-title"
+      >
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">LESS FRICTION, MORE FLOW</p>
+            <h2 id="features-title">语言不同，<br />思路不用中断。</h2>
+          </div>
+          <p>从读懂一句话，到记住一种表达。<br />那些琐碎的来回，交给伴译。</p>
+        </div>
+        <div class="feature-grid">
+          <article class="feature-card">
+            <div class="feature-meta">
+              <span>01 — 阅读</span
+              ><svg viewBox="0 0 32 32" aria-hidden="true">
+                <path d="M7 5v22M25 5v22M3 5h8M21 5h8M3 27h8M21 27h8M14 16h4" />
+              </svg>
+            </div>
+            <h3>看到哪里，译到哪里。</h3>
+            <p>
+              在支持选区读取的网页、文档和应用中，鼠标划选文字，译文随即出现。
+            </p>
+            <div class="feature-visual selection-visual" aria-hidden="true">
+              <span>在你的阅读里，<mark>少一点距离。</mark></span
+              ><span class="small-translate"
+                >A little closer. <span>↗</span></span
+              >
+            </div>
+            <div class="feature-foot">默认划词模式 <span>↗</span></div>
+          </article>
+          <article class="feature-card">
+            <div class="feature-meta">
+              <span>02 — 表达</span
+              ><svg viewBox="0 0 32 32" aria-hidden="true">
+                <path d="m6 23 1-6L23 3l5 5-16 15-6 1Zm13-16 5 5M5 29h22" />
+              </svg>
+            </div>
+            <h3>写出你本来的意思。</h3>
+            <p>
+              自然、直译、商务、敬语，按语境选择。可编辑输入框中，确认后替换对应文字。
+            </p>
+            <div class="feature-visual style-visual" aria-hidden="true">
+              <span>自然表达 <b>✓</b></span
+              ><span>商务沟通</span><span>日语敬语</span>
+            </div>
+            <div class="feature-foot">也支持复制译文 <span>↗</span></div>
+          </article>
+          <article class="feature-card">
+            <div class="feature-meta">
+              <span>03 — 积累</span
+              ><svg viewBox="0 0 32 32" aria-hidden="true">
+                <path d="M8 4h16v25l-8-5-8 5Z" />
+              </svg>
+            </div>
+            <h3>好表达，变成自己的。</h3>
+            <p>
+              一键收藏原文与译文，用本地卡片复习。收藏由当前 Windows
+              用户加密保存。
+            </p>
+            <div class="feature-visual collection-visual" aria-hidden="true">
+              <span class="saved-star">✦</span>
+              <div><strong>一期一会</strong><span>珍惜每一次相遇。</span></div>
+              <span>↗</span>
+            </div>
+            <div class="feature-foot">收藏与复习无需在线 <span>↗</span></div>
+          </article>
+        </div>
+      </section>
+
+      <section
+        class="offline-section"
+        id="offline"
+        aria-labelledby="offline-title"
+      >
+        <div class="container offline-layout">
+          <div class="offline-copy">
+            <p class="eyebrow">
+              <span class="status-dot"></span> OFFLINE FIRST
+            </p>
+            <h2 id="offline-title">
+              常用的，留在本地。<br />需要时，再连接世界。
+            </h2>
+            <p>
+              默认先查离线词库，未命中再按设置使用在线 AI。<br />在线译文也能自动加入本地词库，越用越积累。
+            </p>
+            <div class="offline-stats">
+              <div>
+                <strong>6,426<span>组</span></strong
+                ><span>中英日词条</span>
+              </div>
+              <div>
+                <strong>32,159<span>条</span></strong
+                ><span>可用离线查询记录</span>
+              </div>
+            </div>
+            <a
+              class="text-link light-link"
+              href="https://github.com/Linkyyy/TypeLingo/blob/codex/typelingo-favorites-and-replacement/docs/OFFLINE_VOCABULARY.md"
+              target="_blank"
+              rel="noopener noreferrer"
+              >了解词库与导入格式 <span aria-hidden="true">↗</span></a
+            >
+          </div>
+          <div class="offline-visual">
+            <div class="local-label">
+              <span class="live-dot"></span> 这次翻译，不必联网。
+            </div>
+            <div class="offline-query">
+              <div><span>中文</span><strong>米饭</strong></div>
+              <span aria-hidden="true">→</span>
+              <div><span>日本語</span><strong>ご飯</strong></div>
+            </div>
+            <div class="lookup-flow">
+              <span class="flow-active"><i>✓</i> 本地词库</span
+              ><span aria-hidden="true">→</span><span>在线 AI</span>
+            </div>
+            <p class="offline-detail">词库命中 · 无需 API Key</p>
+            <div class="offline-note">
+              <span aria-hidden="true">↳</span>
+              <p>
+                支持在设置中关闭在线回退。离线为词库精确匹配，不是任意句子的离线机器翻译。
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section
+        class="details-section container section-space"
+        aria-labelledby="details-title"
+      >
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">SMALL DETAILS. EVERY DAY.</p>
+            <h2 id="details-title">顺手，也顺心。</h2>
+          </div>
+          <p>让工具适应你的习惯。</p>
+        </div>
+        <div class="details-layout">
+          <div class="detail-list">
+            <article>
+              <span>01</span>
+              <div>
+                <h3>AI，由你选择。</h3>
+                <p>
+                  支持 DeepSeek、OpenAI、Claude、Gemini 和通义千问。使用你自己的
+                  API Key，自选模型。
+                </p>
+              </div>
+            </article>
+            <article>
+              <span>02</span>
+              <div>
+                <h3>等待，也有自己的节奏。</h3>
+                <p>
+                  显示翻译中的
+                  Loading，或等结果完成再出现。浅色、深色、跟随系统，都随你。
+                </p>
+              </div>
+            </article>
+            <article>
+              <span>03</span>
+              <div>
+                <h3>需要时出现，安静时退后。</h3>
+                <p>
+                  托盘常驻，一键暂停；可设置应用白名单与排除项，让翻译只出现在你希望的地方。
+                </p>
+              </div>
+            </article>
+          </div>
+          <div class="review-demo">
+            <div class="review-demo-top">
+              <span><span aria-hidden="true">✦</span> 给记忆一点时间</span
+              ><span>卡片复习示意</span>
+            </div>
+            <span class="review-language">日本語 → 中文</span>
+            <p class="review-word">また明日。</p>
+            <div class="review-answer" id="review-answer" hidden>明天见。</div>
+            <button
+              class="button review-reveal"
+              id="review-reveal"
+              aria-expanded="false"
+              aria-controls="review-answer"
+            >
+              想好了吗？查看译文 <span aria-hidden="true">↗</span>
+            </button>
+            <div class="review-ratings" hidden>
+              <span>记住这句话了吗？</span
+              ><button data-rating="again">再看一次</button
+              ><button data-rating="remembered">记住了 ✓</button>
+            </div>
+            <p id="review-feedback" class="review-feedback" aria-live="polite">
+              先回想，再揭晓。让每次收藏都有回响。
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section
+        class="faq-section container"
+        id="faq"
+        aria-labelledby="faq-title"
+      >
+        <div>
+          <p class="eyebrow">GOOD QUESTIONS</p>
+          <h2 id="faq-title">开始之前，<br />你可能想知道。</h2>
+        </div>
+        <div class="faq-list">
+          <details>
+            <summary>
+              下载后怎么开始使用？<span aria-hidden="true">+</span>
+            </summary>
+            <p>
+              支持 Windows 10 / 11 x64。下载 ZIP 后完整解压，运行
+              TypeLingo.exe，也可使用包内的当前用户安装脚本。无需额外安装
+              .NET。首次打开先尝试离线词库；想翻译更多内容，可在设置中选择 AI
+              服务并填写自己的 API Key。更新前请先退出托盘中的旧版。
+            </p>
+          </details>
+          <details>
+            <summary>
+              没有网络或 API Key，能使用吗？<span aria-hidden="true">+</span>
+            </summary>
+            <p>
+              可以查询内置离线词库，也可以收藏与复习。离线词库按原文、语言方向、表达风格等精确匹配，内置词条主要为自然风格。未命中的内容需要在线服务；关闭在线回退后，未命中会给出提示。API
+              服务可能产生费用，由对应服务商收取。
+            </p>
+          </details>
+          <details>
+            <summary>
+              所有软件里划词，都能翻译吗？<span aria-hidden="true">+</span>
+            </summary>
+            <p>
+              适用于向 Windows UI Automation
+              提供文本选区的应用。图片、扫描件、部分自绘控件与未开放文本选区的应用暂不支持，不包含
+              OCR。只读文本可翻译、复制和收藏；替换仅用于能够验证安全写入的可编辑输入框，写入前需要确认。
+            </p>
+          </details>
+          <details>
+            <summary>
+              我的文字和收藏会保存在哪里？<span aria-hidden="true">+</span>
+            </summary>
+            <p>
+              离线词库命中时不发送 API
+              请求。在线回退会将待翻译文字发送至你选择的 AI
+              服务。个人词库、自动积累的在线译文和主动收藏保存在本机，并由当前
+              Windows
+              用户加密；你可以关闭在线译文自动入库。导出的词库是明文，请自行妥善保管。
+            </p>
+          </details>
+          <details>
+            <summary>
+              现在有 macOS、手机或正式版吗？<span aria-hidden="true">+</span>
+            </summary>
+            <p>
+              目前提供 Windows x64 预览版 v<span data-version
+                >0.4.0-preview.5</span
+              >，尚未提供 macOS、Linux 或手机版。你可以在 GitHub
+              查看开发进展、版本说明和反馈问题。
+            </p>
+          </details>
+        </div>
+      </section>
+
+      <section
+        class="download-section container"
+        id="download"
+        aria-labelledby="download-title"
+      >
+        <div class="download-panel">
+          <div class="download-art" aria-hidden="true">
+            <img src="/assets/mark.svg" width="320" height="320" alt="" />
+          </div>
+          <div class="download-content">
+            <p class="eyebrow">
+              <span class="status-dot"></span> YOUR NEXT WORD STARTS HERE
+            </p>
+            <h2 id="download-title">下一句，<br />让伴译陪你。</h2>
+            <p>把语言的距离，缩短成一次划选。</p>
+            <a
+              class="button button-lime"
+              data-download="windows"
+              href="/download"
+              ><svg viewBox="0 0 24 24" aria-hidden="true">
+                <path
+                  d="M3 5.5 10.5 4.5v7H3Zm9-1.3L21 3v8.5h-9ZM3 13h7.5v7L3 19Zm9 0h9v8l-9-1.2Z"
+                  fill="currentColor"
+                /></svg
+              >下载 Windows 版 <span aria-hidden="true">↓</span></a
+            >
+            <p class="download-platform">
+              v<span data-version>0.4.0-preview.5</span> 预览版 · Windows 10 /
+              11 x64 · <span data-size>67.4 MB</span>
+            </p>
+            <div class="download-extras">
+              <a
+                data-download="source"
+                href="https://github.com/Linkyyy/TypeLingo"
+                >源代码 <span aria-hidden="true">↗</span></a
+              ><a
+                data-download="checksums"
+                href="https://github.com/Linkyyy/TypeLingo"
+                >SHA-256 校验 <span aria-hidden="true">↗</span></a
+              ><a
+                href="https://github.com/Linkyyy/TypeLingo/blob/codex/typelingo-favorites-and-replacement/docs/RELEASE_NOTES.md"
+                target="_blank"
+                rel="noopener noreferrer"
+                >版本说明 <span aria-hidden="true">↗</span></a
+              >
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+    <footer class="container footer">
+      <a class="brand" href="#" aria-label="返回首页"
+        ><img src="/assets/mark.svg" width="30" height="30" alt="" /><span
+          >TypeLingo<span class="brand-cn">伴译</span></span
+        ></a
+      >
+      <p>让表达跨越语言。</p>
+      <div>
+        <a
+          href="https://github.com/Linkyyy/TypeLingo"
+          target="_blank"
+          rel="noopener noreferrer"
+          >GitHub ↗</a
+        ><a
+          href="https://github.com/Linkyyy/TypeLingo/issues"
+          target="_blank"
+          rel="noopener noreferrer"
+          >反馈问题 ↗</a
+        >
+      </div>
+    </footer>
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>

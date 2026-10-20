@@ -7,3 +7,8 @@ artifacts/
 *.suo
 *.pfx
 .env
+**/node_modules/
+website/dist/
+website/.vercel/
+website/test-results/
+website/playwright-report/

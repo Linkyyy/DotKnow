@@ -72,6 +72,8 @@ dotnet publish src/TypeLingo.App -c Release -r win-x64 --self-contained true \
 
 宣传主图、社交方图、配套文案及素材说明见 [宣传素材](docs/promotion/README.md)。海报是产品交互示意，不是 Windows 实机截图。
 
+官网源码位于 [website/](website/README.md)，桌面／手机效果和 Vercel 部署入口见 [官网预览与部署](docs/website/README.md)。页面包含功能介绍、离线词库说明和可直接下载的 Windows 预览版链接。
+
 ## 已实现
 
 | 能力 | 实现 |
