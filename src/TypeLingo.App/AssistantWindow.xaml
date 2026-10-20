@@ -7,18 +7,18 @@
       <Button Grid.Column="1" Style="{StaticResource OverlayIconButton}" Click="Dismiss_Click" AutomationProperties.Name="{DynamicResource '关闭'}"><controls:SymbolIcon Kind="close" Width="14" Height="14"/></Button>
     </Grid>
     <Border Grid.Row="1" Background="{DynamicResource AccentSurfaceBrush}" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" CornerRadius="10" Padding="12" Margin="0,0,0,14">
-      <StackPanel><TextBlock Text="{DynamicResource '选中的内容'}" FontSize="10" Foreground="{DynamicResource MutedBrush}" Margin="0,0,0,6"/><TextBox x:Name="SelectionText" IsReadOnly="True" TextWrapping="Wrap" MaxHeight="70" MinHeight="26" Padding="0" Background="Transparent" BorderThickness="0" VerticalScrollBarVisibility="Auto" AutomationProperties.Name="{DynamicResource '选中的内容'}"/></StackPanel>
+      <StackPanel><TextBlock Text="{DynamicResource '选中的内容'}" FontSize="10" Foreground="{DynamicResource MutedBrush}" Margin="0,0,0,6"/><TextBox x:Name="SelectionText" IsReadOnly="True" TextWrapping="Wrap" VerticalContentAlignment="Top" MaxHeight="70" MinHeight="26" Padding="0" Background="Transparent" BorderThickness="0" VerticalScrollBarVisibility="Auto" AutomationProperties.Name="{DynamicResource '选中的内容'}"/></StackPanel>
     </Border>
     <StackPanel Grid.Row="2">
       <Grid><Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions><ComboBox x:Name="TaskInput" DisplayMemberPath="Name" SelectedValuePath="Id" SelectionChanged="Task_SelectionChanged" AutomationProperties.Name="{DynamicResource '选择任务'}"/><Button x:Name="SubmitButton" Grid.Column="1" Content="{DynamicResource '开始查询'}" Style="{StaticResource PrimaryButton}" Click="Submit_Click" Margin="10,0,0,0" Padding="17,8"/></Grid>
       <TextBlock x:Name="TaskDescription" FontSize="10" Foreground="{DynamicResource MutedBrush}" TextWrapping="Wrap" Margin="0,7,0,10"/>
       <TextBlock Text="{DynamicResource '补充问题（自由提问时必填）'}" FontSize="11" Margin="0,0,0,6"/>
-      <TextBox x:Name="QuestionInput" Height="64" MaxLength="4000" AcceptsReturn="True" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto" AutomationProperties.Name="{DynamicResource '输入你的问题'}"/>
+      <TextBox x:Name="QuestionInput" Height="64" MaxLength="4000" AcceptsReturn="True" TextWrapping="Wrap" VerticalContentAlignment="Top" VerticalScrollBarVisibility="Auto" AutomationProperties.Name="{DynamicResource '输入你的问题'}"/>
       <TextBlock Text="{DynamicResource '例如：用一个生活中的例子解释。Ctrl+Enter 发送'}" FontSize="10" Foreground="{DynamicResource MutedBrush}" Margin="0,6,0,12"/>
     </StackPanel>
     <Border Grid.Row="3" Style="{StaticResource CardFrame}" Padding="12" Margin="0,0,0,10" MinHeight="70">
       <Grid><TextBlock x:Name="EmptyText" Text="{DynamicResource '选一个预设直接查询，或写下你的问题。'}" TextWrapping="Wrap" Foreground="{DynamicResource MutedBrush}" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10"/>
-        <TextBox x:Name="AnswerText" IsReadOnly="True" Visibility="Collapsed" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Background="Transparent" BorderThickness="0" Padding="0" AutomationProperties.Name="{DynamicResource '查询结果'}"/>
+        <TextBox x:Name="AnswerText" IsReadOnly="True" Visibility="Collapsed" TextWrapping="Wrap" VerticalContentAlignment="Top" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Background="Transparent" BorderThickness="0" Padding="0" AutomationProperties.Name="{DynamicResource '查询结果'}"/>
       </Grid>
     </Border>
     <StackPanel Grid.Row="4"><ProgressBar x:Name="QueryProgress" IsIndeterminate="True" Height="3" Visibility="Collapsed" Margin="0,0,0,8"/>

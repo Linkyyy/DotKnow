@@ -2,7 +2,11 @@
 """将经过检查的宣传图和配套文案打包，不读取用户配置或密钥。"""
 from pathlib import Path
 import hashlib
+import sys
 import zipfile
+
+sys.stdout.reconfigure(encoding="utf-8")
+sys.stderr.reconfigure(encoding="utf-8")
 
 root = Path(__file__).resolve().parents[1]
 source = root / "docs" / "promotion"
