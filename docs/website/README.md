@@ -14,9 +14,9 @@
 
 ## 下载
 
-Windows 按钮直接连接经过检查的 `0.4.0-preview.5` ZIP，不依赖网站的 JavaScript。安装包保存在不可变 Git commit，文件 SHA-256、大小和下载路径集中在 `website/src/release.js`。
+Windows 按钮直接连接经过检查的 `0.4.0-preview.6` ZIP，不依赖网站的 JavaScript。安装包保存在不可变 Git commit，文件 SHA-256、大小和下载路径集中在 `website/src/release.js`。
 
-当前 Windows ZIP：67,370,884 字节，SHA-256 `a54804b02411d7e6e9fd4cf0e80d625eca49b26b03c0dc9f9e9764e7eea0416c`。本次网络验证返回 HTTP 206、`Content-Type: application/zip` 和有效 ZIP 签名 `PK\x03\x04`。
+当前 Windows ZIP：68,537,067 字节，SHA-256 `9acd644e0ae57118d03cf50176804b68d2109d72fb7a44d377e098dbbfcebb4a`。本次网络验证返回 HTTP 206、`Content-Type: application/zip` 和有效 ZIP 签名 `PK\x03\x04`。
 
 ## 验证
 

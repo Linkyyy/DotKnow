@@ -36,7 +36,7 @@ npx vercel@latest --prod
 
 ## 更新下载版本
 
-修改 `src/release.js` 中经过校验的版本、不可变 Git commit、ZIP 文件名、十进制 MB 大小与 **ZIP** SHA-256，然后构建、测试。Windows 按钮直连 GitHub 已发布二进制，避免每次官网部署复制 67 MB 安装包。`/download` 页面也提供跳转。若更换域名，可设置 `SITE_URL=https://你的域名 npm run build` 以输出绝对分享图片地址与 canonical URL。
+修改 `src/release.js` 中经过校验的版本、不可变 Git commit、ZIP 文件名、十进制 MB 大小与 **ZIP** SHA-256，然后构建、测试。Windows 按钮直连 GitHub 已发布二进制，避免每次官网部署复制 68.5 MB 安装包。`/download` 页面也提供跳转。若更换域名，可设置 `SITE_URL=https://你的域名 npm run build` 以输出绝对分享图片地址与 canonical URL。
 
 内置词库宣传数量为 6,426 组／32,159 条查询记录，不能等同于 32,159 个独立单词；离线能力为精确查询，在线回退需要用户自己的服务和密钥。
 
