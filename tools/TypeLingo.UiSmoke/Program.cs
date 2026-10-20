@@ -111,6 +111,40 @@ internal static class Program
             Check((string)Find<ComboBox>("TriggerInput").SelectedValue == "selection", "默认以鼠标划词触发，输入自动预览保留为可选项");
             Check(Find<CheckBox>("PreferOfflineCheck").IsChecked == true && Find<CheckBox>("AutoLearnCheck").IsChecked == true && Find<CheckBox>("OnlineFallbackCheck").IsChecked == true,
                 "离线优先、在线回退和自动积累默认开启");
+            var savedBeforePreview = File.ReadAllText(Path.Combine(temporary, "settings.json"));
+            foreach (var palette in AppearancePalettes.All)
+            {
+                var radio = new[] { "Paper", "Forest", "Ocean", "Lavender" }.First(prefix =>
+                    (string)Find<RadioButton>(prefix + "PaletteRadio").Tag == palette.Id);
+                Find<RadioButton>(radio + "PaletteRadio").IsChecked = true;
+                foreach (var mode in new[] { "light", "dark" })
+                {
+                    Find<RadioButton>(mode == "light" ? "LightThemeRadio" : "DarkThemeRadio").IsChecked = true;
+                    SelectPage("home");
+                    var expected = mode == "light" ? palette.Light : palette.Dark;
+                    Check(expected.Resources.All(pair => ((SolidColorBrush)app.Resources[pair.Key]).Color ==
+                        (Color)ColorConverter.ConvertFromString(pair.Value)), "实际 WPF 资源完整应用主题：" + palette.Id + " / " + mode);
+                    using (var menu = new System.Windows.Forms.ContextMenuStrip())
+                    {
+                        menu.Items.Add("Theme fixture"); TrayAppearance.Apply(menu);
+                        var textColor = (Color)ColorConverter.ConvertFromString(expected.Text);
+                        var surfaceColor = (Color)ColorConverter.ConvertFromString(expected.Surface);
+                        Check(menu.ForeColor.R == textColor.R && menu.ForeColor.G == textColor.G && menu.ForeColor.B == textColor.B &&
+                            menu.BackColor.R == surfaceColor.R && menu.BackColor.G == surfaceColor.G && menu.BackColor.B == surfaceColor.B,
+                            "托盘菜单同步主题：" + palette.Id + " / " + mode);
+                    }
+                    Check(items.Select((row, i) => Bounds(row, navigation) == rowBounds[i] &&
+                        Bounds(((StackPanel)row.Content).Children.OfType<TextBlock>().Single(), navigation) == labelBounds[i]).All(x => x),
+                        "主题切换不改变导航坐标：" + palette.Id + " / " + mode);
+                    Capture(window, Path.Combine(output, "theme-" + palette.Id + "-" + mode + "-home.png"));
+                }
+            }
+            Check(File.ReadAllText(Path.Combine(temporary, "settings.json")) == savedBeforePreview, "外观预览不会自动覆盖已保存的配置");
+            window.Hide(); Pump(window);
+            var restoredColors = AppearancePalettes.Resolve(settings.Current.Overlay.ColorTheme, settings.Current.Overlay.Theme, DesktopTheme.IsDark);
+            Check(((SolidColorBrush)app.Resources["CanvasBrush"]).Color == (Color)ColorConverter.ConvertFromString(restoredColors.Canvas),
+                "关闭窗口时恢复已保存的配色与明暗模式");
+            window.Show(); SelectPage("home"); Capture(window, Path.Combine(output, "settings-home.png"));
             SelectPage("vocabulary");
             Check(Find<TextBlock>("VocabularyCountText").Text.Contains("32159") && Find<TextBlock>("VocabularyCountText").Text.Contains("2441"),
                 "真实设置页面加载用户词库可用数和歧义数");
@@ -156,12 +190,15 @@ internal static class Program
             var editor = (TextBox)(model.Template.FindName("PART_EditableTextBox", model) ?? throw new InvalidOperationException("模型编辑模板未连接"));
             editor.Text = "my-selected-model"; Pump(window);
             Find<ComboBox>("PopupDisplayInput").SelectedValue = "result";
+            Find<RadioButton>("OceanPaletteRadio").IsChecked = true;
             Check(model.Text == "my-selected-model", "新版下拉框保留手动模型输入功能");
             Find<Button>("SaveSettingsButton").RaiseEvent(new RoutedEventArgs(Button.ClickEvent)); Pump(window);
             Check(!settings.Current.Overlay.ShowLoading, "Loading 开关可保存并持久化");
             Check(!settings.Current.Vocabulary.PreferOffline && !settings.Current.Vocabulary.AutoLearn && !settings.Current.Vocabulary.AllowOnlineFallback,
                 "离线优先、在线回退和自动积累可独立保存");
             Check(settings.Current.MonitorAllApplications && settings.Current.AI.Model == "my-selected-model" && settings.Current.Translation.TargetLanguage == "en" && settings.Current.Overlay.TriggerMode == "hotkey" && settings.Current.Overlay.Theme == "light", "保存设置同时持久化应用范围、模型、方向、主题与触发方式");
+            var appearanceReload = new SettingsService(temporary, new WindowsProtector()); appearanceReload.Load();
+            Check(appearanceReload.Current.Overlay.ColorTheme == "ocean" && appearanceReload.Current.Overlay.Theme == "light", "实际保存按钮跨重载保留独立的配色与明暗模式");
             SelectPage("general"); var scroll = Find<ScrollViewer>("PageScroll");
             scroll.ScrollToEnd(); Pump(window);
             Check(scroll.ScrollableHeight > 0 && scroll.VerticalOffset > 0, "新样式保持设置内容的滚动功能");
@@ -171,15 +208,18 @@ internal static class Program
                 SelectPage(id); Capture(window, Path.Combine(output, "settings-" + id + ".png"));
             }
             window.Width = 820; window.Height = 560; SelectPage("general"); Pump(window);
+            Check(Find<StackPanel>("PageGeneral").Children.OfType<TypeLingo.App.Controls.SettingCard>().All(card => card.IsCompact),
+                "小窗口设置卡片使用说明在上、控件在下的布局");
             var save = Find<Button>("SaveSettingsButton"); var origin = save.TranslatePoint(new Point(), (UIElement)window.Content);
             Check(origin.Y + save.ActualHeight <= ((FrameworkElement)window.Content).ActualHeight, "较小窗口仍完整显示固定保存按钮");
             Capture(window, Path.Combine(output, "settings-small.png"));
             window.Hide();
             var previewSettings = new AppSettings { PrivacyConsent = true, Overlay = new() { Theme = "light", AutoHideSeconds = 0 } };
+            DesktopTheme.ApplyResources(previewSettings.Overlay);
             using var coordinator = new TranslationCoordinator(new NoApiProvider(), new EmptyCache(), () => previewSettings, new SessionStatistics());
             var overlay = new OverlayWindow(new ReplacementService(new NoInputTarget(), coordinator), () => previewSettings, p => favorites.Add(p));
-            var snapshot = new InputSnapshot("preview", "输入原文", new(50, 50, 20, 20));
-            var preview = new Preview(snapshot, TranslationRequest.Create(previewSettings, snapshot.Text), new TranslationResult("Hello."), 1, false);
+            var snapshot = new InputSnapshot("preview", "また明日。", new(50, 50, 20, 20));
+            var preview = new Preview(snapshot, TranslationRequest.Create(previewSettings, snapshot.Text), new TranslationResult("明天见。"), 1, false);
             overlay.Display(preview); Pump(overlay);
             Check(((TextBlock)overlay.FindName("OriginText")).Text == "在线翻译", "悬浮窗明确显示译文来源");
             ((Button)overlay.FindName("FavoriteButton")).RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
@@ -187,6 +227,12 @@ internal static class Program
             Check(overlay.ActualWidth <= 320 && overlay.ActualHeight <= 64, "短译文悬浮窗自动收窄且高度不超过 64 像素");
             Check(overlay.Opacity == 1 && ((SolidColorBrush)((Border)overlay.FindName("Bubble")).Background).Color.A < 255, "半透明只作用于背景，文字保持清晰");
             Capture(overlay, Path.Combine(output, "overlay-compact.png"));
+            DesktopTheme.ApplyResources(previewSettings.Overlay with { ColorTheme = "lavender", Theme = "dark" }); Pump(overlay);
+            Check(((SolidColorBrush)((Border)overlay.FindName("Bubble")).Background).Color.R == 0x29 &&
+                ((SolidColorBrush)overlay.Foreground).Color.R == 0xF6 && overlay.Opacity == 1,
+                "已显示的悬浮窗同步更新配色背景与文字且不降低文字透明度");
+            Capture(overlay, Path.Combine(output, "overlay-lavender-dark.png"));
+            DesktopTheme.ApplyResources(previewSettings.Overlay);
             overlay.Display(preview with { Snapshot = snapshot with { CanWrite = false, IsSelection = true }, Result = new TranslationResult("只翻译选中的文字。") }); Pump(overlay);
             Check(((Button)overlay.FindName("ReplaceButton")).Visibility == Visibility.Collapsed, "选区预览不显示替换正文按钮");
             Capture(overlay, Path.Combine(output, "overlay-selection.png"));
@@ -213,7 +259,7 @@ internal static class Program
             overlay.Loading(snapshot, "API 测试错误"); Pump(overlay);
             Check(overlay.IsVisible && ((TextBlock)overlay.FindName("TranslationText")).Text == "翻译暂不可用", "请求失败时显示简短提示并保留悬停错误原因");
             overlay.Dismiss();
-            window.Show(); SelectPage("favorites");
+            window.Width = 1040; window.Height = 820; window.Show(); SelectPage("favorites");
             Check(Find<ListBox>("FavoritesList").Items.Count == 1, "收藏页加载本地条目");
             Find<Button>("StartReviewButton").RaiseEvent(new RoutedEventArgs(Button.ClickEvent)); Pump(window);
             Check(Find<TextBlock>("ReviewTranslationText").Visibility == Visibility.Collapsed, "复习先展示原文并隐藏答案");
