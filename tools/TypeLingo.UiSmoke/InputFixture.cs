@@ -49,6 +49,7 @@ internal static class InputFixture
                     }
                     else if (command == "reading-clear") { reading.Selection.Select(readingRun.ContentStart, readingRun.ContentStart); input.Focus(); }
                     else if (command == "reading-away") PointerFixture.Move(window.PointToScreen(new Point(window.ActualWidth - 12, window.ActualHeight - 45)));
+                    else if (command == "pointer-settle") await Dispatcher.Yield(DispatcherPriority.ApplicationIdle);
                     else if (command == "reading-start" || command == "reading-end")
                     {
                         // WPF 自身要求阅读器可聚焦才能处理真实鼠标拖选；上面的用例单独验证无键盘焦点的读取。
@@ -108,7 +109,7 @@ internal static class InputFixture
             Command("reading-away");
             check(Capture()?.SameContent(reading) == true, "鼠标离开阅读文字后仍复核原选区，允许操作悬浮窗");
             Command("reading-clear"); check(Capture() == null, "清除阅读选区后立即停止预览，不回退到全文或输入行");
-            Command("reading-start"); pointer.Press(); Command("reading-end");
+            Command("reading-start"); pointer.Press(); Command("pointer-settle"); Command("reading-end");
             check(Capture() == null, "鼠标按住拖选时不发送中间选区"); pointer.Release();
             async Task<InputSnapshot?> AfterRelease()
             {
