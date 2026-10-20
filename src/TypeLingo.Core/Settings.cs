@@ -79,6 +79,7 @@ public sealed record CacheSettings
 }
 public sealed record OverlaySettings
 {
+    public bool ShowLoading { get; init; } = true;
     public string Theme { get; init; } = "system";
     // 保留旧配置字段；读取旧版设置时迁移到 Theme。
     public bool DarkMode { get; init; }

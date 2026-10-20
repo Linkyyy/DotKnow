@@ -4,6 +4,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Input;
 using System.Windows.Threading;
 using TypeLingo.App;
 using TypeLingo.App.Windows;
@@ -25,9 +26,10 @@ internal static class Program
         {
             app.Resources = new ResourceDictionary { Source = new Uri("pack://application:,,,/TypeLingo;component/Styles/Theme.xaml") };
             var settings = new SettingsService(temporary, new WindowsProtector());
+            var favorites = new FavoriteStore(temporary, new WindowsProtector());
             settings.Save(new AppSettings());
             var window = new SettingsWindow(settings, new SessionStatistics(), (candidate, key) => { settings.Save(candidate, key); return null; },
-                (_, _) => Task.FromResult<IReadOnlyList<string>>(["test-model"]), (_, _) => Task.FromResult(new TranslationResult("仅供界面测试的固定结果")), () => Task.CompletedTask);
+                (_, _) => Task.FromResult<IReadOnlyList<string>>(["test-model"]), (_, _) => Task.FromResult(new TranslationResult("仅供界面测试的固定结果")), () => Task.CompletedTask, favorites);
             T Find<T>(string name) where T : FrameworkElement => (T)(window.FindName(name) ?? throw new InvalidOperationException("找不到控件：" + name));
             void Check(bool condition, string message)
             { if (!condition) throw new InvalidOperationException(message); checks.Add(message); Console.WriteLine("通过：" + message); }
@@ -37,6 +39,7 @@ internal static class Program
                 navigation.SelectedItem = navigation.Items.Cast<ListBoxItem>().First(x => (string)x.Tag == id); Pump(window);
             }
             window.Show(); Pump(window);
+            Check((string)((ListBoxItem)Find<ListBox>("NavigationList").Items[0]).Tag == "home" && Find<FrameworkElement>("PageHome").Visibility == Visibility.Visible, "主页位于导航顶部并默认打开");
             Check(window.IsVisible && window.ActualWidth >= 760, "真实 WPF 设置窗口已启动并完成布局");
             using (var icon = Application.GetResourceStream(new Uri("pack://application:,,,/TypeLingo;component/Assets/typelingo.ico")).Stream)
                 Check(window.Icon != null && icon.Length > 0, "设置窗口与托盘使用可加载的新图标资源");
@@ -67,8 +70,10 @@ internal static class Program
             SelectPage("ai"); var model = Find<ComboBox>("ModelInput"); model.ApplyTemplate();
             var editor = (TextBox)(model.Template.FindName("PART_EditableTextBox", model) ?? throw new InvalidOperationException("模型编辑模板未连接"));
             editor.Text = "my-selected-model"; Pump(window);
+            Find<CheckBox>("ShowLoadingCheck").IsChecked = false;
             Check(model.Text == "my-selected-model", "新版下拉框保留手动模型输入功能");
             Find<Button>("SaveSettingsButton").RaiseEvent(new RoutedEventArgs(Button.ClickEvent)); Pump(window);
+            Check(!settings.Current.Overlay.ShowLoading, "Loading 开关可保存并持久化");
             Check(settings.Current.MonitorAllApplications && settings.Current.AI.Model == "my-selected-model" && settings.Current.Translation.TargetLanguage == "en" && settings.Current.Overlay.TriggerMode == "hotkey" && settings.Current.Overlay.Theme == "light", "保存设置同时持久化应用范围、模型、方向、主题与触发方式");
             SelectPage("general"); var scroll = Find<ScrollViewer>("PageScroll");
             scroll.ScrollToEnd(); Pump(window);
@@ -85,10 +90,12 @@ internal static class Program
             window.Hide();
             var previewSettings = new AppSettings { PrivacyConsent = true, Overlay = new() { Theme = "light", AutoHideSeconds = 0 } };
             using var coordinator = new TranslationCoordinator(new NoApiProvider(), new EmptyCache(), () => previewSettings, new SessionStatistics());
-            var overlay = new OverlayWindow(new ReplacementService(new NoInputTarget(), coordinator), () => previewSettings);
+            var overlay = new OverlayWindow(new ReplacementService(new NoInputTarget(), coordinator), () => previewSettings, p => favorites.Add(p));
             var snapshot = new InputSnapshot("preview", "输入原文", new(50, 50, 20, 20));
             var preview = new Preview(snapshot, TranslationRequest.Create(previewSettings, snapshot.Text), new TranslationResult("Hello."), 1, false);
             overlay.Display(preview); Pump(overlay);
+            ((Button)overlay.FindName("FavoriteButton")).RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+            Check(favorites.GetAll().Count == 1 && !((Button)overlay.FindName("FavoriteButton")).IsEnabled, "星标主动收藏译文并防止重复点击");
             Check(overlay.ActualWidth <= 320 && overlay.ActualHeight <= 64, "短译文悬浮窗自动收窄且高度不超过 64 像素");
             Check(overlay.Opacity == 1 && ((SolidColorBrush)((Border)overlay.FindName("Bubble")).Background).Color.A < 255, "半透明只作用于背景，文字保持清晰");
             Capture(overlay, Path.Combine(output, "overlay-compact.png"));
@@ -99,9 +106,36 @@ internal static class Program
             Check(overlay.ActualWidth <= 320 && overlay.ActualHeight <= 190 && ((ScrollViewer)overlay.FindName("TranslationScroll")).ScrollableHeight > 0, "长译文保持紧凑并通过滚动显示");
             Capture(overlay, Path.Combine(output, "overlay-long.png"));
             overlay.Dismiss(); Check(!overlay.IsVisible, "关闭图标可隐藏悬浮窗");
+            overlay.Loading(snapshot, "正在翻译…"); Pump(overlay);
+            Check(overlay.IsVisible && ((ProgressBar)overlay.FindName("LoadingProgress")).Visibility == Visibility.Visible, "启用 Loading 时显示实际进度控件");
+            overlay.Dismiss(); previewSettings = previewSettings with { Overlay = previewSettings.Overlay with { ShowLoading = false } };
+            overlay.Loading(snapshot, "正在翻译…"); Pump(overlay);
+            Check(!overlay.IsVisible, "关闭 Loading 时等待期间不显示悬浮窗");
             overlay.Loading(snapshot, "API 测试错误"); Pump(overlay);
             Check(overlay.IsVisible && ((TextBlock)overlay.FindName("TranslationText")).Text == "翻译暂不可用", "请求失败时显示简短提示并保留悬停错误原因");
             overlay.Dismiss();
+            window.Show(); SelectPage("favorites");
+            Check(Find<ListBox>("FavoritesList").Items.Count == 1, "收藏页加载本地条目");
+            Find<Button>("StartReviewButton").RaiseEvent(new RoutedEventArgs(Button.ClickEvent)); Pump(window);
+            Check(Find<TextBlock>("ReviewTranslationText").Visibility == Visibility.Collapsed, "复习先展示原文并隐藏答案");
+            Find<Button>("ShowAnswerButton").RaiseEvent(new RoutedEventArgs(Button.ClickEvent)); Pump(window);
+            Check(Find<TextBlock>("ReviewTranslationText").Visibility == Visibility.Visible, "主动显示复习答案");
+            Capture(window, Path.Combine(output, "favorites-review.png"));
+            Find<Button>("ReviewRememberedButton").RaiseEvent(new RoutedEventArgs(Button.ClickEvent)); Pump(window);
+            Check(favorites.GetAll()[0].ReviewCount == 1 && favorites.GetDue().Count == 0, "记住后保存复习排期");
+            window.Hide();
+            using (var clickCoordinator = new TranslationCoordinator(new LocalProvider(), new EmptyCache(), () => previewSettings, new SessionStatistics()))
+            {
+                var target = new LocalTarget(snapshot);
+                var clickable = new OverlayWindow(new ReplacementService(target, clickCoordinator), () => previewSettings);
+                InputFixture.WaitWithDispatcher(clickCoordinator.ObserveAsync(snapshot).ContinueWith(_ => true));
+                clickable.Display(clickCoordinator.CurrentPreview); Pump(clickable);
+                ((TextBlock)clickable.FindName("TranslationText")).RaiseEvent(new MouseButtonEventArgs(Mouse.PrimaryDevice, Environment.TickCount, MouseButton.Left)
+                    { RoutedEvent = UIElement.MouseLeftButtonUpEvent }); Pump(clickable);
+                Check(((FrameworkElement)clickable.FindName("Confirmation")).Visibility == Visibility.Visible && target.Writes == 0, "点击译文进入确认且不会提前写入");
+                ((Button)clickable.FindName("ConfirmButton")).RaiseEvent(new RoutedEventArgs(Button.ClickEvent)); Pump(clickable);
+                Check(target.Writes == 1 && !clickable.IsVisible, "确认后点击译文流程只写入一次并隐藏");
+            }
             InputFixture.Verify(Check);
             File.WriteAllLines(Path.Combine(output, "ui-validation.txt"), checks);
              Console.WriteLine("WPF 界面检查全部通过：" + checks.Count); return 0;
@@ -129,6 +163,15 @@ internal static class Program
     }
     private sealed class NoApiProvider : ITranslationProvider
     { public Task<TranslationResult> TranslateAsync(TranslationRequest request, CancellationToken token) => throw new InvalidOperationException("界面检查不应调用 API"); }
+    private sealed class LocalProvider : ITranslationProvider
+    { public Task<TranslationResult> TranslateAsync(TranslationRequest request, CancellationToken token) => Task.FromResult(new TranslationResult("本地测试译文")); }
+    private sealed class LocalTarget(InputSnapshot snapshot) : IInputTarget
+    {
+        public int Writes;
+        public Task<InputSnapshot?> CaptureAsync(CancellationToken token) => Task.FromResult<InputSnapshot?>(snapshot);
+        public Task<bool> TryReplaceAsync(InputSnapshot expected, string translation, CancellationToken token)
+        { if (!snapshot.SameContent(expected)) return Task.FromResult(false); Writes++; return Task.FromResult(true); }
+    }
     private sealed class EmptyCache : ITranslationCache
     {
         public Task<TranslationResult?> GetAsync(string key, CancellationToken token) => Task.FromResult<TranslationResult?>(null);

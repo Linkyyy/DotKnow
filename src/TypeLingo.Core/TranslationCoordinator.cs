@@ -14,7 +14,7 @@ public sealed class TranslationCoordinator(ITranslationProvider provider, ITrans
     private Preview? preview;
     private Task active = Task.CompletedTask;
     private bool disposed;
-    private (string Identity, string Text)? suppression;
+    private (string Identity, string Text, string? FullText, InputSnapshot? Observed)? suppression;
     public event Action<Preview?>? PreviewChanged;
     public event Action<string>? StatusChanged;
     public Preview? CurrentPreview { get { lock (gate) return preview; } }
@@ -28,10 +28,15 @@ public sealed class TranslationCoordinator(ITranslationProvider provider, ITrans
             if (!config.PrivacyConsent || !config.Translation.Enabled || snapshot is { IsSensitive: true } ||
                 snapshot is { IsComposing: true } || string.IsNullOrWhiteSpace(snapshot?.Text) ||
                 snapshot.Text.Length > config.Translation.MaxInputCharacters) snapshot = null;
-            if (suppression is { } own && snapshot?.Identity == own.Identity && snapshot.Text == own.Text) snapshot = null;
+            if (suppression is { } own && snapshot?.Identity == own.Identity &&
+                (own.FullText != null ? snapshot.EditRange?.FullText == own.FullText : snapshot.Text == own.Text) &&
+                (!snapshot.IsSelection || snapshot.Text == own.Text) && (own.Observed == null || own.Observed.SameContent(snapshot)))
+            {
+                suppression = (own.Identity, own.Text, own.FullText, snapshot); snapshot = null;
+            }
             else if (snapshot != null) suppression = null;
             var request = snapshot == null ? null : TranslationRequest.Create(config, snapshot.Text);
-            if (!force && current?.Identity == snapshot?.Identity && current?.CanWrite == snapshot?.CanWrite && currentKey == request?.CacheKey) return active;
+            if (!force && (current == null ? snapshot == null : current.SameContent(snapshot)) && currentKey == request?.CacheKey) return active;
             pending?.Cancel(); pending?.Dispose(); pending = null;
             current = snapshot; currentKey = request?.CacheKey; preview = null; sequence++;
             PreviewChanged?.Invoke(null);
@@ -92,7 +97,7 @@ public sealed class TranslationCoordinator(ITranslationProvider provider, ITrans
     }
     public void SuppressOwnReplacement(InputSnapshot original, string translated)
     {
-        lock (gate) { suppression = (original.Identity, translated); }
+        lock (gate) { suppression = (original.Identity, translated, original.EditRange?.Replace(translated), null); }
         _ = ObserveAsync(null, true);
     }
     public void Dispose()

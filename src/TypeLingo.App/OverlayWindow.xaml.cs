@@ -15,14 +15,15 @@ public partial class OverlayWindow : Window
     private ReplacementTicket? ticket;
     private readonly ReplacementService replacement;
     private readonly Func<AppSettings> settings;
+    private readonly Action<Preview>? saveFavorite;
     private InputRect? anchor;
     private InputRect? avoid;
     private readonly DispatcherTimer hideTimer = new();
     private bool requesting;
     private string statusSource = "原文保持不变";
-    public OverlayWindow(ReplacementService replacement, Func<AppSettings> settings)
+    public OverlayWindow(ReplacementService replacement, Func<AppSettings> settings, Action<Preview>? saveFavorite = null)
     {
-        this.replacement = replacement; this.settings = settings;
+        this.replacement = replacement; this.settings = settings; this.saveFavorite = saveFavorite;
         InitializeComponent(); SourceInitialized += (_, _) =>
         {
             var handle = new WindowInteropHelper(this).Handle;
@@ -39,12 +40,17 @@ public partial class OverlayWindow : Window
     public void Display(Preview? preview)
     {
         CancelConfirmation(); hideTimer.Stop(); current = preview;
+        LoadingProgress.Visibility = Visibility.Collapsed;
         if (preview == null) { TranslationText.Text = ""; Hide(); return; }
         anchor = preview.Snapshot.Bounds; avoid = preview.Snapshot.ControlBounds;
         TranslationText.Text = preview.Result.Text;
         TranslationText.FontSize = settings().Overlay.FontSize;
         RefreshLanguage();
         CopyButton.Visibility = Visibility.Visible; CopyButton.IsEnabled = true; ReplaceButton.Visibility = preview.Snapshot.CanWrite ? Visibility.Visible : Visibility.Collapsed; ReplaceButton.IsEnabled = preview.Snapshot.CanWrite;
+        FavoriteButton.Visibility = saveFavorite == null ? Visibility.Collapsed : Visibility.Visible;
+        FavoriteButton.IsEnabled = true;
+        TranslationText.Cursor = preview.Snapshot.CanWrite ? Cursors.Hand : Cursors.Arrow;
+        TranslationText.ToolTip = UiText.Get(preview.Snapshot.CanWrite ? "点击译文准备替换选区或当前行" : "当前控件仅支持复制与收藏");
         ShowStatus(preview.FromCache ? "本地缓存 · 原文保持不变" : "译文预览 · 原文保持不变");
         ConfigureBubble(); Show(); UpdateLayout(); Position(); RestartTimer();
     }
@@ -53,13 +59,23 @@ public partial class OverlayWindow : Window
     private void RefreshLanguage() => Bubble.ToolTip = UiText.Get(statusSource);
     public void Loading(InputSnapshot? snapshot, string message)
     {
-        // 等待状态不额外弹窗；错误保留简短提示，具体原因可悬停查看。
         if (IsVisible) ShowStatus(message);
+        if (current == null && snapshot is { IsComposing: false, IsSensitive: false } && !string.IsNullOrWhiteSpace(snapshot.Text) &&
+            message is "等待输入稳定…" or "正在翻译…")
+        {
+            if (!settings().Overlay.ShowLoading) { Hide(); return; }
+            anchor = snapshot.Bounds; avoid = snapshot.ControlBounds;
+            TranslationText.Text = UiText.Get(message); TranslationText.Cursor = Cursors.Arrow; TranslationText.ToolTip = null;
+            LoadingProgress.Visibility = Visibility.Visible;
+            CopyButton.Visibility = ReplaceButton.Visibility = FavoriteButton.Visibility = Visibility.Collapsed;
+            hideTimer.Stop(); ConfigureBubble(); Show(); UpdateLayout(); Position(); return;
+        }
         if (current != null || snapshot == null || snapshot.IsComposing || snapshot.IsSensitive || string.IsNullOrWhiteSpace(snapshot.Text) ||
             message is "等待输入稳定…" or "正在翻译…" or "本地缓存 · 未调用 API" or "译文就绪 · 原文保持不变") return;
         anchor = snapshot.Bounds; avoid = snapshot.ControlBounds;
+        LoadingProgress.Visibility = Visibility.Collapsed;
         TranslationText.Text = UiText.Get("翻译暂不可用"); ShowStatus(message);
-        CopyButton.Visibility = ReplaceButton.Visibility = Visibility.Collapsed;
+        CopyButton.Visibility = ReplaceButton.Visibility = FavoriteButton.Visibility = Visibility.Collapsed;
         ConfigureBubble(); Show(); UpdateLayout(); Position(); RestartTimer();
     }
     private void ConfigureBubble()
@@ -67,7 +83,8 @@ public partial class OverlayWindow : Window
         var config = settings().Overlay;
         MaxWidth = Math.Max(config.MaxWidth, ticket == null ? 120 : 340);
         MaxHeight = ticket == null ? 240 : 500;
-        TranslationText.MaxWidth = Math.Max(32, MaxWidth - (ReplaceButton.Visibility == Visibility.Visible ? 116 : 92));
+        TranslationText.MaxWidth = Math.Max(32, MaxWidth - 68 -
+            (ReplaceButton.Visibility == Visibility.Visible ? 24 : 0) - (FavoriteButton.Visibility == Visibility.Visible ? 24 : 0));
         TranslationText.FontSize = config.FontSize;
         ApplyTransparency();
     }
@@ -102,7 +119,7 @@ public partial class OverlayWindow : Window
         try
         {
             CancelConfirmation();
-            var result = await replacement.PrepareAsync();
+            var result = current is { } displayed ? await replacement.PreparePreviewAsync(displayed) : await replacement.PrepareAsync();
             if (result == null) { ShowStatus("输入已变化、正在组字或不支持安全写入；请重新确认或复制译文。"); return; }
             Display(result.Preview); ticket = result;
             OriginalText.Text = result.Preview.Snapshot.Text;
@@ -130,6 +147,14 @@ public partial class OverlayWindow : Window
     private void Cancel_Click(object sender, RoutedEventArgs e) { CancelConfirmation(); ConfigureBubble(); RestartTimer(); ShowStatus("已取消 · 原文保持不变"); }
     private void Copy_Click(object sender, RoutedEventArgs e) => CopyTranslation();
     private async void Replace_Click(object sender, RoutedEventArgs e) => await RequestReplacementAsync();
+    private async void Translation_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+    { if (current?.Snapshot.CanWrite == true) { e.Handled = true; await RequestReplacementAsync(); } }
+    private void Favorite_Click(object sender, RoutedEventArgs e)
+    {
+        if (current == null || saveFavorite == null) return;
+        try { saveFavorite(current); FavoriteButton.IsEnabled = false; ShowStatus("已收藏，可在本地收藏与复习中查看。"); }
+        catch (Exception) { ShowStatus("收藏失败，请检查本地文件与存储权限。"); }
+    }
 
     private void Position()
     {

@@ -30,7 +30,13 @@ public sealed class ReplacementService(IInputTarget target, TranslationCoordinat
         if (success) coordinator.SuppressOwnReplacement(ticket.Preview.Snapshot, ticket.Preview.Result.Text);
         return success;
     }
+    public async Task<ReplacementTicket?> PreparePreviewAsync(Preview preview, CancellationToken cancellationToken = default)
+    {
+        if (!coordinator.IsCurrent(preview) || preview.Snapshot is not { CanWrite: true, IsComposing: false, IsSensitive: false }) return null;
+        var live = await target.CaptureAsync(cancellationToken);
+        return Same(preview.Snapshot, live) && coordinator.IsCurrent(preview) ? new(preview) : null;
+    }
     public void Cancel(ReplacementTicket ticket) => ticket.Consume();
     private static bool Same(InputSnapshot expected, InputSnapshot? actual) => actual is
-        { CanWrite: true, IsSensitive: false, IsComposing: false } && actual.Identity == expected.Identity && actual.Text == expected.Text;
+        { CanWrite: true, IsSensitive: false, IsComposing: false } && expected.SameContent(actual);
 }

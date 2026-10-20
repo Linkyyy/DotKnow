@@ -34,6 +34,9 @@ internal static class InputFixture
                     else if (command == "select") { input.Text = "prefix selected phrase suffix"; input.IsReadOnly = true; input.Focus(); input.Select(7, 15); }
                     else if (command == "clear") { input.Focus(); input.Select(0, 0); }
                     else if (command == "password") password.Focus();
+                    else if (command == "writable-selection") { input.IsReadOnly = false; input.Text = "prefix selected phrase suffix"; input.Focus(); input.Select(7, 15); }
+                    else if (command == "multiline") { input.IsReadOnly = false; input.Text = "first line\r\ncurrent line\r\nlast line"; input.Focus(); input.Select(15, 0); }
+                    else if (command == "value") { await writer.WriteLineAsync(Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(input.Text))); continue; }
                     else if (command == "stop") { await writer.WriteLineAsync("ok"); app.Shutdown(); return; }
                     await Dispatcher.Yield(DispatcherPriority.ContextIdle);
                     await writer.WriteLineAsync("ok");
@@ -74,12 +77,28 @@ internal static class InputFixture
             Command("select"); var selected = Capture();
             check(selected?.Text == "selected phrase" && selected.IsSelection && !selected.CanWrite, "只读输入框的真实选区可翻译，且不会替换正文");
             Command("clear"); check(Capture() == null, "清除选区后不读取或翻译整个文档");
+            Command("writable-selection"); selected = Capture();
+            check(selected is { IsSelection: true, CanWrite: true } && selected.EditRange?.Start == 7, "可编辑选区具有精确写入范围");
+            check(WaitWithDispatcher(observer.TryReplaceAsync(selected!, "译文", CancellationToken.None)), "真实 UIA 可替换当前选区");
+            string ReadValue()
+            {
+                writer.WriteLine("value");
+                return System.Text.Encoding.UTF8.GetString(Convert.FromBase64String(reader.ReadLineAsync().WaitAsync(TimeSpan.FromSeconds(10)).GetAwaiter().GetResult()!));
+            }
+            check(ReadValue() == "prefix 译文 suffix", "选区替换保留前缀和后缀");
+            Volatile.Write(ref config, config with { Overlay = config.Overlay with { TriggerMode = "typing" } });
+            Command("multiline"); var line = Capture();
+            check(line?.Text == "current line" && line.EditRange?.Start == 12 && !line.IsSelection, "非选区仅捕获光标所在逻辑行");
+            check(WaitWithDispatcher(observer.TryReplaceAsync(line!, "当前行译文", CancellationToken.None)), "真实 UIA 可替换当前行");
+            check(ReadValue() == "first line\r\n当前行译文\r\nlast line", "当前行替换保留其他行和 CRLF");
+            Command("multiline"); line = Capture(); Command("edit");
+            check(!WaitWithDispatcher(observer.TryReplaceAsync(line!, "不应写入", CancellationToken.None)), "确认期间内容变化时拒绝旧范围写入");
             Command("password"); check(Capture(true) == null, "三种触发方式继续跳过真实密码框");
             Command("stop"); process.WaitForExit(5000);
         }
         finally { if (!process.HasExited) process.Kill(true); }
     }
-    private static T WaitWithDispatcher<T>(Task<T> operation)
+    internal static T WaitWithDispatcher<T>(Task<T> operation)
     {
         // 保持客户端 WPF 调度器运行，避免 UIA 在跨进程回调时等待已阻塞的界面线程。
         var bounded = operation.WaitAsync(TimeSpan.FromSeconds(10));

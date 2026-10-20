@@ -14,11 +14,10 @@ public sealed class PreviewActivation
     {
         ShouldCapture(triggerMode);
         if (snapshot is { IsSensitive: true } or { IsComposing: true } || string.IsNullOrWhiteSpace(snapshot?.Text)) snapshot = null;
-        if (mode == "selection") return snapshot is { IsSelection: true, CanWrite: false } ? snapshot : null;
+        if (mode == "selection") return snapshot is { IsSelection: true } ? snapshot : null;
         if (mode != "hotkey") return snapshot;
         if (explicitRequest) requested = snapshot;
-        if (snapshot == null || requested == null || snapshot.Identity != requested.Identity || snapshot.Text != requested.Text ||
-            snapshot.CanWrite != requested.CanWrite || snapshot.IsSelection != requested.IsSelection)
+        if (snapshot == null || requested == null || !requested.SameContent(snapshot))
         { Reset(); return null; }
         return snapshot;
     }

@@ -20,6 +20,7 @@ internal sealed class InputObserver : IInputTarget, IDisposable
     private int dirty = 1;
     private readonly PreviewActivation activation = new();
     private AppSettings? capturedSettings;
+    private AutomationElement? capturedElement;
     public event Action<InputSnapshot?>? SnapshotChanged;
     public event Action<string>? StatusChanged;
     public InputObserver(Func<AppSettings> settings)
@@ -87,71 +88,87 @@ internal sealed class InputObserver : IInputTarget, IDisposable
         if (state.ProcessId != pid || !state.IsEnabled || state.IsOffscreen || state.IsPassword || Sensitive(focused))
         { SubscribeText(null); return null; }
         if (Native.IsComposing(foreground)) return new InputSnapshot("composition", "", new(0, 0, 0, 0), false, true);
+        const int captureLimit = 200000;
         var element = focused;
-        string? text = null;
-        var selection = false;
-        var canWrite = false;
         var controlBounds = Rect(state.BoundingRectangle);
         var bounds = controlBounds;
-        if (config.Overlay.TriggerMode != "typing")
+        string? text = null;
+        InputTextRange? editRange = null;
+        var selection = false;
+        var canWrite = false;
+        // 所有触发方式都优先使用实际选区；不通过剪贴板推测选区位置。
+        var candidate = focused;
+        for (var level = 0; level < 5 && candidate != null; level++)
         {
-            // 只读取 UIA 公开的实际选区，不改剪贴板，也不模拟 Ctrl+C。
-            var candidate = focused;
-            for (var level = 0; level < 5 && candidate != null; level++)
+            var candidateState = candidate.Current;
+            if (candidateState.ProcessId != pid) break;
+            if (candidateState.IsPassword || Sensitive(candidate)) return null;
+            if (candidate.TryGetCurrentPattern(TextPattern.Pattern, out var textObject))
             {
-                if (candidate.Current.ProcessId != pid) break;
-                if (candidate.Current.IsPassword || Sensitive(candidate)) return null;
-                if (candidate.TryGetCurrentPattern(TextPattern.Pattern, out var selectionObject))
+                var pattern = (TextPattern)textObject;
+                var ranges = pattern.GetSelection();
+                if (ranges.Length > 1) { SubscribeText(null); return null; }
+                if (ranges.Length == 1)
                 {
-                    var ranges = ((TextPattern)selectionObject).GetSelection();
-                    if (ranges.Length == 1)
+                    var range = ranges[0];
+                    var selected = range.GetText(config.Translation.MaxInputCharacters + 1);
+                    selection = range.CompareEndpoints(TextPatternRangeEndpoint.Start, range, TextPatternRangeEndpoint.End) != 0;
+                    if (selection || candidate == focused)
                     {
-                        var selected = ranges[0].GetText(config.Translation.MaxInputCharacters + 1);
-                        if (!string.IsNullOrWhiteSpace(selected))
+                        element = candidate;
+                        controlBounds = Rect(candidateState.BoundingRectangle);
+                        bounds = RangeBounds(range, controlBounds);
+                        if (selection) text = selected;
+                        if (candidate.TryGetCurrentPattern(ValuePattern.Pattern, out var valueObject))
                         {
-                            text = selected; selection = true; element = candidate;
-                            controlBounds = Rect(candidate.Current.BoundingRectangle);
-                            bounds = RangeBounds(ranges[0], controlBounds); break;
+                            var value = (ValuePattern)valueObject;
+                            var full = value.Current.Value;
+                            if (full.Length <= captureLimit)
+                            {
+                                var prefix = pattern.DocumentRange.Clone();
+                                prefix.MoveEndpointByRange(TextPatternRangeEndpoint.End, range, TextPatternRangeEndpoint.Start);
+                                var mapped = InputTextRange.FromAutomation(full, pattern.DocumentRange.GetText(captureLimit + 1),
+                                    prefix.GetText(captureLimit + 1), selection ? selected : "");
+                                if (mapped != null)
+                                {
+                                    editRange = selection ? mapped : InputTextRange.LineAt(full, mapped.Start);
+                                    text = editRange.Text;
+                                    canWrite = !value.Current.IsReadOnly &&
+                                        Native.CanVerifyCompositionForWrite(foreground, candidateState.ClassName, candidateState.NativeWindowHandle);
+                                }
+                            }
                         }
+                        // 无可靠 ValuePattern/偏移时，选区仍可预览；不猜测写入范围。
+                        if (text != null) break;
                     }
                 }
-                candidate = TreeWalker.ControlViewWalker.GetParent(candidate);
             }
-            if (!selection && config.Overlay.TriggerMode == "selection") { SubscribeText(focused); return null; }
+            candidate = TreeWalker.ControlViewWalker.GetParent(candidate);
         }
-        if (!selection)
+        if (config.Overlay.TriggerMode == "selection" && !selection) { SubscribeText(focused); return null; }
+        if (text == null)
         {
             if (!state.HasKeyboardFocus || (state.ControlType != ControlType.Edit && state.ControlType != ControlType.Document))
             { SubscribeText(null); return null; }
             if (focused.TryGetCurrentPattern(ValuePattern.Pattern, out var valueObject))
             {
                 var value = (ValuePattern)valueObject;
-                if (value.Current.IsReadOnly) { SubscribeText(null); return null; }
-                text = value.Current.Value;
-                canWrite = Native.CanVerifyCompositionForWrite(foreground, state.ClassName, state.NativeWindowHandle);
-            }
-            else if (focused.TryGetCurrentPattern(TextPattern.Pattern, out var textObject))
-            {
-                var pattern = (TextPattern)textObject;
-                if (pattern.DocumentRange.GetAttributeValue(TextPattern.IsReadOnlyAttribute) is not false) return null;
-                text = pattern.DocumentRange.GetText(config.Translation.MaxInputCharacters + 1);
-            }
-            if (focused.TryGetCurrentPattern(TextPattern.Pattern, out var anchorObject))
-            {
-                var ranges = ((TextPattern)anchorObject).GetSelection();
-                if (ranges.Length > 0)
+                var full = value.Current.Value;
+                // 无 TextPattern 的单行编辑框可安全处理；多行框必须能取得光标位置。
+                if (!full.Contains('\r') && !full.Contains('\n'))
                 {
-                    var range = ranges[0].Clone();
-                    if (range.GetBoundingRectangles().Length == 0) range.ExpandToEnclosingUnit(TextUnit.Character);
-                    bounds = RangeBounds(range, controlBounds);
+                    element = focused; editRange = new(full, 0, full.Length); text = full;
+                    canWrite = !value.Current.IsReadOnly &&
+                        Native.CanVerifyCompositionForWrite(foreground, state.ClassName, state.NativeWindowHandle);
                 }
             }
         }
         if (text == null || text.Length > config.Translation.MaxInputCharacters) { SubscribeText(null); return null; }
         if (Native.GetForegroundWindow() != foreground || !Automation.Compare(focused, AutomationElement.FocusedElement)) return null;
+        capturedElement = element;
         SubscribeText(element);
-        return new InputSnapshot($"{pid}:{foreground}:{string.Join('.', element.GetRuntimeId())}:{(selection ? "selection" : "input")}",
-            text, bounds, canWrite, IsSelection: selection, ControlBounds: controlBounds);
+        return new InputSnapshot($"{pid}:{foreground}:{string.Join('.', element.GetRuntimeId())}",
+            text, bounds, canWrite, IsSelection: selection, ControlBounds: controlBounds, EditRange: editRange);
     }
     private static bool Sensitive(AutomationElement element)
     {
@@ -195,18 +212,19 @@ internal sealed class InputObserver : IInputTarget, IDisposable
     public Task<bool> TryReplaceAsync(InputSnapshot expected, string translation, CancellationToken cancellationToken) => Enqueue(() =>
     {
         var now = Capture();
-        if (now is not { CanWrite: true, IsComposing: false, IsSensitive: false } ||
-            now.Identity != expected.Identity || now.Text != expected.Text) return false;
+        if (now is not { CanWrite: true, IsComposing: false, IsSensitive: false } || !expected.SameContent(now) ||
+            expected.EditRange is not { IsValid: true } range || range.Text != expected.Text) return false;
+        var element = capturedElement;
         var focused = AutomationElement.FocusedElement;
-        if (focused == null || !focused.TryGetCurrentPattern(ValuePattern.Pattern, out var obj)) return false;
+        if (element == null || focused == null || !element.TryGetCurrentPattern(ValuePattern.Pattern, out var obj)) return false;
         var value = (ValuePattern)obj;
-        // 在 UIA 允许的范围内紧邻 SetValue 再校验；不模拟键盘、剪贴板粘贴或回车。
+        // 紧邻 SetValue 再次复核全文、范围和焦点；仅替换选区或当前行，保留其余内容。
         var final = Capture();
-        if (final == null || !final.CanWrite || final.Identity != expected.Identity || final.Text != expected.Text || final.IsComposing ||
-            !Automation.Compare(focused, AutomationElement.FocusedElement) || value.Current.IsReadOnly || value.Current.Value != expected.Text)
-            return false;
+        if (final is not { CanWrite: true, IsComposing: false, IsSensitive: false } || !expected.SameContent(final) ||
+            !Automation.Compare(element, capturedElement) || !Automation.Compare(focused, AutomationElement.FocusedElement) ||
+            value.Current.IsReadOnly || value.Current.Value != range.FullText) return false;
         cancellationToken.ThrowIfCancellationRequested();
-        value.SetValue(translation);
+        value.SetValue(range.Replace(translation));
         return true;
     }, cancellationToken);
 

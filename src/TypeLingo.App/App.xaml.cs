@@ -40,14 +40,15 @@ public partial class App : System.Windows.Application
         coordinator = new TranslationCoordinator(provider, cache, () => settings.Current, statistics);
         observer = new InputObserver(() => settings.Current);
         var replacement = new ReplacementService(observer, coordinator);
-        overlay = new OverlayWindow(replacement, () => settings.Current);
+        var favorites = new FavoriteStore(folder, protector);
+        overlay = new OverlayWindow(replacement, () => settings.Current, preview => favorites.Add(preview));
         hotkeys = new HotkeyService();
         ProviderApi TestApi(AppSettings candidate, string newKey) => new(http, () => candidate,
             ai => string.IsNullOrWhiteSpace(newKey) ? settings.ReadKey(ai) : newKey.Trim(), statistics);
         settingsWindow = new SettingsWindow(settings, statistics, SaveSettings,
             (candidate, key) => TestApi(candidate, key).GetModelsAsync(),
             (candidate, key) => TestApi(candidate, key).TranslateAsync(TranslationRequest.Create(candidate, "Hello") with { SourceLanguage = "en" }, CancellationToken.None),
-            async () => { await coordinator.ObserveAsync(null, true); await cache.ClearAsync(); });
+            async () => { await coordinator.ObserveAsync(null, true); await cache.ClearAsync(); }, favorites);
         coordinator.PreviewChanged += preview => Ui(() => overlay.Display(preview));
         coordinator.StatusChanged += status => Ui(() => { overlay.ShowStatus(status); overlay.Loading(latest, status); });
         observer.SnapshotChanged += snapshot =>

@@ -33,7 +33,8 @@
     "Position": "above",
     "Theme": "system",
     "TriggerMode": "typing",
-    "AutoHideSeconds": 8
+    "AutoHideSeconds": 8,
+    "ShowLoading": true
   },
   "Hotkeys": {
     "Replace": "Ctrl+Alt+Enter",

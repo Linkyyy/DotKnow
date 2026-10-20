@@ -7,7 +7,12 @@ namespace TypeLingo.Core;
 public record InputRect(double X, double Y, double Width, double Height);
 public sealed record InputSnapshot(string Identity, string Text, InputRect Bounds,
     bool CanWrite = true, bool IsComposing = false, bool IsSensitive = false,
-    bool IsSelection = false, InputRect? ControlBounds = null);
+    bool IsSelection = false, InputRect? ControlBounds = null, InputTextRange? EditRange = null)
+{
+    public bool SameContent(InputSnapshot? other) => other != null && Identity == other.Identity && Text == other.Text &&
+        CanWrite == other.CanWrite && IsSelection == other.IsSelection && EditRange == other.EditRange &&
+        IsComposing == other.IsComposing && IsSensitive == other.IsSensitive;
+}
 
 public sealed record TranslationRequest(string Provider, string Model, string SourceLanguage,
     string TargetLanguage, string Mode, string Text, string BaseUrl, string PromptVersion = "1")

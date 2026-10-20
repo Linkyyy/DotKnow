@@ -22,14 +22,18 @@ public partial class SettingsWindow : Window
     private readonly DispatcherTimer timer = new() { Interval = TimeSpan.FromSeconds(1) };
     private bool loading = true;
     private int providerRevision;
+    private readonly FavoriteStore favorites;
+    private List<FavoriteEntry> reviewQueue = [];
+    private int reviewIndex;
 
     public SettingsWindow(SettingsService service, SessionStatistics statistics,
         Func<AppSettings, string, string?> save,
         Func<AppSettings, string, Task<IReadOnlyList<string>>> getModels,
-        Func<AppSettings, string, Task<TranslationResult>> testTranslation, Func<Task> clearCache)
+        Func<AppSettings, string, Task<TranslationResult>> testTranslation, Func<Task> clearCache, FavoriteStore? favorites = null)
     {
         this.service = service; this.statistics = statistics; this.save = save;
         this.getModels = getModels; this.testTranslation = testTranslation; this.clearCache = clearCache;
+        this.favorites = favorites ?? new FavoriteStore(service.DirectoryPath, new DpapiProtector());
         InitializeComponent(); LoadSettings(); ShowMessage(service.LoadWarning ?? "");
         SourceInitialized += (_, _) =>
         {
@@ -71,7 +75,7 @@ public partial class SettingsWindow : Window
     private Dictionary<string, FrameworkElement> Pages => new()
     {
         ["home"] = PageHome, ["general"] = PageGeneral, ["ai"] = PageAi,
-        ["cache"] = PageCache, ["appearance"] = PageAppearance, ["hotkeys"] = PageHotkeys, ["privacy"] = PagePrivacy
+        ["cache"] = PageCache, ["appearance"] = PageAppearance, ["hotkeys"] = PageHotkeys, ["privacy"] = PagePrivacy, ["favorites"] = PageFavorites
     };
     private void Navigation_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
@@ -84,6 +88,7 @@ public partial class SettingsWindow : Window
         foreach (var page in Pages) page.Value.Visibility = page.Key == id ? Visibility.Visible : Visibility.Collapsed;
         PageTitleText.Text = UiText.Get(section.Title); PageDescriptionText.Text = UiText.Get(section.Description);
         PageScroll.Visibility = Visibility.Visible; PageScroll.ScrollToTop();
+        if (id == "favorites") RefreshFavorites();
     }
     private void Search_TextChanged(object sender, TextChangedEventArgs e)
     { if (!loading && NavigationList != null) ApplySearch(); }
@@ -157,13 +162,14 @@ public partial class SettingsWindow : Window
             DiskCheck.IsChecked = s.Cache.DiskEnabled; DiskCapacityInput.Text = s.Cache.DiskMaxEntries.ToString(); DiskTtlInput.Text = s.Cache.DiskTTLDays.ToString();
             LightThemeRadio.IsChecked = s.Overlay.Theme == "light"; DarkThemeRadio.IsChecked = s.Overlay.Theme == "dark"; SystemThemeRadio.IsChecked = s.Overlay.Theme == "system";
             AutoHideInput.Text = s.Overlay.AutoHideSeconds.ToString(); PreviewHotkey.Text = s.Hotkeys.Preview; FontInput.Text = Number(s.Overlay.FontSize); WidthInput.Text = Number(s.Overlay.MaxWidth); OpacityInput.Text = Number(s.Overlay.Opacity);
+            ShowLoadingCheck.IsChecked = s.Overlay.ShowLoading;
             ReplaceHotkey.Text = s.Hotkeys.Replace; ToggleHotkey.Text = s.Hotkeys.Toggle; CopyHotkey.Text = s.Hotkeys.Copy;
             AllowedInput.Text = string.Join(", ", s.AllowedApplications); ExcludedInput.Text = string.Join(", ", s.ExcludedApplications); RefreshStatistics();
             providerRevision++;
         }
         finally { loading = false; }
         RefreshScope();
-        if (NavigationList.SelectedItem == null) OpenPage("general");
+        if (NavigationList.SelectedItem == null) OpenPage("home");
         ApplySearch();
     }
     private void UiLanguage_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -227,7 +233,7 @@ public partial class SettingsWindow : Window
             Translation = new() { Enabled = EnabledCheck.IsChecked == true, SourceLanguage = Selected(SourceInput), TargetLanguage = Selected(TargetInput), Mode = Selected(ModeInput), DebounceMilliseconds = Integer(DebounceInput.Text), MinimumRequestIntervalMilliseconds = Integer(IntervalInput.Text), MaxInputCharacters = Integer(MaxInput.Text) },
             AI = SelectedAi() with { TimeoutSeconds = Integer(TimeoutInput.Text), MaxRetries = Integer(RetriesInput.Text) },
             Cache = new() { MemoryEnabled = MemoryCheck.IsChecked == true, MemoryMaxEntries = Integer(MemoryCapacityInput.Text), MemoryTTLMinutes = Integer(MemoryTtlInput.Text), DiskEnabled = DiskCheck.IsChecked == true, DiskMaxEntries = Integer(DiskCapacityInput.Text), DiskTTLDays = Integer(DiskTtlInput.Text) },
-            Overlay = new() { Theme = SelectedTheme(), DarkMode = SelectedTheme() == "dark", TriggerMode = Selected(TriggerInput), AutoHideSeconds = Integer(AutoHideInput.Text), FontSize = Decimal(FontInput.Text), MaxWidth = Decimal(WidthInput.Text), Opacity = Decimal(OpacityInput.Text), Position = Selected(PositionInput) },
+            Overlay = new() { ShowLoading = ShowLoadingCheck.IsChecked == true, Theme = SelectedTheme(), DarkMode = SelectedTheme() == "dark", TriggerMode = Selected(TriggerInput), AutoHideSeconds = Integer(AutoHideInput.Text), FontSize = Decimal(FontInput.Text), MaxWidth = Decimal(WidthInput.Text), Opacity = Decimal(OpacityInput.Text), Position = Selected(PositionInput) },
             Hotkeys = new() { Replace = ReplaceHotkey.Text.Trim(), Toggle = ToggleHotkey.Text.Trim(), Copy = CopyHotkey.Text.Trim(), Preview = PreviewHotkey.Text.Trim() },
             AllowedApplications = Split(AllowedInput.Text), ExcludedApplications = Split(ExcludedInput.Text)
         };
@@ -292,6 +298,76 @@ public partial class SettingsWindow : Window
     {
         try { service.DeleteKey(SelectedAi()); KeyInput.Clear(); RefreshKeyStatus(); ShowMessage("已删除当前服务商的密钥。"); }
         catch (Exception) { ShowMessage("无法删除密钥，请检查文件权限。"); }
+    }
+    private void FavoritesSearch_TextChanged(object sender, TextChangedEventArgs e)
+    { if (!loading) RefreshFavorites(); }
+    private void RefreshFavorites_Click(object sender, RoutedEventArgs e) => RefreshFavorites();
+    private void RefreshFavorites()
+    {
+        try
+        {
+            var all = favorites.GetAll(); var due = favorites.GetDue().Count;
+            var query = FavoritesSearchInput.Text.Trim();
+            var matches = all.Where(x => x.Original.Contains(query, StringComparison.OrdinalIgnoreCase) ||
+                x.Translation.Contains(query, StringComparison.OrdinalIgnoreCase)).ToArray();
+            FavoritesList.ItemsSource = matches;
+            FavoritesEmptyText.Visibility = matches.Length == 0 ? Visibility.Visible : Visibility.Collapsed;
+            FavoritesCountText.Text = UiText.Format("共 {0} 条收藏 · {1} 条待复习", all.Count, due);
+            StartReviewButton.IsEnabled = due > 0;
+        }
+        catch (Exception)
+        {
+            FavoritesList.ItemsSource = null; StartReviewButton.IsEnabled = false;
+            ShowMessage("收藏文件无法读取，原文件已保留。请检查本地文件或 Windows 用户。");
+        }
+    }
+    private void CopyFavorite_Click(object sender, RoutedEventArgs e)
+    {
+        if (sender is not Button { Tag: FavoriteEntry entry }) return;
+        try { System.Windows.Clipboard.SetText(entry.Translation); ShowMessage("译文已复制"); }
+        catch (System.Runtime.InteropServices.COMException) { ShowMessage("剪贴板正忙，请重试。"); }
+    }
+    private void DeleteFavorite_Click(object sender, RoutedEventArgs e)
+    {
+        if (sender is not Button { Tag: FavoriteEntry entry }) return;
+        if (System.Windows.MessageBox.Show(this, UiText.Get("删除这条收藏及其复习进度？"), UiText.Get("删除收藏"),
+            MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes) return;
+        try
+        {
+            favorites.Delete(entry.Id); reviewQueue = []; ReviewPanel.Visibility = Visibility.Collapsed; RefreshFavorites();
+        }
+        catch (Exception) { ShowMessage("收藏操作失败，请检查本地文件与存储权限。"); }
+    }
+    private void StartReview_Click(object sender, RoutedEventArgs e)
+    {
+        try { reviewQueue = favorites.GetDue().ToList(); reviewIndex = 0; ShowReviewCard(); }
+        catch (Exception) { ShowMessage("收藏操作失败，请检查本地文件与存储权限。"); }
+    }
+    private void ShowReviewCard()
+    {
+        if (reviewIndex >= reviewQueue.Count)
+        {
+            ReviewPanel.Visibility = Visibility.Collapsed; RefreshFavorites(); ShowMessage("本轮复习完成。"); return;
+        }
+        var entry = reviewQueue[reviewIndex];
+        ReviewPanel.Visibility = Visibility.Visible;
+        ReviewOriginalText.Text = entry.Original; ReviewTranslationText.Text = entry.Translation;
+        ReviewTranslationText.Visibility = ReviewRatingPanel.Visibility = Visibility.Collapsed;
+        ShowAnswerButton.Visibility = Visibility.Visible;
+        ReviewProgressText.Text = UiText.Format("复习 {0} / {1}", reviewIndex + 1, reviewQueue.Count);
+    }
+    private void ShowAnswer_Click(object sender, RoutedEventArgs e)
+    {
+        ReviewTranslationText.Visibility = ReviewRatingPanel.Visibility = Visibility.Visible;
+        ShowAnswerButton.Visibility = Visibility.Collapsed;
+    }
+    private void ReviewAgain_Click(object sender, RoutedEventArgs e) => RateReview(false);
+    private void ReviewRemembered_Click(object sender, RoutedEventArgs e) => RateReview(true);
+    private void RateReview(bool remembered)
+    {
+        if (reviewIndex >= reviewQueue.Count || ReviewRatingPanel.Visibility != Visibility.Visible) return;
+        try { favorites.Review(reviewQueue[reviewIndex].Id, remembered); reviewIndex++; ShowReviewCard(); RefreshFavorites(); }
+        catch (Exception) { ShowMessage("收藏操作失败，请检查本地文件与存储权限。"); }
     }
     private void RefreshStatistics()
     {

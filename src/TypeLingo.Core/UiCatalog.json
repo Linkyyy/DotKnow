@@ -1182,5 +1182,125 @@
   "最大宽度（160–800）": {
     "en-US": "Maximum width (160–800)",
     "ja-JP": "最大幅（160–800）"
+  },
+  "本地收藏与复习": {
+    "en-US": "Favorites & review",
+    "ja-JP": "ローカル保存と復習"
+  },
+  "保存常用表达，用卡片巩固记忆": {
+    "en-US": "Save useful expressions and review with flashcards",
+    "ja-JP": "よく使う表現を保存してカードで復習"
+  },
+  "显示 Loading": {
+    "en-US": "Show loading indicator",
+    "ja-JP": "読み込み状況を表示"
+  },
+  "等待输入稳定和翻译期间显示进度，关闭后仅显示结果": {
+    "en-US": "Show progress while waiting and translating; turn off to show results only",
+    "ja-JP": "入力待機中と翻訳中に進捗を表示。オフにすると結果のみ表示"
+  },
+  "点击译文准备替换选区或当前行": {
+    "en-US": "Click the translation to prepare replacing the selection or current line",
+    "ja-JP": "訳文をクリックして選択範囲または現在の行の置換を確認"
+  },
+  "当前控件仅支持复制与收藏": {
+    "en-US": "This control supports copying and saving only",
+    "ja-JP": "この入力欄ではコピーと保存が可能です"
+  },
+  "收藏译文": {
+    "en-US": "Save translation",
+    "ja-JP": "訳文を保存"
+  },
+  "已收藏，可在本地收藏与复习中查看。": {
+    "en-US": "Saved. Find it in Favorites & review.",
+    "ja-JP": "保存しました。「ローカル保存と復習」で確認できます。"
+  },
+  "收藏失败，请检查本地文件与存储权限。": {
+    "en-US": "Could not save. Check local files and storage permissions.",
+    "ja-JP": "保存できません。ローカルファイルと書き込み権限を確認してください。"
+  },
+  "点击悬浮窗的星标保存原文与译文；仅在本机加密保存，不自动收藏。": {
+    "en-US": "Click the bubble star to save source and translation, encrypted on this device. Saving is always manual.",
+    "ja-JP": "吹き出しの星で原文と訳文を保存します。この端末に暗号化して保存され、自動保存はしません。"
+  },
+  "共 {0} 条收藏 · {1} 条待复习": {
+    "en-US": "{0} saved · {1} due for review",
+    "ja-JP": "保存 {0} 件・復習待ち {1} 件"
+  },
+  "开始到期复习": {
+    "en-US": "Review due cards",
+    "ja-JP": "復習を始める"
+  },
+  "刷新收藏": {
+    "en-US": "Refresh favorites",
+    "ja-JP": "保存一覧を更新"
+  },
+  "显示译文": {
+    "en-US": "Show translation",
+    "ja-JP": "訳文を表示"
+  },
+  "再练一次": {
+    "en-US": "Practice again",
+    "ja-JP": "もう一度"
+  },
+  "记住了": {
+    "en-US": "Remembered",
+    "ja-JP": "覚えた"
+  },
+  "搜索本地收藏": {
+    "en-US": "Search local favorites",
+    "ja-JP": "保存した表現を検索"
+  },
+  "暂无匹配的收藏；翻译后点击星标即可保存。": {
+    "en-US": "No matching favorites. Click the star after translating to save one.",
+    "ja-JP": "該当する保存はありません。翻訳後に星をクリックすると保存できます。"
+  },
+  "删除收藏": {
+    "en-US": "Delete favorite",
+    "ja-JP": "保存を削除"
+  },
+  "删除这条收藏及其复习进度？": {
+    "en-US": "Delete this favorite and its review progress?",
+    "ja-JP": "この保存と復習履歴を削除しますか？"
+  },
+  "收藏操作失败，请检查本地文件与存储权限。": {
+    "en-US": "Could not update favorites. Check local files and storage permissions.",
+    "ja-JP": "保存内容を更新できません。ファイルと書き込み権限を確認してください。"
+  },
+  "收藏文件无法读取，原文件已保留。请检查本地文件或 Windows 用户。": {
+    "en-US": "Cannot read favorites. The original file is preserved. Check local files or the Windows user.",
+    "ja-JP": "保存ファイルを読み込めません。元のファイルは保持されています。ファイルと Windows ユーザーを確認してください。"
+  },
+  "本轮复习完成。": {
+    "en-US": "Review session complete.",
+    "ja-JP": "今回の復習が完了しました。"
+  },
+  "复习 {0} / {1}": {
+    "en-US": "Review {0} / {1}",
+    "ja-JP": "復習 {0} / {1}"
+  },
+  "悬浮窗显示译文、复制、收藏与替换；点击译文可准备替换选区或当前行。": {
+    "en-US": "The bubble shows translation, copy, save and replace. Click the translation to prepare replacing the selection or current line.",
+    "ja-JP": "吹き出しからコピー・保存・置換ができます。訳文をクリックすると選択範囲か現在の行の置換を確認できます。"
+  },
+  "默认 Ctrl+Alt+T；优先翻译选区，否则翻译光标所在行": {
+    "en-US": "Default Ctrl+Alt+T; translate the selection, otherwise the current line",
+    "ja-JP": "既定 Ctrl+Alt+T。選択範囲を優先し、なければカーソル行を翻訳"
+  },
+  "收藏译文，稍后复习": {
+    "en-US": "Save expressions. Review later.",
+    "ja-JP": "表現を保存して、あとで復習"
+  },
+  "是否替换当前选区或所在行？": {
+    "en-US": "Replace the selection or current line?",
+    "ja-JP": "選択範囲または現在の行を置換しますか？"
+  },
+  "上方译文只替换选区或当前行，不会发送消息。": {
+    "en-US": "The translation replaces only the selection or current line. No message is sent.",
+    "ja-JP": "訳文は選択範囲か現在の行のみを置換します。送信はしません。"
+  },
+  "开启全部应用监控后，选区或光标所在行可能发送给所选 AI；范围核对会在本机临时读取输入框全文。私人内容可随时暂停或改为指定应用。": {
+    "en-US": "With all-app monitoring, the selection or current line may be sent to the selected AI. Full editor text is read locally to verify ranges. Pause or restrict applications when handling private content.",
+    "ja-JP": "全アプリ監視では選択範囲や現在の行を AI に送信します。範囲確認のため入力欄全文を端末内で一時的に読み取ります。私的な内容では一時停止または対象アプリを制限してください。"
   }
 }

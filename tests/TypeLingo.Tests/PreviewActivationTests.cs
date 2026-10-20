@@ -31,11 +31,11 @@ public sealed class PreviewActivationTests
         gate.Filter(Input(), "hotkey", true); gate.Reset(); Assert.False(gate.ShouldCapture("hotkey"));
         gate.Filter(Input(), "hotkey", true); gate.ShouldCapture("typing"); Assert.False(gate.ShouldCapture("hotkey"));
     }
-    [Fact] public void SelectionMode_OnlyAcceptsActualNonWritableSelection()
+    [Fact] public void SelectionMode_AcceptsWritableAndReadOnlyActualSelections()
     {
         var gate = new PreviewActivation();
         Assert.Null(gate.Filter(Input(), "selection"));
-        Assert.Null(gate.Filter(Input() with { IsSelection = true }, "selection"));
+        Assert.NotNull(gate.Filter(Input() with { IsSelection = true }, "selection"));
         var selected = Input() with { IsSelection = true, CanWrite = false };
         Assert.Equal(selected, gate.Filter(selected, "selection"));
         Assert.Null(gate.Filter(selected with { Text = " " }, "selection"));

@@ -14,5 +14,5 @@
   <Geometry x:Key="Icon.close">M6,6 L18,18 M18,6 L6,18</Geometry>
   <Geometry x:Key="Icon.copy">M9,8 L20,8 20,21 9,21 Z M16,8 L16,3 4,3 4,16 9,16</Geometry>
   <Geometry x:Key="Icon.replace">M3,7 L20,7 16,3 M20,7 L16,11 M21,17 L4,17 8,13 M4,17 L8,21</Geometry>
-  <Geometry x:Key="Icon.brand">M5,3 L17,3 Q20,3 20,6 L20,13 Q20,16 17,16 L10,16 5,21 5,16 Q2,16 2,13 L2,6 Q2,3 5,3 Z M7,12 L10,6 13,12 M8,10 L12,10 M16,10 L22,10 M19,8 L19,17 M16,14 L22,18</Geometry>
+  <Geometry x:Key="Icon.favorite">M12,3 L15,9 22,10 17,15 18,22 12,19 6,22 7,15 2,10 9,9 Z</Geometry>
 </ResourceDictionary>
