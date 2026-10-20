@@ -15,6 +15,7 @@ public partial class AssistantWindow : Window
     private Preview? current;
     public InputSnapshot? SessionSnapshot { get; private set; }
     public bool HasSession => SessionSnapshot != null;
+    internal bool OwnsForeground => Native.GetForegroundWindow() == new WindowInteropHelper(this).Handle;
     public bool IsQuerying { get; private set; }
     public long QueryRevision { get; private set; }
     public event Action<InputSnapshot, TranslationRequest>? QueryRequested;
@@ -25,7 +26,7 @@ public partial class AssistantWindow : Window
         this.settings = settings; this.saveFavorite = saveFavorite;
         InitializeComponent();
         Closing += (_, e) => { e.Cancel = true; CancelSession(); };
-        SourceInitialized += (_, _) => Native.ApplyWindowAppearance(new WindowInteropHelper(this).Handle, DesktopTheme.IsDark);
+        SourceInitialized += (_, _) => ApplyNativeTheme();
     }
     public bool Matches(InputSnapshot snapshot) => SessionSnapshot?.SameContent(snapshot) == true;
     public void Present(InputSnapshot snapshot, bool autoRun = false, bool activate = false)
@@ -39,7 +40,7 @@ public partial class AssistantWindow : Window
         SetBusy(false); QueryStatus.Text = UiText.Get("选区已保留，输入问题不会读取其他内容。");
         CopyAnswerButton.IsEnabled = SaveAnswerButton.IsEnabled = false;
         _ = new WindowInteropHelper(this).EnsureHandle();
-        Native.ApplyWindowAppearance(new WindowInteropHelper(this).Handle, DesktopTheme.IsDark);
+        ApplyNativeTheme();
         Position(snapshot.Bounds);
         if (!autoRun || config.Overlay.ShowLoading) Show();
         if (activate) { Show(); Activate(); QuestionInput.Focus(); }
@@ -53,11 +54,14 @@ public partial class AssistantWindow : Window
         var topLeft = scale.Transform(new Point(area.Left, area.Top));
         var bottomRight = scale.Transform(new Point(area.Right, area.Bottom));
         Width = Math.Min(500, bottomRight.X - topLeft.X); Height = Math.Min(660, bottomRight.Y - topLeft.Y);
-        MinWidth = Math.Min(360, Width); MinHeight = Math.Min(420, Height);
+        MinWidth = Math.Min(360, Width); MinHeight = Math.Min(560, Height);
+        QuestionInput.Height = Height < 620 ? 44 : 64; SelectionText.MaxHeight = Height < 620 ? 42 : 70;
         var point = scale.Transform(new Point(anchor.X + anchor.Width + 12, anchor.Y));
         Left = Math.Clamp(point.X, topLeft.X, Math.Max(topLeft.X, bottomRight.X - Width));
         Top = Math.Clamp(point.Y, topLeft.Y, Math.Max(topLeft.Y, bottomRight.Y - Height));
     }
+    private void ApplyNativeTheme() => Native.ApplyWindowAppearance(new WindowInteropHelper(this).Handle,
+        AppearanceTheme.IsDark(settings().Overlay.Theme, DesktopTheme.IsDark));
     private void Task_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
         if (TaskDescription == null) return;

@@ -78,7 +78,7 @@ public partial class App : System.Windows.Application
             {
                 if (!ReferenceEquals(capturedConfig, settings.Current)) return;
                 // Clicking our question box changes focus; its session keeps the already captured selection.
-                if (assistant.HasSession && assistant.IsActive) return;
+                if (assistant.HasSession && assistant.OwnsForeground) return;
                 HandleSnapshot(snapshot);
             });
         };
@@ -92,7 +92,7 @@ public partial class App : System.Windows.Application
             {
                 try
                 {
-                    if (assistant.HasSession && assistant.IsActive) { assistant.Activate(); return; }
+                    if (assistant.HasSession && assistant.OwnsForeground) { assistant.Activate(); return; }
                     HandleSnapshot(await observer.RequestPreviewAsync(CancellationToken.None), true);
                 }
                 catch (Exception) { latest = null; await coordinator.ObserveAsync(null, true); overlay.ShowStatus("无法读取当前输入或选区，请切换应用后重试。"); }
@@ -100,6 +100,7 @@ public partial class App : System.Windows.Application
         };
         var menu = new Forms.ContextMenuStrip();
         menu.Items.Add("设置 / 隐私授权", null, (_, _) => ShowSettings()).Tag = "设置 / 隐私授权";
+        menu.Items.Add("任务与提示词", null, (_, _) => { ShowSettings(); settingsWindow.OpenAssistantSettings(); }).Tag = "任务与提示词";
         pauseItem = new Forms.ToolStripMenuItem("暂停全部读取", null, (_, _) => TogglePause()) { Tag = "暂停全部读取" }; menu.Items.Add(pauseItem);
         menu.Items.Add("清除缓存", null, async (_, _) =>
         {

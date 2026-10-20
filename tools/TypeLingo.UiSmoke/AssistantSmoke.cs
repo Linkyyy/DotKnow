@@ -26,19 +26,24 @@ internal static class AssistantSmoke
         Find<TextBox>("PromptBodyInput").Text = "请用简洁的中文解释，并用一个生活中的例子帮助理解。";
         Find<Button>("StorePromptButton").RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
         var customId = (string)Find<ListBox>("PromptList").SelectedValue;
+        check(customId.StartsWith("custom-", StringComparison.Ordinal), "新建预设拥有独立标识且列表保持该自定义预设选中");
         Find<ComboBox>("AssistantTaskInput").SelectedValue = customId;
         Find<ComboBox>("SelectionActionInput").SelectedValue = "instant";
         Find<Button>("SaveSettingsButton").RaiseEvent(new RoutedEventArgs(Button.ClickEvent)); Pump(settingsWindow);
         var reloaded = new SettingsService(directory, new Protector()); reloaded.Load();
         check(reloaded.Current.Assistant.PresetId == customId && reloaded.Current.Assistant.SelectionAction == "instant" &&
             reloaded.Current.Assistant.CustomPresets.Single().Instructions.Contains("生活中的例子"), "自定义提示词和默认任务通过真实设置界面保存并可重载");
+        Find<ScrollViewer>("PageScroll").ScrollToTop(); Pump(settingsWindow);
         capture(settingsWindow, "settings-prompts.png");
+        Find<ScrollViewer>("PageScroll").ScrollToBottom(); Pump(settingsWindow);
+        capture(settingsWindow, "settings-custom-prompt.png");
         Find<Button>("DeletePromptButton").RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
         Find<Button>("SaveSettingsButton").RaiseEvent(new RoutedEventArgs(Button.ClickEvent)); Pump(settingsWindow);
         check(service.Current.Assistant.CustomPresets.Length == 0 && service.Current.Assistant.PresetId == "encyclopedia",
             "删除默认自定义预设后安全回退到百科");
 
         var config = new AppSettings { PrivacyConsent = true, Overlay = new() { Theme = "light" } };
+        DesktopTheme.ApplyResources(config.Overlay);
         var favorites = new FavoriteStore(Path.Combine(directory, "assistant-favorites"), new Protector());
         var assistant = new AssistantWindow(() => config, p => favorites.Add(p));
         T Control<T>(string name) where T : FrameworkElement => (T)assistant.FindName(name);
@@ -46,6 +51,10 @@ internal static class AssistantSmoke
         assistant.QueryRequested += (_, request) => { submitted = request; submissions++; };
         var selected = new InputSnapshot("assistant-fixture", "熵（entropy）", new(50, 50, 120, 24), CanWrite: false, IsSelection: true);
         assistant.Present(selected); Pump(assistant);
+        var canvas = (Border)assistant.Content;
+        var actions = Control<Button>("SaveAnswerButton").TransformToAncestor(canvas).TransformBounds(new Rect(Control<Button>("SaveAnswerButton").RenderSize));
+        check(canvas.Background is System.Windows.Media.SolidColorBrush { Color.A: 255 } && actions.Right <= canvas.ActualWidth && actions.Bottom <= canvas.ActualHeight,
+            "提问面板具有完整不透明背景且右侧操作按钮位于可见区域内");
         check(!assistant.IsActive && submissions == 0 && assistant.HasSession, "自动出现任务面板时保留应用焦点，未点击查询前不发送内容");
         assistant.Activate(); Control<TextBox>("QuestionInput").Focus(); Control<TextBox>("QuestionInput").Text = "请用生活中的例子解释。"; Pump(assistant);
         check(assistant.Matches(selected) && Control<TextBox>("QuestionInput").IsKeyboardFocusWithin, "点击问题框获得输入焦点后仍保留原应用选区");

@@ -148,6 +148,7 @@ public partial class SettingsWindow : Window
         NavigationList.SelectedItem = NavigationList.Items.Cast<ListBoxItem>().First(x => (string)x.Tag == id);
     }
     private void OpenGeneral_Click(object sender, RoutedEventArgs e) => OpenPage("general");
+    internal void OpenAssistantSettings() => OpenPage("prompts");
     private void OpenAi_Click(object sender, RoutedEventArgs e) => OpenPage("ai");
     private void OpenPrivacy_Click(object sender, RoutedEventArgs e) => OpenPage("privacy");
     private void Scope_Changed(object sender, RoutedEventArgs e) { if (!loading) RefreshScope(); }

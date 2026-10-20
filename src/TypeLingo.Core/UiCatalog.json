@@ -2090,5 +2090,29 @@
   "显示答案": {
     "en-US": "Reveal answer",
     "ja-JP": "回答を表示"
+  },
+  "划选助手状态与常用设置一览": {
+    "en-US": "Assistant status and common settings",
+    "ja-JP": "アシスタントの状態とよく使う設定"
+  },
+  "百科、翻译和你的专属提问方式": {
+    "en-US": "Encyclopedia, translation and your own prompts",
+    "ja-JP": "百科・翻訳・あなた専用の質問"
+  },
+  "让助手窗口融入你的桌面": {
+    "en-US": "Make the assistant fit your desktop",
+    "ja-JP": "アシスタントをデスクトップに合わせる"
+  },
+  "保存知识与表达，用卡片巩固记忆": {
+    "en-US": "Save knowledge and expressions, then review with cards",
+    "ja-JP": "知識や表現を保存し、カードで復習"
+  },
+  "助手设置无效。": {
+    "en-US": "Invalid assistant settings.",
+    "ja-JP": "アシスタント設定が無効です。"
+  },
+  "API 未返回有效内容。": {
+    "en-US": "The API returned no usable content.",
+    "ja-JP": "API から有効な内容が返されませんでした。"
   }
 }

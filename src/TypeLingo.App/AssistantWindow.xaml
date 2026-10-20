@@ -1,6 +1,6 @@
 <Window x:Class="TypeLingo.App.AssistantWindow" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:controls="clr-namespace:TypeLingo.App.Controls"
-        Title="{DynamicResource '点知 · 划选即问'}" Width="500" Height="660" MinWidth="360" MinHeight="420" ShowInTaskbar="False" ShowActivated="False" Topmost="True" Background="{DynamicResource CanvasBrush}" PreviewKeyDown="Window_PreviewKeyDown">
-  <Grid Margin="22,18,22,16">
+        Title="{DynamicResource '点知 · 划选即问'}" Icon="pack://application:,,,/TypeLingo;component/Assets/typelingo.ico" Width="500" Height="660" MinWidth="360" MinHeight="560" ShowInTaskbar="False" ShowActivated="False" Topmost="True" Background="{DynamicResource CanvasBrush}" PreviewKeyDown="Window_PreviewKeyDown">
+  <Border Background="{DynamicResource CanvasBrush}" Padding="22,18,22,16"><Grid>
     <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="*"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
     <Grid Margin="0,0,0,16"><Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
       <StackPanel Orientation="Horizontal"><controls:BrandMark Width="27" Height="27" Foreground="{DynamicResource AccentBrush}" Margin="0,0,10,0"/><StackPanel><TextBlock Text="{DynamicResource '点知 · DotKnow'}" FontSize="17" FontWeight="SemiBold"/><TextBlock Text="{DynamicResource '哪里不会，点哪里。'}" FontSize="10" Foreground="{DynamicResource MutedBrush}" Margin="0,4,0,0"/></StackPanel></StackPanel>
@@ -27,5 +27,5 @@
       </Grid>
       <TextBlock Text="{DynamicResource 'AI 回答可能有误；百科等任务需要在线模型，不提供实时联网检索。'}" FontSize="9" Foreground="{DynamicResource MutedBrush}" TextWrapping="Wrap" Margin="0,9,0,0"/>
     </StackPanel>
-  </Grid>
+  </Grid></Border>
 </Window>

@@ -60,6 +60,7 @@ public partial class SettingsWindow
         RefreshAssistantChoices();
         SelectionActionInput.SelectedValue = action; AnswerLanguageInput.SelectedValue = language;
         PromptList.SelectedValue = preset.Id;
+        PromptList.ScrollIntoView(PromptList.SelectedItem);
     }
     private void DeletePrompt_Click(object sender, RoutedEventArgs e)
     {

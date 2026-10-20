@@ -120,11 +120,14 @@ public sealed class TranslationCoordinator(ITranslationProvider provider, ITrans
     private void PublishStatus(long id, string status) { lock (gate) { if (!disposed && id == sequence) StatusChanged?.Invoke(status); } }
     public bool IsCurrent(Preview value)
     {
-        lock (gate) return !disposed && value.Sequence == sequence && preview == value &&
-            settings().PrivacyConsent && settings().Translation.Enabled &&
-            (value.Request.IsTranslation
-                ? TranslationRequest.Create(settings(), value.Snapshot.Text).CacheKey == value.Request.CacheKey
-                : settings() == requestSettings);
+        lock (gate)
+        {
+            var config = settings();
+            return !disposed && value.Sequence == sequence && preview == value && config.PrivacyConsent && config.Translation.Enabled &&
+                config.Assistant == requestSettings?.Assistant && (value.Request.IsTranslation
+                    ? TranslationRequest.Create(config, value.Snapshot.Text).CacheKey == value.Request.CacheKey
+                    : config == requestSettings);
+        }
     }
     public void SuppressOwnReplacement(InputSnapshot original, string translated)
     {
