@@ -30,4 +30,18 @@
 
 核心验证覆盖 12 组外观设置保存／重载、旧配置兼容、明暗跟随、主题搜索、完整资源，以及八组实际色板的主要文字对比度（至少 4.5:1）。核心测试当前为 203 项。
 
-Windows UI 验收会实际遍历四套配色的浅／深色，逐项核对资源、导航坐标、预览不写配置、关闭恢复、保存持久化、已显示浮窗同步更新、紧凑浮窗及小窗口布局，并输出真实截图。Linux 的交叉构建不等于 Windows GUI 渲染；最终验收结果记录在 [VALIDATION.md](VALIDATION.md)。
+Windows UI 验收已通过 141 项检查：实际遍历四套配色的浅／深色，逐项核对资源、导航坐标、预览不写配置、关闭恢复、保存持久化、已显示浮窗同步更新、紧凑浮窗及小窗口布局；同时验证短屏首页入口完整可见、入口导航、原有替换、真实鼠标划词与 WebView2 流程。[Actions 记录](https://github.com/Linkyyy/TypeLingo/actions/runs/39403250327) 对应源码 `a8d9fe9`。Linux 交叉构建与 Windows GUI 验收分别记录在 [VALIDATION.md](VALIDATION.md)。
+
+## 真实 Windows 截图
+
+以下图片来自同一套隔离 UI 测试，未使用用户数据；完整来源与通过状态见 [source.json](ui-preview/source.json)，检查明细见 [ui-validation.txt](ui-preview/ui-validation.txt)。
+
+| 浅纸 · 浅色 | 深林 · 深色 |
+| --- | --- |
+| ![浅纸浅色首页](ui-preview/theme-paper-light-home.png) | ![深林深色首页](ui-preview/theme-forest-dark-home.png) |
+
+| 雾蓝 · 浅色 | 暮紫 · 深色 |
+| --- | --- |
+| ![雾蓝浅色首页](ui-preview/theme-ocean-light-home.png) | ![暮紫深色首页](ui-preview/theme-lavender-dark-home.png) |
+
+更多界面：[主题选择](ui-preview/settings-appearance.png) · [收藏与复习](ui-preview/favorites-review.png) · [小窗口布局](ui-preview/settings-small.png) · [紧凑浮窗](ui-preview/overlay-compact.png)。其他浅／深色组合也保存在 [截图目录](ui-preview)。
