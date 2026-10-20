@@ -103,27 +103,28 @@ internal sealed class InputObserver : IInputTarget, IDisposable
         var focusedPath = focused == null ? null : ForegroundPath(focused, foreground);
         var processNames = new Dictionary<int, string> { [(int)pid] = process };
         InputSnapshot? result = null;
+        var resolved = false;
         var selectionFirst = config.Overlay.TriggerMode != "typing";
         if (!selectionFirst && focusedPath != null)
-            result = ReadPath(config, focusedPath, focusedPath, foreground, pid, process, processNames, false);
-        if (result == null && pointAvailable && !pointerIsOurs)
+            result = ReadPath(config, focusedPath, focusedPath, foreground, pid, process, processNames, false, out resolved);
+        if (result == null && !resolved && pointAvailable && !pointerIsOurs)
         {
             // 阅读文档的键盘焦点可能仍在工具栏：从鼠标命中的文本向上查找实际选区。
             var pointed = AutomationElement.FromPoint(new System.Windows.Point(point.X, point.Y));
             var pointedPath = pointed == null ? null : ForegroundPath(pointed, foreground);
             if (pointedPath != null)
-                result = ReadPath(config, pointedPath, focusedPath, foreground, pid, process, processNames, true);
+                result = ReadPath(config, pointedPath, focusedPath, foreground, pid, process, processNames, true, out resolved);
         }
-        if (result == null && selectionTarget != null)
+        if (result == null && !resolved && selectionTarget != null)
         {
             // 鼠标移到译文的复制／收藏按钮后继续复核原选区，不要求它获取键盘焦点。
             var savedPath = ForegroundPath(selectionTarget, foreground);
             if (savedPath != null)
-                result = ReadPath(config, savedPath, focusedPath, foreground, pid, process, processNames, true);
+                result = ReadPath(config, savedPath, focusedPath, foreground, pid, process, processNames, true, out resolved);
         }
-        if (result == null && focusedPath != null)
+        if (result == null && !resolved && focusedPath != null)
             result = ReadPath(config, focusedPath, focusedPath, foreground, pid, process, processNames,
-                config.Overlay.TriggerMode == "selection");
+                config.Overlay.TriggerMode == "selection", out resolved);
         if (result == null)
         { ClearSelectionTarget(); SubscribeText(focused); return null; }
         if (Native.GetForegroundWindow() != foreground || !SameElement(focused, AutomationElement.FocusedElement)) return null;
@@ -136,19 +137,20 @@ internal sealed class InputObserver : IInputTarget, IDisposable
     }
 
     private InputSnapshot? ReadPath(AppSettings config, List<AutomationElement> path, List<AutomationElement>? focusedPath,
-        nint foreground, uint pid, string process, Dictionary<int, string> processNames, bool selectionOnly)
+        nint foreground, uint pid, string process, Dictionary<int, string> processNames, bool selectionOnly, out bool resolved)
     {
+        resolved = false;
         // 渲染进程可不同于宿主，但整条路径必须实际位于当前前台 HWND 下，且未被排除。
         foreach (var node in path)
         {
             var state = node.Current;
-            if (state.ProcessId <= 0 || state.ProcessId == Environment.ProcessId || state.IsPassword || Sensitive(node)) return null;
+            if (state.ProcessId <= 0 || state.ProcessId == Environment.ProcessId || state.IsPassword || Sensitive(node)) { resolved = true; return null; }
             if (!processNames.TryGetValue(state.ProcessId, out var name))
             {
                 using var childProcess = Process.GetProcessById(state.ProcessId);
                 processNames[state.ProcessId] = name = childProcess.ProcessName;
             }
-            if (!PrivacyGuard.AllowsHostedInput(config, process, name, true)) return null;
+            if (!PrivacyGuard.AllowsHostedInput(config, process, name, true)) { resolved = true; return null; }
         }
         const int captureLimit = 200000;
         foreach (var candidate in path)
@@ -167,11 +169,12 @@ internal sealed class InputObserver : IInputTarget, IDisposable
             {
                 var pattern = (TextPattern)textObject;
                 var ranges = pattern.GetSelection();
-                if (ranges.Length > 1) return null;
+                if (ranges.Length > 1) { resolved = true; return null; }
                 if (ranges.Length != 1) continue;
                 var range = ranges[0];
                 selection = range.CompareEndpoints(TextPatternRangeEndpoint.Start, range, TextPatternRangeEndpoint.End) != 0;
                 if (selectionOnly && !selection) continue;
+                if (selection) resolved = true;
                 var editable = value?.Current.IsReadOnly == false ||
                     pattern.DocumentRange.GetAttributeValue(TextPattern.IsReadOnlyAttribute) is false;
                 if (!selection && !editable) continue;
@@ -222,6 +225,7 @@ internal sealed class InputObserver : IInputTarget, IDisposable
                 }
             }
             if (text == null) continue;
+            resolved = true;
             if (string.IsNullOrWhiteSpace(text) || text.Length > config.Translation.MaxInputCharacters) return null;
             capturedElement = candidate;
             return new InputSnapshot($"{pid}:{state.ProcessId}:{foreground}:{string.Join('.', candidate.GetRuntimeId())}",

@@ -40,8 +40,9 @@ internal static class InputFixture
                     else if (command == "clear") { input.Focus(); input.Select(0, 0); }
                     else if (command == "password") password.Focus();
                     else if (command == "rich") { rich.Focus(); rich.CaretPosition = rich.Document.ContentStart.GetNextInsertionPosition(LogicalDirection.Forward)!; }
-                    else if (command == "reading")
+                    else if (command is "reading" or "reading-conflict")
                     {
+                        if (command == "reading-conflict") { input.Text = "short"; input.SelectAll(); }
                         reading.Focusable = false;
                         reading.Selection.Select(readingRun.ContentStart, readingRun.ContentEnd); input.Focus();
                         var rect = readingRun.ContentStart.GetCharacterRect(LogicalDirection.Forward);
@@ -128,6 +129,10 @@ internal static class InputFixture
             Volatile.Write(ref config, config with { ExcludedApplications = [process.ProcessName] });
             check(Capture() == null, "阅读选区继续遵守进程排除项");
             Volatile.Write(ref config, config with { ExcludedApplications = [] });
+            Volatile.Write(ref config, config with { Translation = config.Translation with { MaxInputCharacters = 10 } });
+            Command("reading-conflict");
+            check(Capture() == null, "鼠标选区超过长度限制时跳过，不回退翻译其他输入框的旧选区");
+            Volatile.Write(ref config, config with { Translation = config.Translation with { MaxInputCharacters = 2000 } });
             Command("writable-selection"); selected = Capture();
             check(selected is { IsSelection: true, CanWrite: true } && selected.EditRange?.Start == 7, "可编辑选区具有精确写入范围");
             check(WaitWithDispatcher(observer.TryReplaceAsync(selected!, "译文", CancellationToken.None)), "真实 UIA 可替换当前选区");
