@@ -1,7 +1,7 @@
 name: 构建与测试
 on:
   push:
-    branches-ignore: ['codex/ui-preview-*']
+    branches-ignore: ['codex/ui-preview-*', 'codex/release-preview-*']
   pull_request:
   workflow_dispatch:
 permissions:
@@ -48,9 +48,13 @@ jobs:
       - name: 发布界面预览与验收诊断
         if: always() && steps.ui_smoke.outcome != 'skipped' && github.event_name == 'push' && github.ref == 'refs/heads/codex/typelingo-favorites-and-replacement'
         run: ./scripts/publish-ui-previews.ps1
+      - run: python scripts/package-promotion.py
       - run: python scripts/package-release.py
       - name: 验证点知安装包与程序启动
         run: ./scripts/test-release-package.ps1
+      - name: 发布 Windows 验收安装包
+        if: github.event_name == 'push' && github.ref == 'refs/heads/codex/typelingo-favorites-and-replacement'
+        run: ./scripts/publish-release-previews.ps1
       - uses: actions/upload-artifact@v4
         with:
           name: DotKnow-win-x64
