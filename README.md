@@ -4,11 +4,12 @@
 
 面向 Windows 10/11 的 C# / .NET 8 / WPF 桌面翻译助手。默认用鼠标拖选文字，松开并稳定后，通过所选 AI 服务翻译选区，在旁边显示译文；覆盖公开可访问文本选区的网页、文档与应用阅读区域，也支持输入框。**自动操作只预览；原文仅在你主动请求并确认替换后才写入。**
 
-当前开发版本为 v0.4.0-preview.4：默认划词翻译，新增鼠标命中选区识别，不依赖阅读区域取得键盘焦点；拖选中不请求、清除选区后隐藏。输入自动预览和快捷键模式仍可选，保留 C 图标、Loading 选择、替换及收藏复习。使用方式见 [划词翻译](docs/SELECTION_TRANSLATION.md)，验证进度见 [验证记录](docs/VALIDATION.md)。下方 v0.3.0 下载仍为此前稳定版。
+当前开发版本为 v0.4.0-preview.4：默认划词翻译，新增鼠标命中选区识别，不依赖阅读区域取得键盘焦点；拖选中不请求、清除选区后隐藏。输入自动预览和快捷键模式仍可选，保留 C 图标、Loading 选择、替换及收藏复习。155 项核心测试及本轮 Windows WPF／WebView2 划词验证通过。使用方式见 [划词翻译](docs/SELECTION_TRANSLATION.md)，详见 [验证记录](docs/VALIDATION.md)。v0.3.0 链接为此前稳定版。
 
 ## 下载安装包
 
-- [Windows x64 中文安装包](https://github.com/Linkyyy/TypeLingo/releases/download/v0.3.0/TypeLingo-Windows-x64.zip)
+- [当前开发版 Windows x64（默认划词）](https://github.com/Linkyyy/TypeLingo/raw/refs/heads/codex/typelingo-favorites-and-replacement/downloads/TypeLingo-Windows-x64.zip)
+- [此前稳定版 v0.3.0](https://github.com/Linkyyy/TypeLingo/releases/download/v0.3.0/TypeLingo-Windows-x64.zip)
 - [完整源码 ZIP](https://github.com/Linkyyy/TypeLingo/releases/download/v0.3.0/TypeLingo-Source.zip)
 - [版本发布页面](https://github.com/Linkyyy/TypeLingo/releases)
 - [安装包备用下载](https://github.com/Linkyyy/TypeLingo/raw/refs/heads/main/downloads/TypeLingo-Windows-x64.zip)

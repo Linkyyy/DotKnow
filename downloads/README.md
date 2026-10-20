@@ -1,6 +1,6 @@
-# v0.4.0-preview.3 候选交付包
+# v0.4.0-preview.4 候选交付包
 
-本包修正设置 Tab 抖动和搜索光标，新增明确的翻译窗口显示时机选择，并修正新版 Teams／WebView2 的嵌入进程与富文本读取路径。C 图标与收藏复习保持可用。151 项核心测试与 [Windows WPF／WebView2／UIA 检查](https://github.com/Linkyyy/TypeLingo/actions/runs/39359244576) 已通过；实际 Teams 账户与企业版本仍需在用户机器确认。
+默认鼠标拖选文字后翻译，支持网页、只读文档和应用阅读区域的可访问选区，不要求阅读区域取得键盘焦点；拖选中不请求、清除选区后隐藏。输入自动和快捷键模式仍可选。保留 C 图标、Loading 选择与收藏复习。155 项核心测试及 [本轮 Windows WPF／WebView2／UIA](https://github.com/Linkyyy/TypeLingo/actions/runs/39385687722) 全部通过，见 [本轮记录](../docs/VALIDATION.md)。
 
 - [Windows x64 中文候选安装包](https://github.com/Linkyyy/TypeLingo/raw/refs/heads/codex/typelingo-favorites-and-replacement/downloads/TypeLingo-Windows-x64.zip)
 - [完整源码 ZIP](https://github.com/Linkyyy/TypeLingo/raw/refs/heads/codex/typelingo-favorites-and-replacement/downloads/TypeLingo-Source.zip)
