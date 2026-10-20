@@ -26,8 +26,12 @@ internal static class InputFixture
         var panel = new StackPanel(); panel.Children.Add(input); panel.Children.Add(password); panel.Children.Add(rich); panel.Children.Add(reading);
         var window = new Window { Title = "伴译选区验收窗口", Width = 680, Height = 620, Content = panel, Topmost = true };
         var mouseEvents = new List<string>();
+        TaskCompletionSource<bool>? dragMoved = null;
         reading.PreviewMouseDown += (_, e) => mouseEvents.Add("down:" + e.GetPosition(reading));
-        reading.PreviewMouseMove += (_, e) => { if (e.LeftButton == MouseButtonState.Pressed) mouseEvents.Add("move:" + e.GetPosition(reading)); };
+        reading.PreviewMouseMove += (_, e) => {
+            if (e.LeftButton == MouseButtonState.Pressed)
+            { mouseEvents.Add("move:" + e.GetPosition(reading)); if (e.GetPosition(reading).X > 100) dragMoved?.TrySetResult(true); }
+        };
         reading.PreviewMouseUp += (_, e) => mouseEvents.Add("up:" + e.GetPosition(reading));
         FrameworkElement ReadingScope() => (reading.Template.FindName("PART_ContentHost", reading) as ScrollViewer)?.Content as FrameworkElement ?? reading;
         window.Loaded += async (_, _) =>
@@ -61,8 +65,10 @@ internal static class InputFixture
                     {
                         // WPF 自身要求阅读器可聚焦才能处理真实鼠标拖选；上面的用例单独验证无键盘焦点的读取。
                         reading.Focusable = true;
+                        if (command == "reading-end") dragMoved = new TaskCompletionSource<bool>();
                         var rect = command == "reading-start" ? readingRun.ContentStart.GetCharacterRect(LogicalDirection.Forward) : readingRun.ContentEnd.GetCharacterRect(LogicalDirection.Backward);
                         PointerFixture.Move(ReadingScope().PointToScreen(new Point(command == "reading-start" ? rect.Left + 1 : rect.Right + 2, rect.Top + rect.Height / 2)));
+                        if (command == "reading-end") await dragMoved!.Task.WaitAsync(TimeSpan.FromSeconds(5));
                     }
                     else if (command == "reading-state")
                     {

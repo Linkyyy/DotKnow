@@ -175,8 +175,8 @@ internal sealed class InputObserver : IInputTarget, IDisposable
                 selection = range.CompareEndpoints(TextPatternRangeEndpoint.Start, range, TextPatternRangeEndpoint.End) != 0;
                 if (selectionOnly && !selection) continue;
                 if (selection) resolved = true;
-                var editable = value?.Current.IsReadOnly == false ||
-                    pattern.DocumentRange.GetAttributeValue(TextPattern.IsReadOnlyAttribute) is false;
+                var editable = !selection && (value?.Current.IsReadOnly == false ||
+                    pattern.DocumentRange.GetAttributeValue(TextPattern.IsReadOnlyAttribute) is false);
                 if (!selection && !editable) continue;
                 var anchorRange = range.Clone();
                 if (anchorRange.GetBoundingRectangles().Length == 0) anchorRange.ExpandToEnclosingUnit(TextUnit.Character);

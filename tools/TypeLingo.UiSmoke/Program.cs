@@ -188,9 +188,12 @@ internal static class Program
                 ((Button)clickable.FindName("ConfirmButton")).RaiseEvent(new RoutedEventArgs(Button.ClickEvent)); Pump(clickable);
                 Check(target.Writes == 1 && !clickable.IsVisible, "确认后点击译文流程只写入一次并隐藏");
             }
-            InputFixture.Verify(Check);
-            WebViewFixture.Verify(Check, (w, name) => Capture(w, Path.Combine(output, name)), output);
+            var fixtureErrors = new List<Exception>();
+            try { InputFixture.Verify(Check); } catch (Exception error) { fixtureErrors.Add(error); }
+            try { WebViewFixture.Verify(Check, (w, name) => Capture(w, Path.Combine(output, name)), output); }
+            catch (Exception error) { fixtureErrors.Add(error); }
             File.WriteAllLines(Path.Combine(output, "ui-validation.txt"), checks);
+            if (fixtureErrors.Count > 0) throw new AggregateException("跨进程选区验收失败", fixtureErrors);
              Console.WriteLine("WPF 界面检查全部通过：" + checks.Count); return 0;
         }
         catch (Exception error)
