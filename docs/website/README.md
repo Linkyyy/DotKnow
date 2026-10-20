@@ -8,7 +8,7 @@
 
 源代码和部署配置位于 [website/](../../website/README.md)。
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FLinkyyy%2FTypeLingo%2Ftree%2Fa48091569a86f5259ddf306be08bfe8472612f66%2Fwebsite&project-name=typelingo&repository-name=typelingo-website)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FLinkyyy%2FTypeLingo%2Ftree%2Fd373867491595cba29c9935133e53c89d73bdc50%2Fwebsite&project-name=typelingo&repository-name=typelingo-website)
 
 也可在 Vercel 中导入现有 `Linkyyy/TypeLingo` 仓库，分支选择 `codex/typelingo-favorites-and-replacement`，Root Directory 选择 `website`，Framework 选择 Vite，构建命令 `npm run build`，输出目录 `dist`。网站没有运行时密钥要求。账号部署授权需要由 Vercel 项目所有者提供；以上链接是部署入口，不代表已经上线。
 

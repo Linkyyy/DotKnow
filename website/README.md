@@ -21,7 +21,7 @@ npm test
 
 ## Vercel 部署
 
-[一键部署官网](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FLinkyyy%2FTypeLingo%2Ftree%2Fa48091569a86f5259ddf306be08bfe8472612f66%2Fwebsite&project-name=typelingo&repository-name=typelingo-website)（在你的 Vercel 账号内导入；此链接不是已上线地址）。
+[一键部署官网](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FLinkyyy%2FTypeLingo%2Ftree%2Fd373867491595cba29c9935133e53c89d73bdc50%2Fwebsite&project-name=typelingo&repository-name=typelingo-website)（在你的 Vercel 账号内导入；此链接不是已上线地址）。
 
 导入 GitHub 仓库 `Linkyyy/TypeLingo`，选择含本目录的分支，Root Directory 设置为 **website**，Framework Preset 为 **Vite**。仓库内的 `vercel.json` 已包含构建与安全响应头设置。使用默认 `*.vercel.app` 域名即可上线，无需配置环境变量。
 
