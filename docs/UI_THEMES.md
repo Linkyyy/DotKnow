@@ -43,7 +43,7 @@
 
 核心验证覆盖 12 组外观设置保存／重载、旧配置兼容、明暗跟随、主题搜索、完整资源，以及八组实际色板的主要文字对比度（至少 4.5:1）。核心测试当前为 215 项。
 
-Windows UI 验收已通过 163 项检查：实际遍历四套配色的浅／深色，逐项核对资源、导航坐标、预览不写配置、关闭恢复、保存持久化、已显示浮窗同步更新、紧凑浮窗及小窗口布局；同时验证短屏首页入口完整可见、入口导航、原有替换、真实鼠标划词与 WebView2 流程。[Actions 记录](https://github.com/Linkyyy/TypeLingo/actions/runs/39436094828) 对应源码 `a49f5f3`。Linux 交叉构建与 Windows GUI 验收分别记录在 [VALIDATION.md](VALIDATION.md)。
+Windows UI 验收已通过 163 项检查：实际遍历四套配色的浅／深色，逐项核对资源、导航坐标、预览不写配置、关闭恢复、保存持久化、已显示浮窗同步更新、紧凑浮窗及小窗口布局；同时验证短屏首页入口完整可见、入口导航、原有替换、真实鼠标划词与 WebView2 流程。[Actions 记录](https://github.com/Linkyyy/TypeLingo/actions/runs/39437107939) 对应源码 `5e22352`。Linux 交叉构建与 Windows GUI 验收分别记录在 [VALIDATION.md](VALIDATION.md)。
 
 ## 真实 Windows 截图
 

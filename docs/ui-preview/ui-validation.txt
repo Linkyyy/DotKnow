@@ -134,7 +134,7 @@ AI 回答收藏保留任务和用户问题
 鼠标离开阅读文字后仍复核原选区，允许操作悬浮窗
 清除阅读选区后立即停止预览，不回退到全文或输入行
 鼠标按住拖选时不发送中间选区
-真实鼠标拖选并松开后捕获只读阅读区的完整选中文字：{"Identity":"5436:5436:66058:7.5436.31093287","Text":"selected reading phrase","Bounds":{"X":84,"Y":421,"Width":187,"Height":20},"CanWrite":false,"IsComposing":false,"IsSensitive":false,"IsSelection":true,"ControlBounds":{"X":76,"Y":413,"Width":615,"Height":100},"EditRange":null}; fixture={"Text":"selected reading phrase\r\n","Focus":"FlowDocumentScrollViewer","IsKeyboardFocusWithin":true,"Focusable":true,"IsActive":true,"LeftButton":"Released","Events":["down:9,18.039999999999964","move:9,18.039999999999964","move:197,18.039999999999964","up:197,18.039999999999964"],"Start":"8,8,0,20.453333333333333","End":"194.67000000000002,8,0,20.453333333333333","Scope":"FlowDocumentView"}
+真实鼠标拖选并松开后捕获只读阅读区的完整选中文字：{"Identity":"1156:1156:66072:7.1156.31093287","Text":"selected reading phrase","Bounds":{"X":84,"Y":421,"Width":187,"Height":20},"CanWrite":false,"IsComposing":false,"IsSensitive":false,"IsSelection":true,"ControlBounds":{"X":76,"Y":413,"Width":615,"Height":100},"EditRange":null}; fixture={"Text":"selected reading phrase\r\n","Focus":"FlowDocumentScrollViewer","IsKeyboardFocusWithin":true,"Focusable":true,"IsActive":true,"LeftButton":"Released","Events":["down:9,18.039999999999964","move:9,18.039999999999964","move:197,18.039999999999964","up:197,18.039999999999964"],"Start":"8,8,0,20.453333333333333","End":"194.67000000000002,8,0,20.453333333333333","Scope":"FlowDocumentView"}
 阅读选区继续遵守进程排除项
 鼠标选区超过长度限制时跳过，不回退翻译其他输入框的旧选区
 可编辑选区具有精确写入范围
