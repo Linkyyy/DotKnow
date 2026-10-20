@@ -158,7 +158,7 @@ internal static class Program
             foreach (Button action in Find<System.Windows.Controls.Primitives.UniformGrid>("HomeQuickActions").Children)
             {
                 SelectPage("home"); action.RaiseEvent(new RoutedEventArgs(Button.ClickEvent)); Pump(window);
-                Check(Find<FrameworkElement>("Page" + ((string)action.Tag switch { "general" => "General", "vocabulary" => "Vocabulary", "favorites" => "Favorites", _ => "Appearance" })).Visibility == Visibility.Visible,
+                Check(Find<FrameworkElement>("Page" + ((string)action.Tag switch { "prompts" => "Prompts", "general" => "General", "vocabulary" => "Vocabulary", "favorites" => "Favorites", _ => "Appearance" })).Visibility == Visibility.Visible,
                     "首页快捷入口打开对应功能：" + action.Tag);
             }
             SelectPage("vocabulary");

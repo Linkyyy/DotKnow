@@ -49,6 +49,8 @@ jobs:
         if: always() && steps.ui_smoke.outcome != 'skipped' && github.event_name == 'push' && github.ref == 'refs/heads/codex/typelingo-favorites-and-replacement'
         run: ./scripts/publish-ui-previews.ps1
       - run: python scripts/package-release.py
+      - name: 验证点知安装包与程序启动
+        run: ./scripts/test-release-package.ps1
       - uses: actions/upload-artifact@v4
         with:
           name: DotKnow-win-x64
