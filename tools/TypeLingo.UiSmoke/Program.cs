@@ -28,9 +28,11 @@ internal static class Program
             app.Resources = new ResourceDictionary { Source = new Uri("pack://application:,,,/TypeLingo;component/Styles/Theme.xaml") };
             var settings = new SettingsService(temporary, new WindowsProtector());
             var favorites = new FavoriteStore(temporary, new WindowsProtector());
+            using var vocabulary = new VocabularyStore(temporary, new WindowsProtector());
+            InputFixture.WaitWithDispatcher(vocabulary.InitializeAsync().ContinueWith(t => { t.GetAwaiter().GetResult(); return true; }));
             settings.Save(new AppSettings());
             var window = new SettingsWindow(settings, new SessionStatistics(), (candidate, key) => { settings.Save(candidate, key); return null; },
-                (_, _) => Task.FromResult<IReadOnlyList<string>>(["test-model"]), (_, _) => Task.FromResult(new TranslationResult("仅供界面测试的固定结果")), () => Task.CompletedTask, favorites);
+                (_, _) => Task.FromResult<IReadOnlyList<string>>(["test-model"]), (_, _) => Task.FromResult(new TranslationResult("仅供界面测试的固定结果")), () => Task.CompletedTask, favorites, vocabulary);
             T Find<T>(string name) where T : FrameworkElement => (T)(window.FindName(name) ?? throw new InvalidOperationException("找不到控件：" + name));
             void Check(bool condition, string message)
             { if (!condition) throw new InvalidOperationException(message); checks.Add(message); Console.WriteLine("通过：" + message); }
@@ -96,6 +98,26 @@ internal static class Program
             }
             Check(Find<RadioButton>("SystemThemeRadio").IsChecked == true, "默认主题可跟随 Windows 系统");
             Check((string)Find<ComboBox>("TriggerInput").SelectedValue == "selection", "默认以鼠标划词触发，输入自动预览保留为可选项");
+            Check(Find<CheckBox>("PreferOfflineCheck").IsChecked == true && Find<CheckBox>("AutoLearnCheck").IsChecked == true && Find<CheckBox>("OnlineFallbackCheck").IsChecked == true,
+                "离线优先、在线回退和自动积累默认开启");
+            SelectPage("vocabulary");
+            Check(Find<TextBlock>("VocabularyCountText").Text.Contains("32159") && Find<TextBlock>("VocabularyCountText").Text.Contains("2441"),
+                "真实设置页面加载用户词库可用数和歧义数");
+            var uiRequest = TranslationRequest.Create(new AppSettings { Translation = new() { SourceLanguage = "zh", TargetLanguage = "en" } }, "ui-fixture-original");
+            InputFixture.WaitWithDispatcher(vocabulary.LearnAsync(uiRequest, new TranslationResult("ui-fixture-answer"), default).ContinueWith(t => { t.GetAwaiter().GetResult(); return true; }));
+            Find<TextBox>("VocabularySearchInput").Text = "ui-fixture-original"; Pump(window);
+            var vocabularyList = Find<ListBox>("VocabularyList");
+            Check(vocabularyList.Items.Count == 1, "题库搜索定位实际在线积累条目");
+            vocabularyList.SelectedIndex = 0; Pump(window);
+            Find<TextBox>("VocabularyEditTranslation").Text = "manually reviewed fixture answer";
+            Find<Button>("VocabularyEditButton").RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+            InputFixture.WaitWithDispatcher(Task.Run(async () => {
+                for (var attempt = 0; attempt < 50; attempt++)
+                { if ((await vocabulary.FindAsync(uiRequest, default))?.Text == "manually reviewed fixture answer") return true; await Task.Delay(100); }
+                throw new InvalidOperationException("题库编辑未持久化");
+            })); Pump(window);
+            Check(Find<TextBlock>("MessageText").Text.Contains("自动积累不会覆盖人工编辑"), "通过实际编辑按钮保存 DPAPI 个人译文");
+            Find<CheckBox>("PreferOfflineCheck").IsChecked = false; Find<CheckBox>("AutoLearnCheck").IsChecked = false; Find<CheckBox>("OnlineFallbackCheck").IsChecked = false;
             Find<RadioButton>("DarkThemeRadio").IsChecked = true; Pump(window);
             Check(((SolidColorBrush)app.Resources["CanvasBrush"]).Color.R < 100 && ((SolidColorBrush)window.Foreground).Color.R > 240, "深色主题卡片即时切换实际资源");
             Capture(window, Path.Combine(output, "settings-dark.png"));
@@ -126,12 +148,14 @@ internal static class Program
             Check(model.Text == "my-selected-model", "新版下拉框保留手动模型输入功能");
             Find<Button>("SaveSettingsButton").RaiseEvent(new RoutedEventArgs(Button.ClickEvent)); Pump(window);
             Check(!settings.Current.Overlay.ShowLoading, "Loading 开关可保存并持久化");
+            Check(!settings.Current.Vocabulary.PreferOffline && !settings.Current.Vocabulary.AutoLearn && !settings.Current.Vocabulary.AllowOnlineFallback,
+                "离线优先、在线回退和自动积累可独立保存");
             Check(settings.Current.MonitorAllApplications && settings.Current.AI.Model == "my-selected-model" && settings.Current.Translation.TargetLanguage == "en" && settings.Current.Overlay.TriggerMode == "hotkey" && settings.Current.Overlay.Theme == "light", "保存设置同时持久化应用范围、模型、方向、主题与触发方式");
             SelectPage("general"); var scroll = Find<ScrollViewer>("PageScroll");
             scroll.ScrollToEnd(); Pump(window);
             Check(scroll.ScrollableHeight > 0 && scroll.VerticalOffset > 0, "新样式保持设置内容的滚动功能");
             scroll.ScrollToTop();
-            foreach (var id in new[] { "general", "ai", "privacy", "appearance" })
+            foreach (var id in new[] { "general", "vocabulary", "ai", "privacy", "appearance" })
             {
                 SelectPage(id); Capture(window, Path.Combine(output, "settings-" + id + ".png"));
             }
@@ -146,6 +170,7 @@ internal static class Program
             var snapshot = new InputSnapshot("preview", "输入原文", new(50, 50, 20, 20));
             var preview = new Preview(snapshot, TranslationRequest.Create(previewSettings, snapshot.Text), new TranslationResult("Hello."), 1, false);
             overlay.Display(preview); Pump(overlay);
+            Check(((TextBlock)overlay.FindName("OriginText")).Text == "在线翻译", "悬浮窗明确显示译文来源");
             ((Button)overlay.FindName("FavoriteButton")).RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
             Check(favorites.GetAll().Count == 1 && !((Button)overlay.FindName("FavoriteButton")).IsEnabled, "星标主动收藏译文并防止重复点击");
             Check(overlay.ActualWidth <= 320 && overlay.ActualHeight <= 64, "短译文悬浮窗自动收窄且高度不超过 64 像素");
@@ -154,6 +179,17 @@ internal static class Program
             overlay.Display(preview with { Snapshot = snapshot with { CanWrite = false, IsSelection = true }, Result = new TranslationResult("只翻译选中的文字。") }); Pump(overlay);
             Check(((Button)overlay.FindName("ReplaceButton")).Visibility == Visibility.Collapsed, "选区预览不显示替换正文按钮");
             Capture(overlay, Path.Combine(output, "overlay-selection.png"));
+            var offlineConfig = previewSettings with { Translation = new() { SourceLanguage = "auto", TargetLanguage = "ja" } };
+            using (var offlineCoordinator = new TranslationCoordinator(new NoApiProvider(), new EmptyCache(), () => offlineConfig, new SessionStatistics(), vocabulary))
+            {
+                InputFixture.WaitWithDispatcher(offlineCoordinator.ObserveAsync(snapshot with { Text = "米饭", CanWrite = false, IsSelection = true }).ContinueWith(t => { t.GetAwaiter().GetResult(); return true; }));
+                var offline = offlineCoordinator.CurrentPreview;
+                Check(offline?.Result.Text == "ご飯" && offline.Origin == TranslationOrigin.Vocabulary, "未提供 API Key 时真实内置词库完成自动源语言离线翻译，在线服务禁止调用");
+                overlay.Display(offline); Pump(overlay);
+                Check(((TextBlock)overlay.FindName("OriginText")).Text == "离线题库" && ((Button)overlay.FindName("ReplaceButton")).Visibility == Visibility.Collapsed,
+                    "离线阅读选区显示来源并隐藏替换按钮");
+                Capture(overlay, Path.Combine(output, "overlay-offline.png"));
+            }
             overlay.Display(preview with { Result = new TranslationResult(string.Concat(Enumerable.Repeat("较长译文会自动换行并限制可见高度。", 40))) }); Pump(overlay);
             Check(overlay.ActualWidth <= 320 && overlay.ActualHeight <= 190 && ((ScrollViewer)overlay.FindName("TranslationScroll")).ScrollableHeight > 0, "长译文保持紧凑并通过滚动显示");
             Capture(overlay, Path.Combine(output, "overlay-long.png"));

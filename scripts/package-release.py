@@ -29,10 +29,13 @@ def main():
         for file in sorted((root / "docs").iterdir()):
             if file.is_file():
                 archive.write(file, file.relative_to(root).as_posix())
+        for file in sorted((root / "docs" / "vocabulary").rglob("*")):
+            if file.is_file():
+                archive.write(file, file.relative_to(root).as_posix())
     source_zip = output / "TypeLingo-Source.zip"
     excluded = {"bin", "obj", ".git", "TestResults", "__pycache__"}
     with zipfile.ZipFile(source_zip, "w", zipfile.ZIP_DEFLATED, compresslevel=9) as archive:
-        for directory in ["src", "tests", "tools", "docs", "scripts", "packaging", ".github"]:
+        for directory in ["src", "tests", "tools", "docs", "data", "scripts", "packaging", ".github"]:
             for file in sorted((root / directory).rglob("*")):
                 if file.is_file() and not excluded.intersection(file.relative_to(root).parts):
                     archive.write(file, "TypeLingo/" + file.relative_to(root).as_posix())

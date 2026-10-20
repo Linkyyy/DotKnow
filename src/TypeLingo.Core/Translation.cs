@@ -25,7 +25,14 @@ public sealed record TranslationRequest(string Provider, string Model, string So
         settings.Translation.Mode, text, settings.AI.BaseUrl.TrimEnd('/'));
 }
 public sealed record TranslationResult(string Text, int PromptTokens = 0, int CompletionTokens = 0);
-public sealed record Preview(InputSnapshot Snapshot, TranslationRequest Request, TranslationResult Result, long Sequence, bool FromCache);
+public enum TranslationOrigin { Online, Cache, Vocabulary }
+public sealed record Preview(InputSnapshot Snapshot, TranslationRequest Request, TranslationResult Result, long Sequence, bool FromCache,
+    TranslationOrigin Origin = TranslationOrigin.Online);
+public interface ITranslationMemory
+{
+    Task<TranslationResult?> FindAsync(TranslationRequest request, CancellationToken cancellationToken);
+    Task LearnAsync(TranslationRequest request, TranslationResult result, CancellationToken cancellationToken);
+}
 public enum TranslationError { Authentication, Configuration, RateLimit, Server, Network, Timeout, InvalidResponse }
 public sealed class TranslationException(TranslationError kind, string safeMessage) : Exception(safeMessage)
 {
@@ -50,9 +57,10 @@ public interface IInputTarget
 
 public sealed class SessionStatistics
 {
-    private long apiCalls, hits, successes, failures, elapsedTicks, promptTokens, completionTokens;
+    private long apiCalls, hits, vocabularyHits, successes, failures, elapsedTicks, promptTokens, completionTokens;
     public long ApiCalls => Interlocked.Read(ref apiCalls);
     public long CacheHits => Interlocked.Read(ref hits);
+    public long VocabularyHits => Interlocked.Read(ref vocabularyHits);
     public long Successes => Interlocked.Read(ref successes);
     public long Failures => Interlocked.Read(ref failures);
     public long PromptTokens => Interlocked.Read(ref promptTokens);
@@ -60,6 +68,7 @@ public sealed class SessionStatistics
     public double AverageLatencyMilliseconds => Successes == 0 ? 0 : TimeSpan.FromTicks(Interlocked.Read(ref elapsedTicks) / Successes).TotalMilliseconds;
     public void ApiCall() => Interlocked.Increment(ref apiCalls);
     public void CacheHit() => Interlocked.Increment(ref hits);
+    public void VocabularyHit() => Interlocked.Increment(ref vocabularyHits);
     public void Failed() => Interlocked.Increment(ref failures);
     public void Succeeded(TimeSpan elapsed, TranslationResult result)
     {

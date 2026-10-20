@@ -29,11 +29,12 @@ public partial class SettingsWindow : Window
     public SettingsWindow(SettingsService service, SessionStatistics statistics,
         Func<AppSettings, string, string?> save,
         Func<AppSettings, string, Task<IReadOnlyList<string>>> getModels,
-        Func<AppSettings, string, Task<TranslationResult>> testTranslation, Func<Task> clearCache, FavoriteStore? favorites = null)
+        Func<AppSettings, string, Task<TranslationResult>> testTranslation, Func<Task> clearCache, FavoriteStore? favorites = null, VocabularyStore? vocabulary = null, Action? vocabularyChanged = null)
     {
         this.service = service; this.statistics = statistics; this.save = save;
         this.getModels = getModels; this.testTranslation = testTranslation; this.clearCache = clearCache;
         this.favorites = favorites ?? new FavoriteStore(service.DirectoryPath, new DpapiProtector());
+        this.vocabulary = vocabulary; this.vocabularyChanged = vocabularyChanged;
         InitializeComponent(); LoadSettings(); ShowMessage(service.LoadWarning ?? "");
         SourceInitialized += (_, _) =>
         {
@@ -75,7 +76,7 @@ public partial class SettingsWindow : Window
     private Dictionary<string, FrameworkElement> Pages => new()
     {
         ["home"] = PageHome, ["general"] = PageGeneral, ["ai"] = PageAi,
-        ["cache"] = PageCache, ["appearance"] = PageAppearance, ["hotkeys"] = PageHotkeys, ["privacy"] = PagePrivacy, ["favorites"] = PageFavorites
+        ["cache"] = PageCache, ["appearance"] = PageAppearance, ["hotkeys"] = PageHotkeys, ["privacy"] = PagePrivacy, ["favorites"] = PageFavorites, ["vocabulary"] = PageVocabulary
     };
     private void Navigation_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
@@ -89,6 +90,7 @@ public partial class SettingsWindow : Window
         PageTitleText.Text = UiText.Get(section.Title); PageDescriptionText.Text = UiText.Get(section.Description);
         PageScroll.Visibility = Visibility.Visible; PageScroll.ScrollToTop();
         if (id == "favorites") RefreshFavorites();
+        if (id == "vocabulary") _ = RefreshVocabularyAsync(true);
     }
     private void Search_TextChanged(object sender, TextChangedEventArgs e)
     { if (!loading && NavigationList != null) ApplySearch(); }
@@ -168,6 +170,7 @@ public partial class SettingsWindow : Window
             KeyInput.Clear(); RefreshKeyStatus(); PlatformAddress.Text = ProviderCatalog.Get(s.AI.Provider).PlatformUrl;
             MemoryCheck.IsChecked = s.Cache.MemoryEnabled; MemoryCapacityInput.Text = s.Cache.MemoryMaxEntries.ToString(); MemoryTtlInput.Text = s.Cache.MemoryTTLMinutes.ToString();
             DiskCheck.IsChecked = s.Cache.DiskEnabled; DiskCapacityInput.Text = s.Cache.DiskMaxEntries.ToString(); DiskTtlInput.Text = s.Cache.DiskTTLDays.ToString();
+            PreferOfflineCheck.IsChecked = s.Vocabulary.PreferOffline; AutoLearnCheck.IsChecked = s.Vocabulary.AutoLearn; OnlineFallbackCheck.IsChecked = s.Vocabulary.AllowOnlineFallback;
             LightThemeRadio.IsChecked = s.Overlay.Theme == "light"; DarkThemeRadio.IsChecked = s.Overlay.Theme == "dark"; SystemThemeRadio.IsChecked = s.Overlay.Theme == "system";
             AutoHideInput.Text = s.Overlay.AutoHideSeconds.ToString(); PreviewHotkey.Text = s.Hotkeys.Preview; FontInput.Text = Number(s.Overlay.FontSize); WidthInput.Text = Number(s.Overlay.MaxWidth); OpacityInput.Text = Number(s.Overlay.Opacity);
             ReplaceHotkey.Text = s.Hotkeys.Replace; ToggleHotkey.Text = s.Hotkeys.Toggle; CopyHotkey.Text = s.Hotkeys.Copy;
@@ -240,6 +243,7 @@ public partial class SettingsWindow : Window
             Translation = new() { Enabled = EnabledCheck.IsChecked == true, SourceLanguage = Selected(SourceInput), TargetLanguage = Selected(TargetInput), Mode = Selected(ModeInput), DebounceMilliseconds = Integer(DebounceInput.Text), MinimumRequestIntervalMilliseconds = Integer(IntervalInput.Text), MaxInputCharacters = Integer(MaxInput.Text) },
             AI = SelectedAi() with { TimeoutSeconds = Integer(TimeoutInput.Text), MaxRetries = Integer(RetriesInput.Text) },
             Cache = new() { MemoryEnabled = MemoryCheck.IsChecked == true, MemoryMaxEntries = Integer(MemoryCapacityInput.Text), MemoryTTLMinutes = Integer(MemoryTtlInput.Text), DiskEnabled = DiskCheck.IsChecked == true, DiskMaxEntries = Integer(DiskCapacityInput.Text), DiskTTLDays = Integer(DiskTtlInput.Text) },
+            Vocabulary = new() { PreferOffline = PreferOfflineCheck.IsChecked == true, AutoLearn = AutoLearnCheck.IsChecked == true, AllowOnlineFallback = OnlineFallbackCheck.IsChecked == true },
             Overlay = new() { ShowLoading = Selected(PopupDisplayInput) == "loading", Theme = SelectedTheme(), DarkMode = SelectedTheme() == "dark", TriggerMode = Selected(TriggerInput), AutoHideSeconds = Integer(AutoHideInput.Text), FontSize = Decimal(FontInput.Text), MaxWidth = Decimal(WidthInput.Text), Opacity = Decimal(OpacityInput.Text), Position = Selected(PositionInput) },
             Hotkeys = new() { Replace = ReplaceHotkey.Text.Trim(), Toggle = ToggleHotkey.Text.Trim(), Copy = CopyHotkey.Text.Trim(), Preview = PreviewHotkey.Text.Trim() },
             AllowedApplications = Split(AllowedInput.Text), ExcludedApplications = Split(ExcludedInput.Text)
@@ -378,15 +382,17 @@ public partial class SettingsWindow : Window
     }
     private void RefreshStatistics()
     {
-        var total = statistics.Successes + statistics.CacheHits;
+        var hits = statistics.CacheHits + statistics.VocabularyHits;
+        var total = statistics.Successes + hits;
         HomeApiCount.Text = statistics.ApiCalls.ToString(CultureInfo.InvariantCulture);
-        HomeCacheCount.Text = statistics.CacheHits.ToString(CultureInfo.InvariantCulture);
-        HomeSuccessCount.Text = statistics.Successes.ToString(CultureInfo.InvariantCulture);
+        HomeCacheCount.Text = hits.ToString(CultureInfo.InvariantCulture);
+        HomeSuccessCount.Text = total.ToString(CultureInfo.InvariantCulture);
         var current = service.Current;
         HomeStateText.Text = UiText.Get(!current.PrivacyConsent ? "等待隐私授权" : current.Translation.Enabled ? "实时翻译已开启" : "实时翻译已暂停") +
             " · " + UiText.Get(current.MonitorAllApplications ? "全部可访问应用" : "仅允许指定应用");
-        StatisticsText.Text = UiText.Format("HTTP 请求 {0} · 本地命中 / 节省请求 {1}\n翻译成功 {2} · 失败 {3} · 命中率 {4}%\n平均 API 延迟 {5} ms · 输入词元 {6} / 输出词元 {7}",
-            statistics.ApiCalls, statistics.CacheHits, statistics.Successes, statistics.Failures, total == 0 ? 0 : statistics.CacheHits * 100 / total,
+        StatisticsText.Text = UiText.Format("HTTP 请求 {0} · 题库命中 {1} · 缓存命中 {2}\n在线成功 {3} · 失败 {4} · 本地命中率 {5}%\n平均 API 延迟 {6} ms · 输入词元 {7} / 输出词元 {8}",
+            statistics.ApiCalls, statistics.VocabularyHits, statistics.CacheHits, statistics.Successes, statistics.Failures, total == 0 ? 0 : hits * 100 / total,
             statistics.AverageLatencyMilliseconds.ToString("F0", CultureInfo.InvariantCulture), statistics.PromptTokens, statistics.CompletionTokens);
+        if (PageVocabulary.Visibility == Visibility.Visible) _ = RefreshVocabularyAsync(false);
     }
 }

@@ -15,6 +15,7 @@ public partial class App : System.Windows.Application
     private Mutex? instance;
     private SettingsService settings = null!;
     private CacheService cache = null!;
+    private VocabularyStore vocabulary = null!;
     private TranslationCoordinator coordinator = null!;
     private InputObserver observer = null!;
     private OverlayWindow overlay = null!;
@@ -37,8 +38,9 @@ public partial class App : System.Windows.Application
         UiText.Apply(settings.Current.UiLanguage);
         var statistics = new SessionStatistics();
         cache = new CacheService(() => settings.Current, System.IO.Path.Combine(folder, "translations.db"), protector);
+        vocabulary = new VocabularyStore(folder, protector);
         var provider = new ProviderApi(http, () => settings.Current, settings.ReadKey, statistics);
-        coordinator = new TranslationCoordinator(provider, cache, () => settings.Current, statistics);
+        coordinator = new TranslationCoordinator(provider, cache, () => settings.Current, statistics, vocabulary);
         observer = new InputObserver(() => settings.Current);
         var replacement = new ReplacementService(observer, coordinator);
         var favorites = new FavoriteStore(folder, protector);
@@ -49,7 +51,8 @@ public partial class App : System.Windows.Application
         settingsWindow = new SettingsWindow(settings, statistics, SaveSettings,
             (candidate, key) => TestApi(candidate, key).GetModelsAsync(),
             (candidate, key) => TestApi(candidate, key).TranslateAsync(TranslationRequest.Create(candidate, "Hello") with { SourceLanguage = "en" }, CancellationToken.None),
-            async () => { await coordinator.ObserveAsync(null, true); await cache.ClearAsync(); }, favorites);
+            async () => { await coordinator.ObserveAsync(null, true); await cache.ClearAsync(); }, favorites, vocabulary, () => { _ = coordinator.ObserveAsync(null, true); });
+        _ = PrepareVocabularyAsync();
         coordinator.PreviewChanged += preview => Ui(() => overlay.Display(preview));
         coordinator.StatusChanged += status => Ui(() => { overlay.ShowStatus(status); overlay.Loading(latest, status); });
         observer.SnapshotChanged += snapshot =>
@@ -98,7 +101,12 @@ public partial class App : System.Windows.Application
         SystemEvents.UserPreferenceChanged += SystemThemeChanged;
         var hotkeyError = hotkeys.Register(settings.Current.Hotkeys);
         if (hotkeyError != null) settingsWindow.ShowMessage(hotkeyError);
-        if (!settings.Current.PrivacyConsent || !settings.HasKey || settings.LoadWarning != null || hotkeyError != null) ShowSettings();
+        if (!settings.Current.PrivacyConsent || (!settings.HasKey && !settings.Current.Vocabulary.PreferOffline && settings.Current.Vocabulary.AllowOnlineFallback) || settings.LoadWarning != null || hotkeyError != null) ShowSettings();
+    }
+    private async Task PrepareVocabularyAsync()
+    {
+        try { await vocabulary.InitializeAsync(); }
+        catch (Exception) { Ui(() => settingsWindow.ShowMessage("离线题库无法初始化，原有文件已保留；请检查存储权限。")); }
     }
     private string? SaveSettings(AppSettings candidate, string key)
     {

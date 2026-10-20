@@ -10,6 +10,7 @@
           <Button Style="{StaticResource IconButton}" Click="Dismiss_Click" ToolTip="{DynamicResource '关闭'}" AutomationProperties.Name="{DynamicResource '关闭'}"><controls:SymbolIcon Kind="close" Width="13" Height="13"/></Button>
         </StackPanel>
       </Grid>
+      <TextBlock x:Name="OriginText" Visibility="Collapsed" FontSize="10" Foreground="{DynamicResource MutedBrush}" Margin="0,3,0,0"/>
       <ProgressBar x:Name="LoadingProgress" Visibility="Collapsed" IsIndeterminate="True" Height="3" Margin="0,7,0,0" Foreground="{DynamicResource AccentBrush}" AutomationProperties.Name="{DynamicResource '正在翻译…'}"/>
       <StackPanel x:Name="Confirmation" Visibility="Collapsed" Margin="0,10,0,0" MaxWidth="290">
         <Border Background="{DynamicResource HoverBrush}" CornerRadius="8" Padding="10"><StackPanel><TextBlock Text="{DynamicResource '是否替换当前选区或所在行？'}" FontWeight="SemiBold"/><TextBlock Text="{DynamicResource '原文'}" Foreground="{DynamicResource MutedBrush}" FontSize="11" Margin="0,8,0,3"/><ScrollViewer MaxHeight="90" VerticalScrollBarVisibility="Auto" Focusable="False"><TextBlock x:Name="OriginalText" TextWrapping="Wrap"/></ScrollViewer><TextBlock Text="{DynamicResource '上方译文只替换选区或当前行，不会发送消息。'}" FontSize="11" Foreground="{DynamicResource MutedBrush}" Margin="0,8,0,0"/></StackPanel></Border>

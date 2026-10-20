@@ -41,6 +41,7 @@ public partial class OverlayWindow : Window
     {
         CancelConfirmation(); hideTimer.Stop(); current = preview;
         LoadingProgress.Visibility = Visibility.Collapsed;
+        OriginText.Visibility = preview == null ? Visibility.Collapsed : Visibility.Visible;
         if (preview == null) { TranslationText.Text = ""; Hide(); return; }
         anchor = preview.Snapshot.Bounds; avoid = preview.Snapshot.ControlBounds;
         TranslationText.Text = preview.Result.Text;
@@ -51,12 +52,16 @@ public partial class OverlayWindow : Window
         FavoriteButton.IsEnabled = true;
         TranslationText.Cursor = preview.Snapshot.CanWrite ? Cursors.Hand : Cursors.Arrow;
         TranslationText.ToolTip = UiText.Get(preview.Snapshot.CanWrite ? "点击译文准备替换选区或当前行" : "当前控件仅支持复制与收藏");
-        ShowStatus(preview.FromCache ? "本地缓存 · 原文保持不变" : "译文预览 · 原文保持不变");
+        ShowStatus(preview.Origin == TranslationOrigin.Vocabulary ? "离线题库 · 未调用 API" : preview.FromCache ? "本地缓存 · 原文保持不变" : "译文预览 · 原文保持不变");
         ConfigureBubble(); Show(); UpdateLayout(); Position(); RestartTimer();
     }
     public void MoveAnchor(InputRect bounds, InputRect? controlBounds = null) { anchor = bounds; avoid = controlBounds; if (IsVisible) Position(); }
     public void ShowStatus(string message) { statusSource = message; Bubble.ToolTip = UiText.Get(message); }
-    private void RefreshLanguage() => Bubble.ToolTip = UiText.Get(statusSource);
+    private void RefreshLanguage()
+    {
+        Bubble.ToolTip = UiText.Get(statusSource);
+        if (current != null) OriginText.Text = UiText.Get(current.Origin == TranslationOrigin.Vocabulary ? "离线题库" : current.FromCache ? "本地缓存" : "在线翻译");
+    }
     public void Loading(InputSnapshot? snapshot, string message)
     {
         if (IsVisible) ShowStatus(message);
@@ -66,12 +71,13 @@ public partial class OverlayWindow : Window
             if (!settings().Overlay.ShowLoading) { Hide(); return; }
             anchor = snapshot.Bounds; avoid = snapshot.ControlBounds;
             TranslationText.Text = UiText.Get(message); TranslationText.Cursor = Cursors.Arrow; TranslationText.ToolTip = null;
+            OriginText.Visibility = Visibility.Collapsed;
             LoadingProgress.Visibility = Visibility.Visible;
             CopyButton.Visibility = ReplaceButton.Visibility = FavoriteButton.Visibility = Visibility.Collapsed;
             hideTimer.Stop(); ConfigureBubble(); Show(); UpdateLayout(); Position(); return;
         }
         if (current != null || snapshot == null || snapshot.IsComposing || snapshot.IsSensitive || string.IsNullOrWhiteSpace(snapshot.Text) ||
-            message is "等待输入稳定…" or "正在翻译…" or "本地缓存 · 未调用 API" or "译文就绪 · 原文保持不变") return;
+            message is "等待输入稳定…" or "正在翻译…" or "本地缓存 · 未调用 API" or "离线题库 · 未调用 API" or "译文就绪 · 原文保持不变") return;
         anchor = snapshot.Bounds; avoid = snapshot.ControlBounds;
         LoadingProgress.Visibility = Visibility.Collapsed;
         TranslationText.Text = UiText.Get("翻译暂不可用"); ShowStatus(message);

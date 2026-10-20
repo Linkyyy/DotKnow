@@ -2,7 +2,7 @@ namespace TypeLingo.Core;
 
 /// <summary>同一时间只执行一个主翻译请求，焦点、文本或配置变化时取消旧请求。</summary>
 public sealed class TranslationCoordinator(ITranslationProvider provider, ITranslationCache cache,
-    Func<AppSettings> settings, SessionStatistics statistics) : IDisposable
+    Func<AppSettings> settings, SessionStatistics statistics, ITranslationMemory? vocabulary = null) : IDisposable
 {
     private readonly object gate = new();
     private readonly SemaphoreSlim singleRequest = new(1, 1);
@@ -52,8 +52,21 @@ public sealed class TranslationCoordinator(ITranslationProvider provider, ITrans
         await Task.Yield();
         try
         {
-            var result = await cache.GetAsync(request.CacheKey, token);
-            var cached = result != null;
+            TranslationResult? result = null;
+            var origin = TranslationOrigin.Online;
+            var savingFailed = false;
+            if (vocabulary != null && (config.Vocabulary.PreferOffline || !config.Vocabulary.AllowOnlineFallback))
+            {
+                result = await vocabulary.FindAsync(request, token);
+                if (result != null) origin = TranslationOrigin.Vocabulary;
+            }
+            if (result == null && !config.Vocabulary.AllowOnlineFallback)
+            { PublishStatus(id, "离线题库未命中，已关闭在线翻译。"); return; }
+            if (result == null)
+            {
+                result = await cache.GetAsync(request.CacheKey, token);
+                if (result != null) origin = TranslationOrigin.Cache;
+            }
             if (result == null)
             {
                 PublishStatus(id, "等待输入稳定…");
@@ -70,17 +83,30 @@ public sealed class TranslationCoordinator(ITranslationProvider provider, ITrans
                     result = await provider.TranslateAsync(request, token);
                     token.ThrowIfCancellationRequested();
                     if (string.IsNullOrWhiteSpace(result.Text)) throw new TranslationException(TranslationError.InvalidResponse, "API 未返回有效译文。");
-                    await cache.PutAsync(request.CacheKey, result, token);
+                    try { await cache.PutAsync(request.CacheKey, result, token); }
+                    catch (Exception) when (!token.IsCancellationRequested) { savingFailed = true; }
                 }
                 finally { singleRequest.Release(); }
+            }
+            if (vocabulary != null && config.Vocabulary.AutoLearn && origin != TranslationOrigin.Vocabulary)
+            {
+                token.ThrowIfCancellationRequested();
+                try { await vocabulary.LearnAsync(request, result, token); }
+                catch (Exception) when (!token.IsCancellationRequested) { savingFailed = true; }
             }
             lock (gate)
             {
                 if (disposed || token.IsCancellationRequested || id != sequence || current?.Identity != snapshot.Identity || currentKey != request.CacheKey) return;
-                if (cached) statistics.CacheHit();
-                preview = new Preview(snapshot, request, result, id, cached);
+                if (origin == TranslationOrigin.Cache) statistics.CacheHit();
+                if (origin == TranslationOrigin.Vocabulary) statistics.VocabularyHit();
+                preview = new Preview(snapshot, request, result, id, origin == TranslationOrigin.Cache, origin);
                 PreviewChanged?.Invoke(preview);
-                StatusChanged?.Invoke(cached ? "本地缓存 · 未调用 API" : "译文就绪 · 原文保持不变");
+                StatusChanged?.Invoke(savingFailed ? "译文就绪，但本地保存失败；请检查存储权限。" : origin switch
+                {
+                    TranslationOrigin.Vocabulary => "离线题库 · 未调用 API",
+                    TranslationOrigin.Cache => "本地缓存 · 未调用 API",
+                    _ => "译文就绪 · 原文保持不变"
+                });
             }
         }
         catch (OperationCanceledException) when (token.IsCancellationRequested) { }

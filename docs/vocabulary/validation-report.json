@@ -1,0 +1,47 @@
+{
+  "formatVersion": "1.0",
+  "batchFiles": 102,
+  "rawCollected": 7546,
+  "vocabTotal": 6426,
+  "duplicateTriples": 1120,
+  "duplicateEntries": 1119,
+  "conflictQueries": 2441,
+  "pendingReview": 0,
+  "missingOrInvalid": 0,
+  "directionRecords": {
+    "zh->en": 5495,
+    "en->zh": 5160,
+    "zh->ja": 5442,
+    "ja->zh": 5403,
+    "en->ja": 5175,
+    "ja->en": 5484
+  },
+  "entriesTotal": 32159,
+  "categoryCounts": {
+    "饮食": 440,
+    "日常生活": 1689,
+    "人物关系": 241,
+    "购物": 379,
+    "家居": 181,
+    "交通": 336,
+    "旅行": 238,
+    "住宿": 179,
+    "时间": 269,
+    "天气": 177,
+    "健康": 401,
+    "学习": 242,
+    "工作": 279,
+    "办公沟通": 421,
+    "计算机": 324,
+    "软件": 208,
+    "网络": 183,
+    "商务交流": 239
+  },
+  "jsonlParseErrors": {
+    "vocabulary": 0,
+    "entries": 0,
+    "ambiguous": 0
+  },
+  "missingFieldsAfterParse": 0,
+  "missingDetail": []
+}

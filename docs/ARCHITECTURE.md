@@ -88,3 +88,12 @@ UiSmoke 用布局宿主加载实际资源和窗口，不启动产品托盘；独
 默认 TriggerMode 为 selection。InputObserver 先验证前台宿主，再对鼠标命中元素的 RawView 祖先路径查找 TextPattern 选区；不依赖焦点在阅读区域、不进行子树全文扫描。鼠标主键按住时暂停捕获，自有不激活悬浮窗的操作除外。已捕获的选区只在同一前台窗口和键盘焦点保持时复用，并在每次轮询中重新读取。只读选区不读取 DocumentRange 全文。ValuePattern 范围映射和写入仅限实际键盘焦点所在的编辑目标；任何焦点、内容或配置变化均使确认失效。
 
 Overlay.TriggerModeVersion 标记首次默认模式迁移：旧 typing 转为 selection，hotkey 保留；后续设置保存包含版本并保留用户的 typing 选择。
+
+
+## 离线题库优先
+
+TranslationCoordinator 可注入 ITranslationMemory；离线优先或禁止在线时先查题库。未命中且允许在线时查现有缓存，再走限流后的服务商。题库、缓存、在线来源分别统计，Preview 记录来源。在线／缓存结果在独立开关启用时写入题库，缓存和题库保存失败不丢弃成功译文；取消和失效请求不积累。
+
+VocabularyStore 从嵌入的用户原始 ZIP 只读加载公开 entries 和隔离键，个人覆盖层使用单独 vocabulary.db、逐条 DPAPI 加密、事务提交后才更新内存索引。清空标记持久停用内置数据，恢复为显式操作。人工修改、隔离和删除优先于自动积累。题库文件不参与 CacheService 的 TTL／淘汰／清空。上传包内脚本不执行。
+
+自动源语言先检查明确方向及歧义；不同译文不猜测。在线 auto 结果没有可靠检测语言，作为独立 auto 查询保存，不能遮蔽已有具体方向；人工确认的 auto 项可作为明确用户覆盖。

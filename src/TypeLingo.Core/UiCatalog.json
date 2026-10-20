@@ -1370,5 +1370,209 @@
   "选择语言、翻译方向与划词偏好": {
     "en-US": "Choose languages, translation direction and text selection preferences",
     "ja-JP": "言語、翻訳方向、選択範囲の翻訳を設定"
+  },
+  "离线题库": {
+    "en-US": "Offline vocabulary",
+    "ja-JP": "オフライン辞書"
+  },
+  "优先查询本地词库，积累常用表达": {
+    "en-US": "Use local translations first and grow your vocabulary",
+    "ja-JP": "ローカル辞書を優先し、よく使う表現を蓄積"
+  },
+  "先查本地题库，未命中再在线翻译；内置 32159 条中英日六向记录。": {
+    "en-US": "Look up locally before translating online. Includes 32,159 Chinese, English and Japanese directional entries.",
+    "ja-JP": "ローカル辞書を先に検索し、見つからなければオンライン翻訳。中英日 6 方向の 32,159 件を収録。"
+  },
+  "优先使用离线题库": {
+    "en-US": "Prefer offline vocabulary",
+    "ja-JP": "オフライン辞書を優先"
+  },
+  "默认开启；命中时无需 API Key，也不调用在线服务": {
+    "en-US": "Enabled by default. Local matches need no API key or online request.",
+    "ja-JP": "既定で有効。一致した場合は API キーも通信も不要。"
+  },
+  "未命中时允许在线翻译": {
+    "en-US": "Allow online translation on a miss",
+    "ja-JP": "見つからない場合はオンライン翻訳"
+  },
+  "关闭后仅查询题库；未命中会提示，不发送文本": {
+    "en-US": "Turn off to use only the vocabulary. Misses show a message without sending text.",
+    "ja-JP": "無効にすると辞書のみを使用。見つからなくてもテキストは送信しません。"
+  },
+  "自动积累在线译文": {
+    "en-US": "Save online translations to vocabulary",
+    "ja-JP": "オンライン訳文を自動保存"
+  },
+  "将在线结果和以后命中的旧缓存连同原文加密保存；不覆盖人工条目": {
+    "en-US": "Encrypt and save online results and future cache hits with their originals; preserve manual edits.",
+    "ja-JP": "オンライン結果や今後使う既存キャッシュを原文と共に暗号化して保存。手動編集は上書きしません。"
+  },
+  "正在加载离线题库…": {
+    "en-US": "Loading offline vocabulary…",
+    "ja-JP": "オフライン辞書を読み込み中…"
+  },
+  "按原文、语言方向和风格精确匹配；自动源语言有歧义时不猜测。": {
+    "en-US": "Match exact text, language direction and style. Ambiguous automatic source queries are not guessed.",
+    "ja-JP": "原文・翻訳方向・スタイルが完全一致する項目を検索。言語の自動判定に曖昧さがある場合は推測しません。"
+  },
+  "导入题库": {
+    "en-US": "Import vocabulary",
+    "ja-JP": "辞書をインポート"
+  },
+  "导出题库": {
+    "en-US": "Export vocabulary",
+    "ja-JP": "辞書をエクスポート"
+  },
+  "刷新题库": {
+    "en-US": "Refresh vocabulary",
+    "ja-JP": "辞書を更新"
+  },
+  "恢复内置词库": {
+    "en-US": "Restore bundled vocabulary",
+    "ja-JP": "内蔵辞書を復元"
+  },
+  "清空题库": {
+    "en-US": "Clear vocabulary",
+    "ja-JP": "辞書を消去"
+  },
+  "搜索原文或译文": {
+    "en-US": "Search originals or translations",
+    "ja-JP": "原文または訳文を検索"
+  },
+  "列表最多显示 100 条；输入关键词缩小范围，选中后可修改译文。": {
+    "en-US": "Shows up to 100 entries. Search to narrow results; select an entry to edit its translation.",
+    "ja-JP": "最大 100 件を表示。キーワードで絞り込み、項目を選ぶと訳文を編集できます。"
+  },
+  "修改所选条目的译文": {
+    "en-US": "Edit the selected translation",
+    "ja-JP": "選択した項目の訳文を編集"
+  },
+  "保存译文": {
+    "en-US": "Save translation",
+    "ja-JP": "訳文を保存"
+  },
+  "删除题库条目": {
+    "en-US": "Delete vocabulary entry",
+    "ja-JP": "辞書の項目を削除"
+  },
+  "个人条目在本机加密保存，没有有效期，与临时缓存分开；导出文件包含明文，请妥善保管。": {
+    "en-US": "Personal entries are encrypted locally, do not expire, and are separate from cache. Exports contain plain text; keep them private.",
+    "ja-JP": "個人項目は端末内で暗号化され、有効期限はなくキャッシュとは別に保存されます。エクスポートは平文なので適切に保管してください。"
+  },
+  "内置词库由用户提供，原始三语词条 6426 组；署名 TypeLingo vocabulary authors，许可 CC BY 4.0。说明随安装包提供。": {
+    "en-US": "User-provided vocabulary: 6,426 trilingual groups. Credit: TypeLingo vocabulary authors, CC BY 4.0. Documentation is included.",
+    "ja-JP": "ユーザー提供の辞書：三言語 6,426 組。著作者 TypeLingo vocabulary authors、CC BY 4.0。説明書を同梱。"
+  },
+  "允许读取选区以查询本地题库；开启在线回退后，未命中内容会发送给所选 AI": {
+    "en-US": "Allow reading selections for local lookup. Online fallback sends unmatched text to your AI service.",
+    "ja-JP": "選択範囲を読み取り辞書を検索。オンライン翻訳を許可すると未登録のテキストを AI に送信します。"
+  },
+  "我同意读取选区，并按在线回退设置发送待翻译内容": {
+    "en-US": "I agree to read selections and send text according to my online fallback setting",
+    "ja-JP": "選択範囲の読み取りと、オンライン翻訳設定に基づくテキスト送信に同意します"
+  },
+  "题库命中时不发送文本。允许在线回退后，未命中选区或当前行会发送给所选 AI。核对替换范围时会在本机临时读取编辑框全文。": {
+    "en-US": "Local matches send no text. Online fallback sends unmatched selections or input lines to your AI service. Full editor text may be read locally to verify replacement ranges.",
+    "ja-JP": "辞書で一致した場合は送信しません。オンライン翻訳が有効な場合、未登録の選択範囲や入力行を AI に送信します。置換範囲の確認時は入力欄全体を端末内で一時的に読み取ります。"
+  },
+  "可用 {0} 条 · 歧义隔离 {1} 条 · 在线积累 {2} 条 · 人工编辑 {3} 条": {
+    "en-US": "{0} usable · {1} ambiguous · {2} learned · {3} manually edited",
+    "ja-JP": "利用可能 {0} 件 · 曖昧 {1} 件 · 自動保存 {2} 件 · 手動編集 {3} 件"
+  },
+  "歧义条目，需人工确认后使用": {
+    "en-US": "Ambiguous entry; confirm manually before use",
+    "ja-JP": "曖昧な項目。手動で確認後に使用可能"
+  },
+  "内置词库": {
+    "en-US": "Bundled vocabulary",
+    "ja-JP": "内蔵辞書"
+  },
+  "在线积累": {
+    "en-US": "Learned online",
+    "ja-JP": "オンラインから保存"
+  },
+  "人工编辑": {
+    "en-US": "Manually edited",
+    "ja-JP": "手動編集"
+  },
+  "导入词库": {
+    "en-US": "Imported vocabulary",
+    "ja-JP": "インポート辞書"
+  },
+  "题库暂时无法读取，原有文件已保留。": {
+    "en-US": "Vocabulary is unavailable. Existing files have been preserved.",
+    "ja-JP": "辞書を読み取れません。既存ファイルは保持されています。"
+  },
+  "题库操作失败，请检查文件格式、校验值和存储权限；原有内容未被清空。": {
+    "en-US": "Vocabulary operation failed. Check format, checksums and storage permissions. Existing contents were not cleared.",
+    "ja-JP": "辞書の操作に失敗。形式、チェックサム、保存先の権限をご確認ください。既存の内容は消去されていません。"
+  },
+  "题库导入完成。": {
+    "en-US": "Vocabulary import completed.",
+    "ja-JP": "辞書のインポートが完了しました。"
+  },
+  "新增 {0} 条 · 重复 {1} 条 · 隔离冲突 {2} 条 · 无效 {3} 条 · 保留人工条目 {4} 条": {
+    "en-US": "{0} added · {1} duplicates · {2} conflicts isolated · {3} invalid · {4} manual entries preserved",
+    "ja-JP": "追加 {0} 件 · 重複 {1} 件 · 競合隔離 {2} 件 · 無効 {3} 件 · 手動項目保持 {4} 件"
+  },
+  "导出文件包含明文原文、译文与个人积累。是否继续？": {
+    "en-US": "The export contains plain-text originals, translations and personal entries. Continue?",
+    "ja-JP": "原文、訳文、個人項目が平文で出力されます。続行しますか？"
+  },
+  "题库已导出，请妥善保管明文文件。": {
+    "en-US": "Vocabulary exported. Keep the plain-text file private.",
+    "ja-JP": "辞書をエクスポートしました。平文ファイルを適切に保管してください。"
+  },
+  "译文已保存，自动积累不会覆盖人工编辑。": {
+    "en-US": "Translation saved. Automatic learning will preserve your edit.",
+    "ja-JP": "訳文を保存しました。自動保存ではこの編集を上書きしません。"
+  },
+  "删除此题库条目？自动积累不会重新保存已删除的查询。": {
+    "en-US": "Delete this entry? Automatic learning will not recreate this deleted query.",
+    "ja-JP": "この項目を削除しますか？自動保存による再登録は行いません。"
+  },
+  "题库条目已删除。": {
+    "en-US": "Vocabulary entry deleted.",
+    "ja-JP": "辞書の項目を削除しました。"
+  },
+  "清空题库将删除个人积累、导入和编辑，并停用内置词库。收藏和缓存保留。是否继续？": {
+    "en-US": "Clear personal, imported and edited entries and disable the bundled vocabulary? Favorites and cache are kept.",
+    "ja-JP": "個人・インポート・編集項目を消去し、内蔵辞書を無効にしますか？お気に入りとキャッシュは保持されます。"
+  },
+  "题库已清空；可随时恢复内置词库。": {
+    "en-US": "Vocabulary cleared. You can restore the bundled vocabulary at any time.",
+    "ja-JP": "辞書を消去しました。内蔵辞書はいつでも復元できます。"
+  },
+  "内置词库已恢复，保留个人积累与编辑。": {
+    "en-US": "Bundled vocabulary restored. Personal entries and edits were kept.",
+    "ja-JP": "内蔵辞書を復元しました。個人項目と編集は保持されています。"
+  },
+  "离线题库 · 未调用 API": {
+    "en-US": "Offline vocabulary · No API request",
+    "ja-JP": "オフライン辞書 · API 通信なし"
+  },
+  "离线题库未命中，已关闭在线翻译。": {
+    "en-US": "No offline match. Online translation is disabled.",
+    "ja-JP": "辞書に一致する項目がありません。オンライン翻訳は無効です。"
+  },
+  "译文就绪，但本地保存失败；请检查存储权限。": {
+    "en-US": "Translation ready, but local saving failed. Check storage permissions.",
+    "ja-JP": "翻訳は完了しましたが保存に失敗。保存先の権限をご確認ください。"
+  },
+  "在线翻译": {
+    "en-US": "Online translation",
+    "ja-JP": "オンライン翻訳"
+  },
+  "本地缓存": {
+    "en-US": "Local cache",
+    "ja-JP": "ローカルキャッシュ"
+  },
+  "离线题库无法初始化，原有文件已保留；请检查存储权限。": {
+    "en-US": "Cannot initialize offline vocabulary. Existing files are preserved. Check storage permissions.",
+    "ja-JP": "オフライン辞書を初期化できません。既存ファイルは保持されています。保存先の権限をご確認ください。"
+  },
+  "HTTP 请求 {0} · 题库命中 {1} · 缓存命中 {2}\n在线成功 {3} · 失败 {4} · 本地命中率 {5}%\n平均 API 延迟 {6} ms · 输入词元 {7} / 输出词元 {8}": {
+    "en-US": "HTTP requests {0} · Vocabulary hits {1} · Cache hits {2}\nOnline successes {3} · Failures {4} · Local hit rate {5}%\nAverage API latency {6} ms · Input tokens {7} / Output tokens {8}",
+    "ja-JP": "HTTP リクエスト {0} · 辞書ヒット {1} · キャッシュヒット {2}\nオンライン成功 {3} · 失敗 {4} · ローカルヒット率 {5}%\n平均 API 遅延 {6} ms · 入力トークン {7} / 出力トークン {8}"
   }
 }

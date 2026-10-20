@@ -9,6 +9,7 @@ public sealed record AppSettings
     public AiSettings AI { get; init; } = new();
     public TranslationSettings Translation { get; init; } = new();
     public CacheSettings Cache { get; init; } = new();
+    public VocabularySettings Vocabulary { get; init; } = new();
     public OverlaySettings Overlay { get; init; } = new();
     public HotkeySettings Hotkeys { get; init; } = new();
     public string[] AllowedApplications { get; init; } = [];
@@ -16,6 +17,7 @@ public sealed record AppSettings
 
     public void Validate()
     {
+        if (Vocabulary == null) throw new ArgumentException("离线题库设置无效。");
         if (!UiCatalog.SupportedLanguages.Contains(UiLanguage))
             throw new ArgumentException("不支持所选界面语言。");
         _ = ProviderCatalog.Get(AI.Provider);
@@ -76,6 +78,12 @@ public sealed record CacheSettings
     public bool DiskEnabled { get; init; }
     public int DiskMaxEntries { get; init; } = 5000;
     public int DiskTTLDays { get; init; } = 7;
+}
+public sealed record VocabularySettings
+{
+    public bool PreferOffline { get; init; } = true;
+    public bool AutoLearn { get; init; } = true;
+    public bool AllowOnlineFallback { get; init; } = true;
 }
 public sealed record OverlaySettings
 {
