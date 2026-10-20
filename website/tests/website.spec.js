@@ -40,6 +40,10 @@ test("production CSP permits interactions and copying without remote requests", 
   expect(await page.evaluate(() => navigator.clipboard.readText())).toBe(
     "明天见。",
   );
+  await page.getByText("核对安装包 SHA-256", { exact: true }).click();
+  await page.getByRole("button", { name: "复制校验值" }).click();
+  await expect(page.getByRole("status")).toHaveText("安装包校验值已复制");
+  expect(await page.evaluate(() => navigator.clipboard.readText())).toBe(release.sha256);
   expect(await page.evaluate(() => window.cspErrors)).toEqual([]);
   expect(violations).toEqual([]);
 });
@@ -78,6 +82,10 @@ test("download buttons work without JavaScript and use the verified artifact", a
     "href",
     artifactUrl("SHA256SUMS.txt"),
   );
+  await expect(page.locator("[data-version]").first()).toHaveText(release.version);
+  await expect(page.locator("[data-size]").first()).toHaveText(release.size);
+  await page.getByText("核对安装包 SHA-256", { exact: true }).click();
+  await expect(page.locator("[data-sha256]")).toHaveText(release.sha256);
   await context.close();
 });
 
@@ -144,10 +152,10 @@ for (const width of [320, 390, 768, 1440]) {
     expect(
       await page.evaluate(() => document.documentElement.scrollWidth),
     ).toBeLessThanOrEqual(width);
-    for (const image of await page.locator("img").all())
-      expect(
-        await image.evaluate((img) => img.complete && img.naturalWidth > 0),
-      ).toBe(true);
+    for (const image of await page.locator("img").all()) {
+      await image.scrollIntoViewIfNeeded();
+      await expect.poll(() => image.evaluate((img) => img.complete && img.naturalWidth > 0)).toBe(true);
+    }
     await page.locator("#faq details").first().locator("summary").click();
     await expect(page.locator("#faq details").first()).toHaveAttribute(
       "open",
@@ -167,3 +175,28 @@ for (const width of [320, 390, 768, 1440]) {
     expect(failedAssets).toEqual([]);
   });
 }
+
+test("real Windows theme previews switch all palettes and modes with stable layout", async ({ page }) => {
+  await page.goto("/");
+  const image = page.locator("#theme-image");
+  await image.scrollIntoViewIfNeeded();
+  const geometry = () => page.locator("#theme-panel").evaluate(el => {
+    const r = el.getBoundingClientRect(); return { width: r.width, height: r.height, top: r.top + window.scrollY };
+  });
+  const original = await geometry();
+  const palettes = { 浅纸: "paper", 深林: "forest", 雾蓝: "ocean", 暮紫: "lavender" };
+  for (const [name, id] of Object.entries(palettes)) {
+    await page.getByRole("tab", { name, exact: true }).click();
+    for (const [label, mode] of [["浅色", "light"], ["深色", "dark"]]) {
+      await page.getByRole("button", { name: label, exact: true }).click();
+      await expect(image).toHaveAttribute("src", `/assets/screens/theme-${id}-${mode}.png`);
+      await expect.poll(() => image.evaluate(img => img.complete && img.naturalWidth === 1024)).toBe(true);
+      await expect(page.locator("#theme-panel")).toHaveAttribute("aria-labelledby", `theme-${id}`);
+      expect(await geometry()).toEqual(original);
+    }
+  }
+  await page.getByRole("tab", { name: "浅纸", exact: true }).click();
+  await page.keyboard.press("ArrowRight");
+  await expect(page.getByRole("tab", { name: "深林", exact: true })).toBeFocused();
+  await expect(page.locator("#theme-caption")).toContainText("深林");
+});

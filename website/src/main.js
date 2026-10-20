@@ -6,6 +6,9 @@ document.querySelectorAll("[data-version]").forEach((el) => {
 document.querySelectorAll("[data-size]").forEach((el) => {
   el.textContent = release.size;
 });
+document.querySelectorAll("[data-sha256]").forEach((el) => {
+  el.textContent = release.sha256;
+});
 const files = {
   windows: release.windowsFile,
   source: "DotKnow-Source.zip",
@@ -116,6 +119,49 @@ function notify(message) {
   toast.classList.add("visible");
   toastTimer = setTimeout(() => toast.classList.remove("visible"), 3200);
 }
+document.querySelector("#copy-checksum").addEventListener("click", async () => {
+  try {
+    await navigator.clipboard.writeText(release.sha256);
+    notify("安装包校验值已复制");
+  } catch {
+    notify("浏览器未允许复制，请手动选中校验值。");
+  }
+});
+
+const themeTabs = [...document.querySelectorAll("[data-theme]")];
+const themeModes = [...document.querySelectorAll("[data-theme-mode]")];
+const themeLabels = { paper: "浅纸", forest: "深林", ocean: "雾蓝", lavender: "暮紫" };
+let previewTheme = "paper";
+let previewMode = "light";
+function renderTheme() {
+  const label = `${themeLabels[previewTheme]} · ${previewMode === "dark" ? "深色" : "浅色"}模式`;
+  const image = document.querySelector("#theme-image");
+  image.src = `/assets/screens/theme-${previewTheme}-${previewMode}.png`;
+  image.alt = `点知主页真实截图，${label}`;
+  document.querySelector("#theme-caption").textContent = `${label} · 真实 Windows 截图`;
+  document.querySelector("#theme-panel").setAttribute("aria-labelledby", `theme-${previewTheme}`);
+  themeTabs.forEach((tab) => {
+    const selected = tab.dataset.theme === previewTheme;
+    tab.setAttribute("aria-selected", String(selected));
+    tab.tabIndex = selected ? 0 : -1;
+  });
+  themeModes.forEach((button) => button.setAttribute("aria-pressed", String(button.dataset.themeMode === previewMode)));
+}
+themeTabs.forEach((tab, index) => {
+  tab.addEventListener("click", () => { previewTheme = tab.dataset.theme; renderTheme(); });
+  tab.addEventListener("keydown", (event) => {
+    let next;
+    if (event.key === "ArrowRight") next = (index + 1) % themeTabs.length;
+    if (event.key === "ArrowLeft") next = (index + themeTabs.length - 1) % themeTabs.length;
+    if (event.key === "Home") next = 0;
+    if (event.key === "End") next = themeTabs.length - 1;
+    if (next !== undefined) {
+      event.preventDefault(); previewTheme = themeTabs[next].dataset.theme; renderTheme(); themeTabs[next].focus();
+    }
+  });
+});
+themeModes.forEach((button) => button.addEventListener("click", () => { previewMode = button.dataset.themeMode; renderTheme(); }));
+
 document.querySelector("#demo-copy").addEventListener("click", async () => {
   try {
     await navigator.clipboard.writeText(

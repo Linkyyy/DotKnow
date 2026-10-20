@@ -1,9 +1,9 @@
 name: 官网构建与浏览器检查
 on:
   push:
-    paths: ['website/**', '.github/workflows/website.yml']
+    paths: ['website/**', 'scripts/package-website.py', '.github/workflows/website.yml']
   pull_request:
-    paths: ['website/**', '.github/workflows/website.yml']
+    paths: ['website/**', 'scripts/package-website.py', '.github/workflows/website.yml']
   workflow_dispatch:
 permissions:
   contents: read
@@ -24,7 +24,15 @@ jobs:
       - run: npx playwright install --with-deps chromium
       - run: npm run build
       - run: npm test
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python3 ../scripts/package-website.py
       - uses: actions/upload-artifact@v4
         with:
           name: DotKnow-website
           path: website/dist/
+      - uses: actions/upload-artifact@v4
+        with:
+          name: DotKnow-website-deployment
+          path: downloads/DotKnow-Website.*

@@ -40,7 +40,7 @@
           <span></span><span></span>
         </button>
         <nav id="navigation" aria-label="主导航">
-          <a href="#features">为什么是点知</a><a href="#offline">离线词库</a
+          <a href="#screenshots">真实界面</a><a href="#presets">任务预设</a><a href="#offline">离线词库</a
           ><a href="#faq">常见问题</a>
           <a class="nav-download" href="#download"
             >下载 Windows 版 <span aria-hidden="true">↗</span></a
@@ -311,6 +311,29 @@
         </div>
       </section>
 
+      <section class="container product-screens section-space" id="screenshots" aria-labelledby="screenshots-title">
+        <div class="section-heading"><div><p class="eyebrow">THE APP, AS IT IS.</p><h2 id="screenshots-title">看一眼，<br />点知本来的样子。</h2></div><p>真实 Windows 程序截图。<br />从一个疑问，到自己的提问方式。</p></div>
+        <div class="screen-grid">
+          <figure class="answer-screen"><div class="screen-frame"><img src="/assets/screens/assistant.png" width="484" height="621" loading="lazy" alt="点知 Windows 百科回答面板，保留选中内容和补充问题，支持复制与收藏" /></div><figcaption><span>01 / 划选即问</span><h3>问题，就在这段内容旁边。</h3><p>保留原选区，输入自己的问题。长回答在面板中滚动阅读，觉得有用就收藏。</p></figcaption></figure>
+          <figure class="prompt-screen"><div class="screen-frame"><img src="/assets/screens/prompts.png" width="1040" height="788" loading="lazy" alt="点知任务与提示词设置，可选择默认任务、划选动作和回答语言" /></div><figcaption><span>02 / 你来定义</span><h3>把常用的问法，保存下来。</h3><p>选择内置预设，或创建专属模板。旧用户升级后，可在这里从即时翻译切换新模式。</p></figcaption></figure>
+        </div>
+        <p class="preset-note">截图来自隔离的 Windows 界面验收。回答使用固定示例，不是在线模型效果评测；未使用用户的个人内容。</p>
+      </section>
+
+      <section class="container theme-section section-space" aria-labelledby="theme-title">
+        <div class="section-heading"><div><p class="eyebrow">A LITTLE MORE YOU.</p><h2 id="theme-title">让工具，<br />也有你的颜色。</h2></div><p>浅纸、深林、雾蓝、暮紫。<br />每套都支持浅色、深色与跟随系统。</p></div>
+        <div class="theme-controls">
+          <div class="theme-tabs" role="tablist" aria-label="软件主题预览">
+            <button role="tab" id="theme-paper" aria-selected="true" aria-controls="theme-panel" tabindex="0" data-theme="paper"><span class="theme-dot paper-dot" aria-hidden="true"></span>浅纸</button>
+            <button role="tab" id="theme-forest" aria-selected="false" aria-controls="theme-panel" tabindex="-1" data-theme="forest"><span class="theme-dot forest-dot" aria-hidden="true"></span>深林</button>
+            <button role="tab" id="theme-ocean" aria-selected="false" aria-controls="theme-panel" tabindex="-1" data-theme="ocean"><span class="theme-dot ocean-dot" aria-hidden="true"></span>雾蓝</button>
+            <button role="tab" id="theme-lavender" aria-selected="false" aria-controls="theme-panel" tabindex="-1" data-theme="lavender"><span class="theme-dot lavender-dot" aria-hidden="true"></span>暮紫</button>
+          </div>
+          <div class="theme-mode" role="group" aria-label="软件明暗预览"><button data-theme-mode="light" aria-pressed="true">浅色</button><button data-theme-mode="dark" aria-pressed="false">深色</button></div>
+        </div>
+        <figure class="theme-preview" id="theme-panel" role="tabpanel" aria-labelledby="theme-paper"><img id="theme-image" src="/assets/screens/theme-paper-light.png" width="1024" height="720" loading="lazy" alt="点知主页真实截图，浅纸配色、浅色模式" /><figcaption id="theme-caption">浅纸 · 浅色模式 · 真实 Windows 截图</figcaption></figure>
+      </section>
+
       <section class="container prompt-section section-space" id="presets" aria-labelledby="presets-title">
         <div class="section-heading"><div><p class="eyebrow">ONE SELECTION. MANY POSSIBILITIES.</p><h2 id="presets-title">你来问，<br />也由你定义怎么答。</h2></div><p>7 套内置提示词，最多 20 套自定义模板。<br />划选后先提问，或立即执行你常用的预设。</p></div>
         <div class="preset-grid">
@@ -455,6 +478,15 @@
         </div>
       </section>
 
+      <section class="container getting-started section-space" id="start" aria-labelledby="start-title">
+        <div class="section-heading"><div><p class="eyebrow">THREE SMALL STEPS.</p><h2 id="start-title">第一次使用，<br />从这里开始。</h2></div><p>不用改变你的阅读习惯。</p></div>
+        <ol class="start-steps">
+          <li><span aria-hidden="true">01</span><h3>下载，打开。</h3><p>完整解压 Windows 安装包，运行 DotKnow.exe，在「隐私与应用」授权读取选区。更新前先退出旧版托盘程序。</p></li>
+          <li><span aria-hidden="true">02</span><h3>选一种问法。</h3><p>在「任务与提示词」选择默认任务。百科等任务需在「AI 服务与模型」保存自己的 API Key；纯离线翻译不需要。</p></li>
+          <li><span aria-hidden="true">03</span><h3>划选，问明白。</h3><p>在支持文本选区的应用中划选内容，选择预设或输入问题，点击查询，也可按 Ctrl+Enter。喜欢直接出结果，可开启立即执行。</p></li>
+        </ol>
+      </section>
+
       <section
         class="faq-section container"
         id="faq"
@@ -568,6 +600,7 @@
                 >版本说明 <span aria-hidden="true">↗</span></a
               >
             </div>
+            <details class="download-checksum"><summary>核对安装包 SHA-256</summary><p>用于核对下载文件是否与发布包一致。</p><code data-sha256>5d62d88792ef83fd1762bf1ad00a70c4ff3f9ade032c676ecf7128725f737238</code><button id="copy-checksum" class="checksum-copy">复制校验值</button></details>
           </div>
         </div>
       </section>

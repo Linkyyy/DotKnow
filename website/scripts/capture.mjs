@@ -12,12 +12,18 @@ try {
   });
   await page.goto("http://127.0.0.1:4173");
   await page.evaluate(() => document.fonts.ready);
+  for (const image of await page.locator("img").all()) {
+    await image.scrollIntoViewIfNeeded();
+    await image.evaluate((element) => element.decode());
+  }
+  await page.evaluate(() => window.scrollTo(0, 0));
   await mkdir("../docs/website", { recursive: true });
   await page.screenshot({
     path: "../docs/website/desktop.png",
     fullPage: true,
   });
   await page.setViewportSize({ width: 390, height: 844 });
+  await page.evaluate(() => window.scrollTo(0, 0));
   await page.screenshot({ path: "../docs/website/mobile.png", fullPage: true });
   await page.setViewportSize({ width: 1200, height: 630 });
   await page.addStyleTag({
