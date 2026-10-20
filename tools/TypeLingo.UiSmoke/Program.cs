@@ -23,6 +23,8 @@ internal static class Program
         var output = Path.GetFullPath(args.FirstOrDefault() ?? "artifacts/ui-smoke"); Directory.CreateDirectory(output);
         var temporary = Path.Combine(Path.GetTempPath(), "TypeLingo-UiSmoke-" + Guid.NewGuid().ToString("N"));
         var app = new Application { ShutdownMode = ShutdownMode.OnExplicitShutdown }; var checks = new List<string>();
+        // Main 以 DispatcherFrame 驱动验收；程序化点击也必须具备真实 WPF 事件的同步上下文。
+        SynchronizationContext.SetSynchronizationContext(new DispatcherSynchronizationContext(app.Dispatcher));
         // Dispatcher 和退出清理中的异常可能不经过 Main 的 catch，仍需在 CI 中保留真实原因。
         void ReportUnhandled(object? error)
         {
