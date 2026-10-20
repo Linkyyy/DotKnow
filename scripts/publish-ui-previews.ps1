@@ -5,7 +5,7 @@ param([string]$SourceDirectory = 'artifacts/ui-smoke')
 $ErrorActionPreference = 'Stop'
 if ($env:GITHUB_SHA -notmatch '^[0-9a-f]{40}$' -or !$env:RUNNER_TEMP) { throw '仅供 GitHub Actions Windows 验收使用。' }
 $source = (Resolve-Path $SourceDirectory).Path
-$passed = Test-Path (Join-Path $source 'ui-validation.txt')
+$passed = (Test-Path (Join-Path $source 'ui-validation.txt')) -and !(Test-Path (Join-Path $source 'ui-validation-failed.txt'))
 if (!$passed -and !(Test-Path (Join-Path $source 'ui-validation-failed.txt'))) { throw '缺少实际验收报告，拒绝发布预览。' }
 $branch = "refs/heads/codex/ui-preview-$($env:GITHUB_SHA)"
 $existing = git ls-remote --heads origin $branch
