@@ -8,7 +8,7 @@ document.querySelectorAll("[data-size]").forEach((el) => {
 });
 const files = {
   windows: release.windowsFile,
-  source: "TypeLingo-Source.zip",
+  source: "DotKnow-Source.zip",
   checksums: "SHA256SUMS.txt",
 };
 document.querySelectorAll("[data-download]").forEach((link) => {
@@ -39,34 +39,24 @@ document.addEventListener("keydown", (event) => {
 
 const scenes = {
   read: {
-    name: "一封来自远方的信",
-    eyebrow: "A NOTE FOR TODAY",
-    heading: "Good things take time.",
-    context: [
-      "There is a whole world out there.",
-      "Take a breath, stay curious, and",
-    ],
-    source: "enjoy the little things.",
-    pair: "英语 → 中文",
-    result: "享受生活中的小美好。",
+    name: "读到一个陌生概念", eyebrow: "CURIOSITY STARTS HERE",
+    heading: "为什么会这样？", context: ["阅读到这里，停了一下。", "选中这一小段，把疑问问清楚。"],
+    source: "熵（entropy）", pair: "百科 · 中文回答",
+    question: "先解释这个概念，再举一个生活中的例子。",
+    result: "熵描述系统可能状态的数量。就像一副扑克牌：打乱的排列方式，远多于整齐排列的方式。",
   },
   write: {
-    name: "写给合作伙伴的邮件",
-    eyebrow: "MAKE YOURSELF UNDERSTOOD",
-    heading: "把想法，准确传达。",
-    context: ["关于下周的项目安排，", "我想和你确认一下时间。"],
-    source: "期待与你进一步交流。",
-    pair: "中文 → 英语",
-    result: "I look forward to discussing this further with you.",
+    name: "一句想读懂的日语", eyebrow: "LANGUAGES STILL MATTER",
+    heading: "跨过语言这道坎。", context: ["翻译依然是重要的一部分。", "中英日互译，常用表达留在本地。"],
+    source: "また明日。", pair: "翻译 · 日语 → 中文",
+    question: "翻译成中文，保持自然的表达。", result: "明天见。",
   },
   learn: {
-    name: "今天想记住的一句话",
-    eyebrow: "A LITTLE MORE EVERY DAY",
-    heading: "出会いを、大切に。",
-    context: ["每一种语言里，", "都有一些值得留下的温柔。"],
-    source: "また明日。",
-    pair: "日本語 → 中文",
-    result: "明天见。",
+    name: "换成自己的提问方式", eyebrow: "YOUR QUESTION. YOUR WAY.",
+    heading: "这次，听懂为止。", context: ["预设以外，也有你的问题。", "不必离开正在阅读的内容。"],
+    source: "复利", pair: "自由提问 · 固定示例",
+    question: "像给小学生讲故事一样解释这个词。",
+    result: "把存下的利息也加入本金，下次一起产生利息。这就是“利滚利”，也是复利的直观含义。",
   },
 };
 const tabs = [...document.querySelectorAll("[data-scene]")];
@@ -84,6 +74,7 @@ function selectScene(tab) {
     source: "demo-source",
     pair: "demo-pair",
     result: "demo-result",
+    question: "demo-question",
   })) {
     document.getElementById(id).textContent = scene[key];
   }
@@ -130,9 +121,9 @@ document.querySelector("#demo-copy").addEventListener("click", async () => {
     await navigator.clipboard.writeText(
       document.querySelector("#demo-result").textContent,
     );
-    notify("示例译文已复制");
+    notify("示例回答已复制");
   } catch {
-    notify("浏览器未允许复制，请选中示例译文手动复制。");
+    notify("浏览器未允许复制，请选中示例回答手动复制。");
   }
 });
 document.querySelector("#demo-favorite").addEventListener("click", (event) => {

@@ -35,7 +35,8 @@ public partial class AssistantWindow : Window
         var config = settings();
         SelectionText.Text = snapshot.Text; QuestionInput.Clear(); AnswerText.Clear();
         AnswerText.Visibility = Visibility.Collapsed; EmptyText.Visibility = Visibility.Visible;
-        TaskInput.ItemsSource = AssistantPresets.For(config.Assistant).Select(x => x with { Name = UiText.Get(x.Name) }).ToArray();
+        TaskInput.ItemsSource = AssistantPresets.For(config.Assistant).Select(x => x with
+            { Name = x.Id.StartsWith("custom-", StringComparison.Ordinal) ? x.Name : UiText.Get(x.Name) }).ToArray();
         TaskInput.SelectedValue = config.Assistant.PresetId;
         SetBusy(false); QueryStatus.Text = UiText.Get("选区已保留，输入问题不会读取其他内容。");
         CopyAnswerButton.IsEnabled = SaveAnswerButton.IsEnabled = false;

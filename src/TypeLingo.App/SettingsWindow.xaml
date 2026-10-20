@@ -256,7 +256,7 @@
                   <ListBox x:Name="PromptList" DisplayMemberPath="Name" SelectedValuePath="Id" SelectionChanged="Prompt_SelectionChanged" MaxHeight="180" MinHeight="100" AutomationProperties.Name="{DynamicResource '预设提示词'}"/>
                   <Button x:Name="NewPromptButton" Content="{DynamicResource '新建提示词'}" Click="NewPrompt_Click" HorizontalAlignment="Left" Margin="0,12,0,15"/>
                   <TextBlock Text="{DynamicResource '名称'}" FontSize="11" Margin="0,0,0,6"/><TextBox x:Name="PromptNameInput" MaxLength="40" AutomationProperties.Name="{DynamicResource '提示词名称'}"/>
-                  <TextBlock Text="{DynamicResource '任务指令'}" FontSize="11" Margin="0,12,0,6"/><TextBox x:Name="PromptBodyInput" Height="160" AcceptsReturn="True" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto" MaxLength="6000" AutomationProperties.Name="{DynamicResource '任务指令'}"/>
+                  <TextBlock Text="{DynamicResource '任务指令'}" FontSize="11" Margin="0,12,0,6"/><TextBox x:Name="PromptBodyInput" Height="160" AcceptsReturn="True" TextWrapping="Wrap" VerticalContentAlignment="Top" VerticalScrollBarVisibility="Auto" MaxLength="6000" AutomationProperties.Name="{DynamicResource '任务指令'}"/>
                   <TextBlock Text="{DynamicResource '只写希望 AI 如何回答；选中的文本会单独提供，无需填写占位符。内置预设只读，可新建自己的版本。'}" FontSize="10" Foreground="{DynamicResource MutedBrush}" TextWrapping="Wrap" Margin="0,9,0,12"/>
                   <StackPanel Orientation="Horizontal"><Button x:Name="StorePromptButton" Content="{DynamicResource '保存此预设'}" Click="StorePrompt_Click"/><Button x:Name="DeletePromptButton" Content="{DynamicResource '删除此预设'}" Click="DeletePrompt_Click" Margin="10,0,0,0"/></StackPanel>
                 </StackPanel></Border>

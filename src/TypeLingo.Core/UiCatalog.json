@@ -2114,5 +2114,9 @@
   "API 未返回有效内容。": {
     "en-US": "The API returned no usable content.",
     "ja-JP": "API から有効な内容が返されませんでした。"
+  },
+  "点知 · 翻译预览": {
+    "en-US": "DotKnow · Translation preview",
+    "ja-JP": "点知 · 翻訳プレビュー"
   }
 }

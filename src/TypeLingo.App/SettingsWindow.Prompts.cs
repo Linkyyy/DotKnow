@@ -20,11 +20,12 @@ public partial class SettingsWindow
     {
         selected ??= AssistantTaskInput.SelectedValue as string ?? "encyclopedia";
         var presets = AssistantPresets.All.Concat(customPrompts).ToArray();
-        AssistantTaskInput.ItemsSource = presets.Select(x => Option(x.Id, x.Name)).ToArray();
+        string Label(PromptPreset x) => x.Id.StartsWith("custom-", StringComparison.Ordinal) ? x.Name : UiText.Get(x.Name);
+        AssistantTaskInput.ItemsSource = presets.Select(x => new Choice(x.Id, Label(x))).ToArray();
         AssistantTaskInput.SelectedValue = presets.Any(x => x.Id == selected) ? selected : "encyclopedia";
         SelectionActionInput.ItemsSource = new[] { Option("ask", "先选择任务或输入问题（推荐）"), Option("instant", "立即执行默认预设") };
         AnswerLanguageInput.ItemsSource = new[] { Option("zh", "中文"), Option("en", "英语"), Option("ja", "日语") };
-        PromptList.ItemsSource = presets.Select(x => x with { Name = UiText.Get(x.Name) }).ToArray();
+        PromptList.ItemsSource = presets.Select(x => x with { Name = Label(x) }).ToArray();
     }
     private void Prompt_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {

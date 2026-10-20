@@ -1,15 +1,14 @@
-# 素材来源
+# 素材来源与边界
 
-用户从四款方案中明确选定 **C 双向对话**。两块相向的几何对话图形，以中间折线留白表示语言转换。原始选稿见 `docs/branding/logo-concepts.png`。
+图形沿用用户明确选定的 **C 双向对话**：两块相向的几何对话图形，中间折线留白。选稿见 docs/branding/logo-concepts.png。此前使用图像生成工具提取透明主标，再由 VTracer 转换与标准化为 SVG；唯一主标仍为 src/TypeLingo.App/Assets/typelingo-mark.svg。
 
-使用图像生成工具基于 C 方案提取透明主标，再以 VTracer 0.6.12 转换为 SVG，并做坐标标准化。唯一主标为 `src/TypeLingo.App/Assets/typelingo-mark.svg`；生产图标由 `scripts/render-brand.sh` 从同一轮廓生成，保持图形一致。
+本次更新品牌名为「点知 · DotKnow」，主宣传语为「哪里不会，点哪里」。C 图形不重新绘制，程序及托盘图标继续由相同轮廓生成，托盘按系统任务栏明暗选择黑／白。
 
-- 程序：深色圆角底、白色 C；PNG 和多尺寸 ICO 共用 SVG。
-- 托盘：透明黑色 C 用于浅色系统任务栏，透明白色 C 用于深色任务栏。
-- 宣传：横图和方图通过图像编辑工具将旧 A／文气泡替换为 C 图形；检查了品牌图形、中文标题、按钮和联网说明。
+- hero.png：新版官网的实际浏览器分享截图，1200×630。图内产品面板是固定内容的网页交互示意，非 Windows 截图，也没有调用 AI。
+- assistant-square.png：官网“百科”交互示意的 640×640 截图，固定示例，非 Windows 截图。
+- app-assistant.png、app-prompts.png：真实 Windows WPF 验收界面，隔离测试数据；回答是验收固定示例，并非在线模型能力评测。来源记录见 docs/ui-preview/source.json。
+- logo.svg / logo.png、app-icon.*、tray-*.ico：保留已选定 C 主标和图标资源，不包含旧名称文案。
 
-图中的编辑器、悬浮窗和卡片为产品交互示意，并非 Windows 截屏。真实界面截图请从验证记录所链接的 Windows Actions 运行附件获取。
+新主图与方图来自本次网页渲染，没有在旧宣传图上覆盖文字或贴新面板。字体 Space Grotesk 使用 SIL OFL，中文采用系统字体。
 
-主图：TypeLingo · 伴译；让表达跨越语言；输入、翻译、收藏、复习，一气呵成；选区／当前行翻译；确认后替换；本地收藏与复习。
-
-方图：把好表达，留在本地；本机加密保存；无需重复调用 API；复习可离线，翻译需连接所选 AI 服务。
+宣传不得将百科描述为实时联网检索，不宣传已实现 OCR、离线大模型、权威事实核验或所有应用均兼容。离线词库仍只用于翻译，在线功能需要用户自己的 API，可能产生费用。

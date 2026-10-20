@@ -2,6 +2,8 @@
 真实 WPF 设置窗口已启动并完成布局
 切换并聚焦 Tab 不改变导航行与文字坐标：home
 不同页面保持相同内容视口宽度：home
+切换并聚焦 Tab 不改变导航行与文字坐标：prompts
+不同页面保持相同内容视口宽度：prompts
 切换并聚焦 Tab 不改变导航行与文字坐标：general
 不同页面保持相同内容视口宽度：general
 切换并聚焦 Tab 不改变导航行与文字坐标：vocabulary
@@ -57,7 +59,7 @@ Windows 可从自包含程序提取已嵌入的 C 图标
 关闭窗口时恢复已保存的配色与明暗模式
 常见笔记本高度下，四个首页快捷入口在首屏完整可见
 未授权时首页主按钮引导到隐私设置
-首页快捷入口打开对应功能：general
+首页快捷入口打开对应功能：prompts
 首页快捷入口打开对应功能：vocabulary
 首页快捷入口打开对应功能：favorites
 首页快捷入口打开对应功能：appearance
@@ -101,6 +103,26 @@ Loading 开关可保存并持久化
 记住后保存复习排期
 点击译文进入确认且不会提前写入
 确认后点击译文流程只写入一次并隐藏
+新用户默认百科预设与先选择任务的划选即问模式
+内置预设可查看且不会被误修改
+新建预设拥有独立标识且列表保持该自定义预设选中
+自定义提示词和默认任务通过真实设置界面保存并可重载
+删除默认自定义预设后安全回退到百科
+提问面板具有完整不透明背景且右侧操作按钮位于可见区域内
+自动出现任务面板时保留应用焦点，未点击查询前不发送内容
+点击问题框获得输入焦点后仍保留原应用选区
+UIA 不读取自己的问题框且不会将提问文字替换为查询选区
+百科请求携带捕获选区和用户问题，进入可取消的查询状态
+回答可选择与滚动，完成后恢复任务输入
+查询结果支持真实剪贴板复制
+AI 回答收藏保留任务和用户问题
+长篇百科回答在窗口内滚动且适应屏幕高度
+关闭会清除提问会话，迟到回答不能重新打开窗口
+自由提问需要填写问题，空白不会调用 API
+自动 AI 任务的仅结果模式在请求期间不显示窗口
+仅结果模式的认证错误也可见并允许重试
+面板中的纯翻译任务保留专用离线请求格式
+新助手中的翻译仍由真实内置离线词库命中
 独立 WPF 输入进程已连接，使用真实跨进程 UIA
 快捷键模式在触发前不读取输入文本
 快捷键可读取当前真实输入框
@@ -112,7 +134,7 @@ Loading 开关可保存并持久化
 鼠标离开阅读文字后仍复核原选区，允许操作悬浮窗
 清除阅读选区后立即停止预览，不回退到全文或输入行
 鼠标按住拖选时不发送中间选区
-真实鼠标拖选并松开后捕获只读阅读区的完整选中文字：{"Identity":"9268:9268:66068:7.9268.31093287","Text":"selected reading phrase","Bounds":{"X":58,"Y":395,"Width":187,"Height":20},"CanWrite":false,"IsComposing":false,"IsSensitive":false,"IsSelection":true,"ControlBounds":{"X":50,"Y":387,"Width":615,"Height":100},"EditRange":null}; fixture={"Text":"selected reading phrase\r\n","Focus":"FlowDocumentScrollViewer","IsKeyboardFocusWithin":true,"Focusable":true,"IsActive":true,"LeftButton":"Released","Events":["down:9,18.039999999999964","move:9,18.039999999999964","move:197,18.039999999999964","up:197,18.039999999999964"],"Start":"8,8,0,20.453333333333333","End":"194.67000000000002,8,0,20.453333333333333","Scope":"FlowDocumentView"}
+真实鼠标拖选并松开后捕获只读阅读区的完整选中文字：{"Identity":"5436:5436:66058:7.5436.31093287","Text":"selected reading phrase","Bounds":{"X":84,"Y":421,"Width":187,"Height":20},"CanWrite":false,"IsComposing":false,"IsSensitive":false,"IsSelection":true,"ControlBounds":{"X":76,"Y":413,"Width":615,"Height":100},"EditRange":null}; fixture={"Text":"selected reading phrase\r\n","Focus":"FlowDocumentScrollViewer","IsKeyboardFocusWithin":true,"Focusable":true,"IsActive":true,"LeftButton":"Released","Events":["down:9,18.039999999999964","move:9,18.039999999999964","move:197,18.039999999999964","up:197,18.039999999999964"],"Start":"8,8,0,20.453333333333333","End":"194.67000000000002,8,0,20.453333333333333","Scope":"FlowDocumentView"}
 阅读选区继续遵守进程排除项
 鼠标选区超过长度限制时跳过，不回退翻译其他输入框的旧选区
 可编辑选区具有精确写入范围

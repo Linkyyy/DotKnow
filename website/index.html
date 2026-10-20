@@ -6,13 +6,13 @@
     <meta name="theme-color" content="#f7f8f2" />
     <meta
       name="description"
-      content="TypeLingo 伴译，一款 Windows 划词翻译工具。中英日互译，默认离线词库优先，支持自选 AI、本地收藏和卡片复习。直接下载 Windows 版本。"
+      content="点知 DotKnow，像点读机一样的 Windows 桌面 AI 助手。哪里不会，点哪里。划选文字查百科、做翻译、看解释或输入自己的问题；翻译保留离线词库。"
     />
     <meta property="og:type" content="website" />
-    <meta property="og:title" content="TypeLingo 伴译 — 选中一句，看懂世界。" />
+    <meta property="og:title" content="点知 DotKnow — 哪里不会，点哪里。" />
     <meta
       property="og:description"
-      content="划词即译，离线优先。让阅读、表达与记忆自然相连。适用于 Windows 10 / 11。"
+      content="选中内容，问清疑惑。百科、翻译、解释、摘要、代码与自定义提示词。适用于 Windows 10 / 11。"
     />
     <meta property="og:image" content="/assets/social.png" />
     <meta name="twitter:card" content="summary_large_image" />
@@ -20,15 +20,15 @@
     <link rel="icon" type="image/svg+xml" href="/assets/mark.svg" />
     <link rel="apple-touch-icon" href="/assets/app-icon.png" />
     <link rel="stylesheet" href="/src/style.css" />
-    <title>TypeLingo 伴译 — 选中一句，看懂世界。</title>
+    <title>点知 DotKnow — 哪里不会，点哪里。</title>
   </head>
   <body>
     <a class="skip-link" href="#main">跳转至正文</a>
     <header class="header">
       <div class="container nav-bar">
-        <a class="brand" href="#" aria-label="TypeLingo 伴译首页"
+        <a class="brand" href="#" aria-label="点知 DotKnow 首页"
           ><img src="/assets/mark.svg" width="35" height="35" alt="" /><span
-            >TypeLingo<span class="brand-cn">伴译</span></span
+            >DotKnow<span class="brand-cn">点知</span></span
           ></a
         >
         <button
@@ -40,7 +40,7 @@
           <span></span><span></span>
         </button>
         <nav id="navigation" aria-label="主导航">
-          <a href="#features">为什么是伴译</a><a href="#offline">离线词库</a
+          <a href="#features">为什么是点知</a><a href="#offline">离线词库</a
           ><a href="#faq">常见问题</a>
           <a class="nav-download" href="#download"
             >下载 Windows 版 <span aria-hidden="true">↗</span></a
@@ -54,16 +54,16 @@
         <div class="hero-copy">
           <a class="release-pill" href="#download"
             ><span class="status-dot"></span>
-            <span data-version>0.4.0-preview.6</span> 现已可用
+            <span data-version>0.5.0-preview.1</span> 现已可用
             <span aria-hidden="true">↗</span></a
           >
           <h1 id="hero-title">
-            选中一句，<br /><span class="highlight">看懂世界。</span>
+            哪里不会，<br /><span class="highlight">点哪里。</span>
           </h1>
           <p class="hero-description">
-            阅读不必来回切换，表达不再卡在语言。<br
+            像点读机一样，把疑问选出来。<br
               class="desktop-br"
-            />TypeLingo 伴译，让翻译出现在你需要的地方。
+            />查百科、做翻译，或直接问 AI。点知就在你身边。
           </p>
           <div class="hero-actions">
             <a
@@ -81,20 +81,19 @@
             >
           </div>
           <p class="download-note">
-            Windows 10 / 11 · x64 · <span data-size>68.5 MB</span
+            Windows 10 / 11 · x64 · <span data-size>68.6 MB</span
             ><br />当前为预览版 · 解压即可使用
           </p>
           <div class="hero-caption">
             <span class="tiny-line"></span
-            ><span>你的阅读节奏，值得被保留。</span>
+            ><span>好奇心，不必切换窗口。</span>
           </div>
         </div>
 
-        <div class="hero-stage" id="experience" aria-label="翻译交互示意">
+        <div class="hero-stage" id="experience" aria-label="划选即问交互示意">
           <div class="stage-topline">
             <span
-              ><span class="live-dot"></span> A LITTLE HELP. A BIGGER
-              WORLD.</span
+              ><span class="live-dot"></span> SELECT. ASK. UNDERSTAND.</span
             ><span>01 / 03</span>
           </div>
           <div class="demo-tabs" role="tablist" aria-label="切换使用场景">
@@ -106,7 +105,7 @@
               tabindex="0"
               data-scene="read"
             >
-              随心读
+              查百科
             </button>
             <button
               role="tab"
@@ -116,7 +115,7 @@
               tabindex="-1"
               data-scene="write"
             >
-              自在写
+              做翻译
             </button>
             <button
               role="tab"
@@ -126,7 +125,7 @@
               tabindex="-1"
               data-scene="learn"
             >
-              慢慢记
+              自己问
             </button>
           </div>
           <div
@@ -139,20 +138,19 @@
             <div class="document-window">
               <div class="document-toolbar">
                 <div class="window-dots"><i></i><i></i><i></i></div>
-                <span id="demo-document-name">一封来自远方的信</span
+                <span id="demo-document-name">读到一个陌生概念</span
                 ><span aria-hidden="true">↗</span>
               </div>
               <div class="document-content">
                 <span class="document-eyebrow" id="demo-eyebrow"
-                  >A NOTE FOR TODAY</span
+                  >CURIOSITY STARTS HERE</span
                 >
-                <h2 id="demo-heading">Good things take time.</h2>
+                <h2 id="demo-heading">为什么会这样？</h2>
                 <p id="demo-context">
-                  There is a whole world out there.<br />Take a breath, stay
-                  curious, and
+                  阅读到这里，停了一下。<br />选中这一小段，把疑问问清楚。
                 </p>
                 <p class="selected-line">
-                  <span id="demo-source">enjoy the little things.</span
+                  <span id="demo-source">熵（entropy）</span
                   ><svg
                     class="demo-cursor"
                     viewBox="0 0 24 28"
@@ -179,24 +177,25 @@
                     width="21"
                     height="21"
                     alt=""
-                  />伴译</span
+                  />点知</span
                 ><span class="language-pair" id="demo-pair"
-                  >英语 <span aria-hidden="true">→</span> 中文</span
+                  >百科 · 中文回答</span
                 >
               </div>
+              <p class="demo-question" id="demo-question">先解释这个概念，再举一个生活中的例子。</p>
               <p class="translation-result" id="demo-result" aria-live="polite">
-                享受生活中的小美好。
+                熵描述系统可能状态的数量。就像一副扑克牌：打乱的排列方式，远多于整齐排列的方式。
               </p>
               <div class="translation-bottom">
                 <span class="result-origin" id="demo-origin"
-                  >自然表达 · 交互示意</span
+                  >固定示例 · 非实时查询</span
                 >
                 <div class="demo-tools">
                   <button
                     class="icon-button"
                     id="demo-copy"
-                    aria-label="复制示例译文"
-                    title="复制译文"
+                    aria-label="复制示例回答"
+                    title="复制回答"
                   >
                     <svg viewBox="0 0 24 24" aria-hidden="true">
                       <rect x="8" y="8" width="12" height="13" rx="2" />
@@ -207,7 +206,7 @@
                   ><button
                     class="icon-button"
                     id="demo-favorite"
-                    aria-label="收藏示例译文"
+                    aria-label="收藏示例回答"
                     aria-pressed="false"
                     title="收藏示例"
                   >
@@ -222,10 +221,10 @@
             </div>
           </div>
           <div class="stage-bottom">
-            <span>划词 · 翻译 · 收藏 · 复习</span
+            <span>划选 · 提问 · 理解 · 收藏</span
             ><span>点击上方标签试试看 <span aria-hidden="true">↑</span></span>
           </div>
-          <p class="illustration-note">网页交互示意，非软件截图</p>
+          <p class="illustration-note">固定内容交互示意，非软件截图；网页不调用 AI</p>
         </div>
       </section>
 
@@ -249,21 +248,21 @@
         <div class="section-heading">
           <div>
             <p class="eyebrow">LESS FRICTION, MORE FLOW</p>
-            <h2 id="features-title">语言不同，<br />思路不用中断。</h2>
+            <h2 id="features-title">有疑问，<br />就在原地问明白。</h2>
           </div>
-          <p>从读懂一句话，到记住一种表达。<br />那些琐碎的来回，交给伴译。</p>
+          <p>把陌生的概念，变成自己的理解。<br />翻译是其中一项，好奇心才是起点。</p>
         </div>
         <div class="feature-grid">
           <article class="feature-card">
             <div class="feature-meta">
-              <span>01 — 阅读</span
+              <span>01 — 好奇</span
               ><svg viewBox="0 0 32 32" aria-hidden="true">
                 <path d="M7 5v22M25 5v22M3 5h8M21 5h8M3 27h8M21 27h8M14 16h4" />
               </svg>
             </div>
-            <h3>看到哪里，译到哪里。</h3>
+            <h3>哪里不懂，就选哪里。</h3>
             <p>
-              在支持选区读取的网页、文档和应用中，鼠标划选文字，译文随即出现。
+              在支持选区读取的网页、文档和应用中，划选陌生概念、复杂段落或代码，选择合适的 AI 任务。
             </p>
             <div class="feature-visual selection-visual" aria-hidden="true">
               <span>在你的阅读里，<mark>少一点距离。</mark></span
@@ -271,24 +270,24 @@
                 >A little closer. <span>↗</span></span
               >
             </div>
-            <div class="feature-foot">默认划词模式 <span>↗</span></div>
+            <div class="feature-foot">默认划选即问 <span>↗</span></div>
           </article>
           <article class="feature-card">
             <div class="feature-meta">
-              <span>02 — 表达</span
+              <span>02 — 你的方式</span
               ><svg viewBox="0 0 32 32" aria-hidden="true">
                 <path d="m6 23 1-6L23 3l5 5-16 15-6 1Zm13-16 5 5M5 29h22" />
               </svg>
             </div>
-            <h3>写出你本来的意思。</h3>
+            <h3>提问，不止一种方式。</h3>
             <p>
-              自然、直译、商务、敬语，按语境选择。可编辑输入框中，确认后替换对应文字。
+              预设提示词一键开问，也能保存自己的模板。想追问这段内容？在划选面板输入问题就好。
             </p>
             <div class="feature-visual style-visual" aria-hidden="true">
-              <span>自然表达 <b>✓</b></span
-              ><span>商务沟通</span><span>日语敬语</span>
+              <span>百科 <b>✓</b></span
+              ><span>通俗解释</span><span>自定义提示词</span>
             </div>
-            <div class="feature-foot">也支持复制译文 <span>↗</span></div>
+            <div class="feature-foot">7 套内置预设 · 自定义模板 <span>↗</span></div>
           </article>
           <article class="feature-card">
             <div class="feature-meta">
@@ -297,9 +296,9 @@
                 <path d="M8 4h16v25l-8-5-8 5Z" />
               </svg>
             </div>
-            <h3>好表达，变成自己的。</h3>
+            <h3>新知识，留给未来的你。</h3>
             <p>
-              一键收藏原文与译文，用本地卡片复习。收藏由当前 Windows
+              收藏有用的回答、问题和译文，用本地卡片复习。收藏由当前 Windows
               用户加密保存。
             </p>
             <div class="feature-visual collection-visual" aria-hidden="true">
@@ -312,6 +311,21 @@
         </div>
       </section>
 
+      <section class="container prompt-section section-space" id="presets" aria-labelledby="presets-title">
+        <div class="section-heading"><div><p class="eyebrow">ONE SELECTION. MANY POSSIBILITIES.</p><h2 id="presets-title">你来问，<br />也由你定义怎么答。</h2></div><p>7 套内置提示词，最多 20 套自定义模板。<br />划选后先提问，或立即执行你常用的预设。</p></div>
+        <div class="preset-grid">
+          <article><span>01</span><h3>百科</h3><p>认识一个概念，了解它的背景。</p></article>
+          <article><span>02</span><h3>翻译</h3><p>中英日互译，继续享受离线词库。</p></article>
+          <article><span>03</span><h3>通俗解释</h3><p>换成易懂的话，配一个例子。</p></article>
+          <article><span>04</span><h3>提炼重点</h3><p>从选中的段落里抓住要点。</p></article>
+          <article><span>05</span><h3>写作润色</h3><p>改进表达，保留你的意思。</p></article>
+          <article><span>06</span><h3>代码解读</h3><p>理解逻辑、输入输出与注意点。</p></article>
+          <article><span>07</span><h3>自由提问</h3><p>围绕这一段，问你真正想知道的。</p></article>
+          <article class="custom-preset"><span>＋ YOUR OWN</span><h3>你的专属提示词</h3><p>“像老师一样讲清楚，再出一道小题。”<br />保存一次，之后随选随用。</p></article>
+        </div>
+        <p class="preset-note">AI 回答可能有误。百科等任务依赖模型知识，当前不提供实时联网检索、来源核验或整篇文档读取。</p>
+      </section>
+
       <section
         class="offline-section"
         id="offline"
@@ -320,13 +334,13 @@
         <div class="container offline-layout">
           <div class="offline-copy">
             <p class="eyebrow">
-              <span class="status-dot"></span> OFFLINE FIRST
+              <span class="status-dot"></span> TRANSLATION · OFFLINE FIRST
             </p>
             <h2 id="offline-title">
               常用的，留在本地。<br />需要时，再连接世界。
             </h2>
             <p>
-              默认先查离线词库，未命中再按设置使用在线 AI。<br />在线译文也能自动加入本地词库，越用越积累。
+              翻译模式默认先查离线词库，未命中再按设置使用在线 AI。<br />在线译文能自动加入词库；百科等任务独立使用在线模型。
             </p>
             <div class="offline-stats">
               <div>
@@ -398,7 +412,7 @@
               <div>
                 <h3>等待，也有自己的节奏。</h3>
                 <p>
-                  显示翻译中的
+                  自动查询时显示
                   Loading，或等结果完成再出现。浅纸、深林、雾蓝、暮紫四套配色，都支持浅色、深色和跟随系统。
                 </p>
               </div>
@@ -408,7 +422,7 @@
               <div>
                 <h3>需要时出现，安静时退后。</h3>
                 <p>
-                  托盘常驻，一键暂停；可设置应用白名单与排除项，让翻译只出现在你希望的地方。
+                  托盘常驻，一键暂停；可设置应用白名单与排除项，让助手只出现在你希望的地方。
                 </p>
               </div>
             </article>
@@ -457,28 +471,29 @@
             </summary>
             <p>
               支持 Windows 10 / 11 x64。下载 ZIP 后完整解压，运行
-              TypeLingo.exe，也可使用包内的当前用户安装脚本。无需额外安装
-              .NET。首次打开先尝试离线词库；想翻译更多内容，可在设置中选择 AI
-              服务并填写自己的 API Key。更新前请先退出托盘中的旧版。
+              DotKnow.exe，也可使用包内的当前用户安装脚本。无需额外安装
+              .NET。首次打开同意读取选区，在「任务与提示词」选择默认任务和划选方式；在线任务需选择 AI 服务并保存自己的 API Key。只用离线词库时选择翻译预设。更新前先退出旧版托盘。
             </p>
           </details>
+          <details><summary>点知和原来的伴译有什么关系？<span aria-hidden="true">+</span></summary><p>点知由 TypeLingo 伴译升级而来。翻译成为多种任务之一；旧版配置、API 密钥、离线词库和收藏继续使用原有本地目录。升级后保留原来的即时翻译习惯，可在「任务与提示词」切换新模式。</p></details>
+          <details><summary>百科是实时联网搜索吗？<span aria-hidden="true">+</span></summary><p>当前通过你选择的在线 AI 模型解释选中内容，不提供实时联网搜索或网页来源核验。遇到时效信息和重要事实，请再核实。网页上的交互为固定示例，不会调用 AI 或读取其他应用。</p></details>
           <details>
             <summary>
               没有网络或 API Key，能使用吗？<span aria-hidden="true">+</span>
             </summary>
             <p>
-              可以查询内置离线词库，也可以收藏与复习。离线词库按原文、语言方向、表达风格等精确匹配，内置词条主要为自然风格。未命中的内容需要在线服务；关闭在线回退后，未命中会给出提示。API
+              翻译模式可以查询内置离线词库，也可以查看收藏与复习。百科、解释等任务需要在线模型和你自己的 API Key。离线词库按原文、语言方向、表达风格等精确匹配，内置词条主要为自然风格。未命中的内容需要在线服务；关闭在线回退后，未命中会给出提示。API
               服务可能产生费用，由对应服务商收取。
             </p>
           </details>
           <details>
             <summary>
-              所有软件里划词，都能翻译吗？<span aria-hidden="true">+</span>
+              所有软件的内容都能划选查询吗？<span aria-hidden="true">+</span>
             </summary>
             <p>
               适用于向 Windows UI Automation
               提供文本选区的应用。图片、扫描件、部分自绘控件与未开放文本选区的应用暂不支持，不包含
-              OCR。只读文本可翻译、复制和收藏；替换仅用于能够验证安全写入的可编辑输入框，写入前需要确认。
+              OCR。只读文本可查询、复制和收藏。即时翻译模式下，能够验证安全写入的可编辑输入框支持确认替换；提问面板内的回答以复制为主。
             </p>
           </details>
           <details>
@@ -487,7 +502,7 @@
             </summary>
             <p>
               离线词库命中时不发送 API
-              请求。在线回退会将待翻译文字发送至你选择的 AI
+              请求。百科等在线任务或在线翻译会将选区、提示词和补充问题发送至你选择的 AI
               服务。个人词库、自动积累的在线译文和主动收藏保存在本机，并由当前
               Windows
               用户加密；你可以关闭在线译文自动入库。导出的词库是明文，请自行妥善保管。
@@ -499,7 +514,7 @@
             </summary>
             <p>
               目前提供 Windows x64 预览版 v<span data-version
-                >0.4.0-preview.6</span
+                >0.5.0-preview.1</span
               >，尚未提供 macOS、Linux 或手机版。你可以在 GitHub
               查看开发进展、版本说明和反馈问题。
             </p>
@@ -518,10 +533,10 @@
           </div>
           <div class="download-content">
             <p class="eyebrow">
-              <span class="status-dot"></span> YOUR NEXT WORD STARTS HERE
+              <span class="status-dot"></span> YOUR NEXT QUESTION STARTS HERE
             </p>
-            <h2 id="download-title">下一句，<br />让伴译陪你。</h2>
-            <p>把语言的距离，缩短成一次划选。</p>
+            <h2 id="download-title">下一次好奇，<br />点知陪你问。</h2>
+            <p>把疑问到理解的距离，缩短成一次划选。</p>
             <a
               class="button button-lime"
               data-download="windows"
@@ -534,8 +549,8 @@
               >下载 Windows 版 <span aria-hidden="true">↓</span></a
             >
             <p class="download-platform">
-              v<span data-version>0.4.0-preview.6</span> 预览版 · Windows 10 /
-              11 x64 · <span data-size>68.5 MB</span>
+              v<span data-version>0.5.0-preview.1</span> 预览版 · Windows 10 /
+              11 x64 · <span data-size>68.6 MB</span>
             </p>
             <div class="download-extras">
               <a
@@ -560,10 +575,10 @@
     <footer class="container footer">
       <a class="brand" href="#" aria-label="返回首页"
         ><img src="/assets/mark.svg" width="30" height="30" alt="" /><span
-          >TypeLingo<span class="brand-cn">伴译</span></span
+          >DotKnow<span class="brand-cn">点知</span></span
         ></a
       >
-      <p>让表达跨越语言。</p>
+      <p>让好奇心，就地得到回应。</p>
       <div>
         <a
           href="https://github.com/Linkyyy/TypeLingo"

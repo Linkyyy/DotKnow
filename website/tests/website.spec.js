@@ -33,12 +33,12 @@ test("production CSP permits interactions and copying without remote requests", 
   });
   await context.grantPermissions(["clipboard-read", "clipboard-write"]);
   await page.goto("/");
-  await page.getByRole("tab", { name: "自在写" }).click();
-  await expect(page.locator("#demo-result")).toContainText("I look forward");
-  await page.getByRole("button", { name: "复制示例译文" }).click();
-  await expect(page.getByRole("status")).toHaveText("示例译文已复制");
+  await page.getByRole("tab", { name: "做翻译" }).click();
+  await expect(page.locator("#demo-result")).toContainText("明天见。");
+  await page.getByRole("button", { name: "复制示例回答" }).click();
+  await expect(page.getByRole("status")).toHaveText("示例回答已复制");
   expect(await page.evaluate(() => navigator.clipboard.readText())).toBe(
-    "I look forward to discussing this further with you.",
+    "明天见。",
   );
   expect(await page.evaluate(() => window.cspErrors)).toEqual([]);
   expect(violations).toEqual([]);
@@ -88,8 +88,8 @@ test("scenario switching stays still and supports arrow keys", async ({
   page.on("pageerror", (e) => errors.push(e.message));
   await page.goto("/");
   const before = await page.locator(".hero-stage").boundingBox();
-  await page.getByRole("tab", { name: "自在写" }).click();
-  await expect(page.locator("#demo-result")).toContainText("I look forward");
+  await page.getByRole("tab", { name: "做翻译" }).click();
+  await expect(page.locator("#demo-result")).toContainText("明天见。");
   await expect(page.locator("#demo-panel")).toHaveAttribute(
     "aria-labelledby",
     "tab-write",
@@ -97,11 +97,12 @@ test("scenario switching stays still and supports arrow keys", async ({
   const after = await page.locator(".hero-stage").boundingBox();
   expect(after).toEqual(before);
   await page.keyboard.press("ArrowRight");
-  await expect(page.getByRole("tab", { name: "慢慢记" })).toBeFocused();
-  await expect(page.locator("#demo-result")).toHaveText("明天见。");
-  await page.getByRole("button", { name: "收藏示例译文" }).click();
+  await expect(page.getByRole("tab", { name: "自己问" })).toBeFocused();
+  await expect(page.locator("#demo-result")).toContainText("利滚利");
+  await expect(page.locator("#demo-question")).toContainText("小学生");
+  await page.getByRole("button", { name: "收藏示例回答" }).click();
   await expect(
-    page.getByRole("button", { name: "收藏示例译文" }),
+    page.getByRole("button", { name: "收藏示例回答" }),
   ).toHaveAttribute("aria-pressed", "true");
   await expect(page.getByRole("status")).toContainText(
     "实际收藏请在 Windows 软件中使用",
@@ -132,6 +133,14 @@ for (const width of [320, 390, 768, 1440]) {
     });
     await page.goto("/");
     await page.evaluate(() => document.fonts.ready);
+    for (const tab of await page.getByRole("tab").all()) {
+      await tab.click();
+      const answer = await page.locator(".translation-window").boundingBox();
+      const footer = await page.locator(".stage-bottom").boundingBox();
+      const stage = await page.locator(".hero-stage").boundingBox();
+      expect(answer.y + answer.height + 5).toBeLessThan(footer.y);
+      expect(footer.y + footer.height).toBeLessThan(stage.y + stage.height);
+    }
     expect(
       await page.evaluate(() => document.documentElement.scrollWidth),
     ).toBeLessThanOrEqual(width);
