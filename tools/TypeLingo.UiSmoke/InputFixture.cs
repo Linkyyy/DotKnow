@@ -42,6 +42,7 @@ internal static class InputFixture
                     else if (command == "rich") { rich.Focus(); rich.CaretPosition = rich.Document.ContentStart.GetNextInsertionPosition(LogicalDirection.Forward)!; }
                     else if (command == "reading")
                     {
+                        reading.Focusable = false;
                         reading.Selection.Select(readingRun.ContentStart, readingRun.ContentEnd); input.Focus();
                         var rect = readingRun.ContentStart.GetCharacterRect(LogicalDirection.Forward);
                         PointerFixture.Move(reading.PointToScreen(new Point(rect.Left + 20, rect.Top + rect.Height / 2)));
@@ -50,6 +51,8 @@ internal static class InputFixture
                     else if (command == "reading-away") PointerFixture.Move(window.PointToScreen(new Point(window.ActualWidth - 12, window.ActualHeight - 45)));
                     else if (command == "reading-start" || command == "reading-end")
                     {
+                        // WPF 自身要求阅读器可聚焦才能处理真实鼠标拖选；上面的用例单独验证无键盘焦点的读取。
+                        reading.Focusable = true;
                         var rect = command == "reading-start" ? readingRun.ContentStart.GetCharacterRect(LogicalDirection.Forward) : readingRun.ContentEnd.GetCharacterRect(LogicalDirection.Backward);
                         PointerFixture.Move(reading.PointToScreen(new Point(command == "reading-start" ? rect.Left + 1 : rect.Right + 2, rect.Top + rect.Height / 2)));
                     }
