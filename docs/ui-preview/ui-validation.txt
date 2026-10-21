@@ -144,7 +144,7 @@ AI 回答收藏保留任务和用户问题
 鼠标离开阅读文字后仍复核原选区，允许操作悬浮窗
 清除阅读选区后立即停止预览，不回退到全文或输入行
 鼠标按住拖选时不发送中间选区
-真实鼠标拖选并松开后捕获只读阅读区的完整选中文字：{"Identity":"3444:3444:66066:7.3444.59223347","Text":"selected reading phrase","Bounds":{"X":84,"Y":421,"Width":187,"Height":20},"CanWrite":false,"IsComposing":false,"IsSensitive":false,"IsSelection":true,"ControlBounds":{"X":76,"Y":413,"Width":615,"Height":100},"EditRange":null,"SelectionRevision":1,"SelectionSource":"3444:66066"}; fixture={"Text":"selected reading phrase\r\n","Focus":"FlowDocumentScrollViewer","IsKeyboardFocusWithin":true,"Focusable":true,"IsActive":true,"LeftButton":"Released","Events":["down:9,18.039999999999964","move:9,18.039999999999964","move:197,18.039999999999964","up:197,18.039999999999964"],"Start":"8,8,0,20.453333333333333","End":"194.67000000000002,8,0,20.453333333333333","Scope":"FlowDocumentView"}
+真实鼠标拖选并松开后捕获只读阅读区的完整选中文字：{"Identity":"6300:6300:131570:7.6300.59223347","Text":"selected reading phrase","Bounds":{"X":84,"Y":421,"Width":187,"Height":20},"CanWrite":false,"IsComposing":false,"IsSensitive":false,"IsSelection":true,"ControlBounds":{"X":76,"Y":413,"Width":615,"Height":100},"EditRange":null,"SelectionRevision":1,"SelectionSource":"6300:131570"}; fixture={"Text":"selected reading phrase\r\n","Focus":"FlowDocumentScrollViewer","IsKeyboardFocusWithin":true,"Focusable":true,"IsActive":true,"LeftButton":"Released","Events":["down:9,18.039999999999964","move:9,18.039999999999964","move:197,18.039999999999964","up:197,18.039999999999964"],"Start":"8,8,0,20.453333333333333","End":"194.67000000000002,8,0,20.453333333333333","Scope":"FlowDocumentView"}
 阅读选区继续遵守进程排除项
 鼠标选区超过长度限制时跳过，不回退翻译其他输入框的旧选区
 可编辑选区具有精确写入范围
@@ -157,7 +157,7 @@ AI 回答收藏保留任务和用户问题
 仅提供 TextPattern 的真实富文本控件，无选区也能自动预览当前行
 三种触发方式继续跳过真实密码框
 微信式自绘控件验收进程就绪
-微信式无 TextPattern 自绘文本可通过快捷键捕获选区，且不具备替换权限：{"Identity":"6756:131590:selection-copy","Text":"\u5FAE\u4FE1\u81EA\u7ED8\u6587\u5B57\u9009\u533A","Bounds":{"X":101,"Y":575,"Width":1,"Height":18},"CanWrite":false,"IsComposing":false,"IsSensitive":false,"IsSelection":true,"ControlBounds":null,"EditRange":null,"SelectionRevision":0,"SelectionSource":"6756:131590"}; UIA result=False; blocked=False; foreground process=Weixin; read:owner=True; stable=True; length=8; result=True; foreground=True; modifiers=False; copied=True
+微信式无 TextPattern 自绘文本可通过快捷键捕获选区，且不具备替换权限：{"Identity":"2424:131616:selection-copy","Text":"\u5FAE\u4FE1\u81EA\u7ED8\u6587\u5B57\u9009\u533A","Bounds":{"X":101,"Y":575,"Width":1,"Height":18},"CanWrite":false,"IsComposing":false,"IsSensitive":false,"IsSelection":true,"ControlBounds":null,"EditRange":null,"SelectionRevision":0,"SelectionSource":"2424:131616"}; UIA result=False; blocked=False; foreground process=Weixin; read:owner=True; stable=False; length=8; result=True; foreground=True; modifiers=False; copied=True
 兼容读取后恢复原剪贴板文字和 HTML 格式
 复制没有产生新选区时不读取旧剪贴板，也不翻译原剪贴板内容
 微信式自绘文字完成鼠标划选后自动触发，无需快捷键
