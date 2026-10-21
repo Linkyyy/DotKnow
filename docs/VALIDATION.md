@@ -1,3 +1,12 @@
+# v0.5.0-preview.3 · 点解品牌更新验收
+
+- 中文名统一为点解，取自粤语“为什么”；软件标题、托盘、Windows 产品属性、中文安装与卸载向导、官网和宣传素材同步更新。
+- Linux 全解决方案构建零警告、零错误，222 项核心测试通过；Windows 核心步骤及 181 项真实 WPF／跨进程检查通过：[Actions 39526940871](https://github.com/Linkyyy/DotKnow/actions/runs/39526940871)，源码 `8eaae3b7d4137f8b924fc59795d28a40d98dfd1f`。
+- 原生截图与来源同步到 docs/ui-preview、官网五套主题和宣传素材；设置页脚显示实际程序集版本。
+- Windows ZIP 真实解压、DotKnow.exe 产品名称、中文脚本解析和真实程序启动通过；不可变发布提交 `7c7b5ee9a4733fcee13668e85e81b5bec03a61fc`。
+- Windows ZIP SHA-256：`2be20220c378f898db523a0f6a2b567d12ca7972accaf5d8c005e43d1936f721`。根目录提供相同已验证 Windows 包；官网按钮、静态下载页与无 JavaScript 页面指向上述不可变提交。
+- 官网 11 项浏览器检查通过；线上部署与新旧域名另外检查。测试未使用真实微信账户，旧版兼容边界继续适用。
+
 # v0.5.0-preview.2 · 划选与简洁阅读验收
 
 - 核心自动测试 **222 项通过**，Linux 构建零警告、零错误；Windows 核心测试步骤通过。

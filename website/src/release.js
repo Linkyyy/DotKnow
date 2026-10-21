@@ -1,10 +1,10 @@
 // Update this single manifest when a new verified desktop build is published.
 export const release = Object.freeze({
-  version: "0.5.0-preview.2",
-  commit: "03b921af85699b5da1da3d904061d3d2ab786b70",
+  version: "0.5.0-preview.3",
+  commit: "7c7b5ee9a4733fcee13668e85e81b5bec03a61fc",
   windowsFile: "DotKnow-Windows-x64.zip",
   size: "68.9 MB",
-  sha256: "4e7c846d7c01f9bf03e4e6b822b9bb370d8f0b7c85664f0264a893e2b5f0a92a",
+  sha256: "2be20220c378f898db523a0f6a2b567d12ca7972accaf5d8c005e43d1936f721",
 });
 export const artifactUrl = (file) =>
   `https://github.com/Linkyyy/DotKnow/raw/${release.commit}/downloads/${file}`;
