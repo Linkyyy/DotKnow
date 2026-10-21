@@ -1,6 +1,6 @@
 # 素材来源与边界
 
-图形沿用用户明确选定的 **C 双向对话**：两块相向的几何对话图形，中间折线留白。选稿见 docs/branding/logo-concepts.png。此前使用图像生成工具提取透明主标，再由 VTracer 转换与标准化为 SVG；唯一主标仍为 src/TypeLingo.App/Assets/typelingo-mark.svg。
+图形沿用用户明确选定的 **C 双向对话**：两块相向的几何对话图形，中间折线留白。选稿见 docs/branding/logo-concepts.png。此前使用图像生成工具提取透明主标，再由 VTracer 转换与标准化为 SVG；唯一主标仍为 src/DotKnow.App/Assets/typelingo-mark.svg。
 
 本次更新品牌名为「点知 · DotKnow」，主宣传语为「哪里不会，点哪里」。C 图形不重新绘制，程序及托盘图标继续由相同轮廓生成，托盘按系统任务栏明暗选择黑／白。
 

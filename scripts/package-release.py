@@ -12,7 +12,7 @@ def main():
     sys.stderr.reconfigure(encoding="utf-8")
     root = Path(__file__).resolve().parents[1]
     output = root / "artifacts"
-    exe = output / "win-x64" / "TypeLingo.exe"
+    exe = output / "win-x64" / "DotKnow.exe"
     if not exe.is_file() or exe.read_bytes()[:2] != b"MZ":
         raise RuntimeError("请先发布 Windows x64 程序，再生成中文安装包。")
     digest = hashlib.sha256(exe.read_bytes()).hexdigest()
@@ -40,7 +40,7 @@ def main():
             for file in sorted((root / directory).rglob("*")):
                 if file.is_file() and not excluded.intersection(file.relative_to(root).parts) and file.name != ".env" and not file.name.startswith(".env."):
                     archive.write(file, "DotKnow/" + file.relative_to(root).as_posix())
-        for name in [".gitignore", "README.md", "TypeLingo.sln", "global.json", "Directory.Build.props"]:
+        for name in [".gitignore", "README.md", "DotKnow.sln", "global.json", "Directory.Build.props"]:
             archive.write(root / name, "DotKnow/" + name)
     for path in [windows_zip, source_zip]:
         with zipfile.ZipFile(path) as archive:

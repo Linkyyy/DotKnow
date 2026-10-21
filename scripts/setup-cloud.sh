@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 set -euo pipefail
-cd /workspace/TypeLingo
+cd /workspace/DotKnow
 source scripts/dotnet-env.sh
 mkdir -p /workspace/shared/downloads
 if [[ ! -x "$DOTNET_ROOT/dotnet" ]] || [[ "$(dotnet --version 2>/dev/null || true)" != "8.0.426" ]]; then
@@ -22,6 +22,6 @@ fi
 # .NET 8 命名互斥锁使用操作系统用户目录，不受 DOTNET_CLI_HOME 配置影响。
 # 托管环境必须允许访问这个标准的用户 SDK 目录。
 mkdir -p /home/agent/.dotnet
-dotnet restore TypeLingo.sln --locked-mode
-dotnet build TypeLingo.sln -c Release --no-restore -m:2
-dotnet test tests/TypeLingo.Tests -c Release --no-build --logger 'trx;LogFileName=core.trx' --results-directory TestResults
+dotnet restore DotKnow.sln --locked-mode
+dotnet build DotKnow.sln -c Release --no-restore -m:2
+dotnet test tests/DotKnow.Tests -c Release --no-build --logger 'trx;LogFileName=core.trx' --results-directory TestResults

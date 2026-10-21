@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <UseWindowsForms>true</UseWindowsForms>
+    <EnableWindowsTargeting>true</EnableWindowsTargeting>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <AssemblyName>DotKnow</AssemblyName>
+    <Version>0.5.0-preview.2</Version>
+    <Product>点知 · DotKnow</Product>
+    <Title>DotKnow</Title>
+    <Description>划选即问的桌面 AI 助手：哪里不会，点哪里。</Description>
+    <ApplicationIcon>Assets/dotknow.ico</ApplicationIcon>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="../DotKnow.Infrastructure/DotKnow.Infrastructure.csproj" />
+    <PackageReference Include="System.Security.Cryptography.ProtectedData" Version="8.0.0" />
+  </ItemGroup>
+  <ItemGroup><Resource Include="Assets/dotknow.ico" /><Resource Include="Assets/dotknow.png" /><Resource Include="Assets/dotknow-tray-black.ico" /><Resource Include="Assets/dotknow-tray-white.ico" /><Using Remove="System.Windows.Forms" /><Using Remove="System.Drawing" /></ItemGroup>
+</Project>

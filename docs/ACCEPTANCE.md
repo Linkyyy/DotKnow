@@ -5,11 +5,11 @@
 ## 准备
 
 ```powershell
-dotnet restore TypeLingo.sln --locked-mode
-dotnet build TypeLingo.sln -c Release --no-restore
-dotnet run --project src/TypeLingo.App -c Release --no-build
+dotnet restore DotKnow.sln --locked-mode
+dotnet build DotKnow.sln -c Release --no-restore
+dotnet run --project src/DotKnow.App -c Release --no-build
 # 在第二个终端：
-dotnet run --project tools/TypeLingo.InputLab -c Release --no-build
+dotnet run --project tools/DotKnow.InputLab -c Release --no-build
 ```
 
 在设置中保存 Key、选择服务商、查询可用模型并选择或填写模型 ID。在“隐私与应用”授权；如需隔离验收范围，关闭“监控所有应用”，仅允许 `TypeLingo.InputLab`。保持默认防抖 500 ms、间隔 700 ms，磁盘缓存关闭，目标 `ja`。测试初始清缓存，记录「隐私」页中的会话请求数；观察完统计后回到输入框（设置窗口获得焦点会隐藏预览）。
@@ -60,7 +60,7 @@ dotnet run --project tools/TypeLingo.InputLab -c Release --no-build
 4. 使用左侧导航切换所有页面。搜索“密钥”“字体”“缓存”，应定位对应页；不存在的词显示空结果，清空搜索后恢复导航。
 5. 检查 900×760 和较小的 820×560 窗口、100%/150%/200% DPI，卡片和输入框无重叠、底部保存按钮可见；长说明自动换行，内容可滚动。
 6. 切换中英日界面与深浅主题，卡片、输入框、下拉菜单、悬浮窗与系统标题栏保持可读；手动模型输入和预设联动继续有效。
-7. Windows 自动验证工具可执行：dotnet run --project tools/TypeLingo.UiSmoke -c Release -- artifacts/ui-smoke。真实 UIA、IME 和第三方输入框兼容性仍按上面的手工清单验收。
+7. Windows 自动验证工具可执行：dotnet run --project tools/DotKnow.UiSmoke -c Release -- artifacts/ui-smoke。真实 UIA、IME 和第三方输入框兼容性仍按上面的手工清单验收。
 
 ## v0.3.0 简洁界面与紧凑悬浮窗
 

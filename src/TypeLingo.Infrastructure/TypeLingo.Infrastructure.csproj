@@ -1,8 +1,0 @@
-<Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup><TargetFramework>net8.0</TargetFramework></PropertyGroup>
-  <ItemGroup>
-    <ProjectReference Include="../TypeLingo.Core/TypeLingo.Core.csproj" />
-    <PackageReference Include="Microsoft.Data.Sqlite" Version="8.0.22" />
-  </ItemGroup>
-  <ItemGroup><EmbeddedResource Include="../../data/TypeLingo-Vocabulary-zh-en-ja-v1.zip" LogicalName="TypeLingo.Vocabulary.zip" /></ItemGroup>
-</Project>

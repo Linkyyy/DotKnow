@@ -1,0 +1,142 @@
+namespace DotKnow.Core;
+
+/// <summary>同一时间只执行一个主翻译请求，焦点、文本或配置变化时取消旧请求。</summary>
+public sealed class TranslationCoordinator(ITranslationProvider provider, ITranslationCache cache,
+    Func<AppSettings> settings, SessionStatistics statistics, ITranslationMemory? vocabulary = null) : IDisposable
+{
+    private readonly object gate = new();
+    private readonly SemaphoreSlim singleRequest = new(1, 1);
+    private CancellationTokenSource? pending;
+    private InputSnapshot? current;
+    private string? currentKey;
+    private AppSettings? requestSettings;
+    private long sequence;
+    private long lastRequestTimestamp;
+    private Preview? preview;
+    private Task active = Task.CompletedTask;
+    private bool disposed;
+    private (string Identity, string Text, string? FullText, InputSnapshot? Observed)? suppression;
+    public event Action<Preview?>? PreviewChanged;
+    public event Action<string>? StatusChanged;
+    public Preview? CurrentPreview { get { lock (gate) return preview; } }
+
+    public Task ObserveAsync(InputSnapshot? snapshot, bool force = false, TranslationRequest? taskRequest = null)
+    {
+        lock (gate)
+        {
+            if (disposed) return Task.CompletedTask;
+            var config = settings();
+            if (!config.PrivacyConsent || !config.Translation.Enabled || snapshot is { IsSensitive: true } ||
+                snapshot is { IsComposing: true } || string.IsNullOrWhiteSpace(snapshot?.Text) ||
+                snapshot.Text.Length > config.Translation.MaxInputCharacters) snapshot = null;
+            if (suppression is { } own && snapshot?.Identity == own.Identity &&
+                (own.FullText != null ? snapshot.EditRange?.FullText == own.FullText : snapshot.Text == own.Text) &&
+                (!snapshot.IsSelection || snapshot.Text == own.Text) && (own.Observed == null || own.Observed.SameContent(snapshot)))
+            {
+                suppression = (own.Identity, own.Text, own.FullText, snapshot); snapshot = null;
+            }
+            else if (snapshot != null) suppression = null;
+            if (snapshot != null && taskRequest != null && taskRequest.Text != snapshot.Text)
+                throw new ArgumentException("查询内容必须与捕获的选区一致。");
+            var request = snapshot == null ? null : taskRequest ?? TranslationRequest.Create(config, snapshot.Text);
+            if (!force && (current == null ? snapshot == null : current.SameContent(snapshot)) && currentKey == request?.CacheKey) return active;
+            pending?.Cancel(); pending?.Dispose(); pending = null;
+            current = snapshot; currentKey = request?.CacheKey; requestSettings = config; preview = null; sequence++;
+            PreviewChanged?.Invoke(null);
+            if (snapshot == null) return active = Task.CompletedTask;
+            var source = pending = new CancellationTokenSource();
+            return active = RunAsync(snapshot, request!, config, sequence, source.Token);
+        }
+    }
+
+    private async Task RunAsync(InputSnapshot snapshot, TranslationRequest request, AppSettings config, long id, CancellationToken token)
+    {
+        // 先让出执行权，避免在更新观察状态时同步触发缓存或事件回调。
+        await Task.Yield();
+        try
+        {
+            TranslationResult? result = null;
+            var origin = TranslationOrigin.Online;
+            var savingFailed = false;
+            if (request.IsTranslation && vocabulary != null && (config.Vocabulary.PreferOffline || !config.Vocabulary.AllowOnlineFallback))
+            {
+                result = await vocabulary.FindAsync(request, token);
+                if (result != null) origin = TranslationOrigin.Vocabulary;
+            }
+            if (request.IsTranslation && result == null && !config.Vocabulary.AllowOnlineFallback)
+            { PublishStatus(id, "离线题库未命中，已关闭在线翻译。"); return; }
+            if (result == null)
+            {
+                result = await cache.GetAsync(request.CacheKey, token);
+                if (result != null) origin = TranslationOrigin.Cache;
+            }
+            if (result == null)
+            {
+                PublishStatus(id, "等待输入稳定…");
+                await Task.Delay(config.Translation.DebounceMilliseconds, token);
+                await singleRequest.WaitAsync(token);
+                try
+                {
+                    var wait = config.Translation.MinimumRequestIntervalMilliseconds -
+                        (Environment.TickCount64 - lastRequestTimestamp);
+                    if (wait > 0) await Task.Delay(TimeSpan.FromMilliseconds(wait), token);
+                    token.ThrowIfCancellationRequested();
+                    lastRequestTimestamp = Environment.TickCount64;
+                    PublishStatus(id, request.IsTranslation ? "正在翻译…" : "正在查询…");
+                    result = await provider.TranslateAsync(request, token);
+                    token.ThrowIfCancellationRequested();
+                    if (string.IsNullOrWhiteSpace(result.Text)) throw new TranslationException(TranslationError.InvalidResponse, "API 未返回有效内容。");
+                    try { await cache.PutAsync(request.CacheKey, result, token); }
+                    catch (Exception) when (!token.IsCancellationRequested) { savingFailed = true; }
+                }
+                finally { singleRequest.Release(); }
+            }
+            if (request.IsTranslation && vocabulary != null && config.Vocabulary.AutoLearn && origin != TranslationOrigin.Vocabulary)
+            {
+                token.ThrowIfCancellationRequested();
+                try { await vocabulary.LearnAsync(request, result, token); }
+                catch (Exception) when (!token.IsCancellationRequested) { savingFailed = true; }
+            }
+            lock (gate)
+            {
+                if (disposed || token.IsCancellationRequested || id != sequence || current?.Identity != snapshot.Identity || currentKey != request.CacheKey) return;
+                if (origin == TranslationOrigin.Cache) statistics.CacheHit();
+                if (origin == TranslationOrigin.Vocabulary) statistics.VocabularyHit();
+                preview = new Preview(snapshot, request, result, id, origin == TranslationOrigin.Cache, origin);
+                PreviewChanged?.Invoke(preview);
+                StatusChanged?.Invoke(savingFailed ? "译文就绪，但本地保存失败；请检查存储权限。" : origin switch
+                {
+                    TranslationOrigin.Vocabulary => "离线题库 · 未调用 API",
+                    TranslationOrigin.Cache => "本地缓存 · 未调用 API",
+                    _ => request.IsTranslation ? "译文就绪 · 原文保持不变" : "回答就绪 · AI 生成"
+                });
+            }
+        }
+        catch (OperationCanceledException) when (token.IsCancellationRequested) { }
+        catch (TranslationException e) { PublishStatus(id, e.Message); }
+        catch (Exception) { PublishStatus(id, "翻译或缓存暂时不可用，请检查配置后重试。"); }
+    }
+
+    private void PublishStatus(long id, string status) { lock (gate) { if (!disposed && id == sequence) StatusChanged?.Invoke(status); } }
+    public bool IsCurrent(Preview value)
+    {
+        lock (gate)
+        {
+            var config = settings();
+            return !disposed && value.Sequence == sequence && preview == value && config.PrivacyConsent && config.Translation.Enabled &&
+                config.Assistant == requestSettings?.Assistant && (value.Request.IsTranslation
+                    ? TranslationRequest.Create(config, value.Snapshot.Text).CacheKey == value.Request.CacheKey
+                    : config == requestSettings);
+        }
+    }
+    public void SuppressOwnReplacement(InputSnapshot original, string translated)
+    {
+        lock (gate) { suppression = (original.Identity, translated, original.EditRange?.Replace(translated), null); }
+        _ = ObserveAsync(null, true);
+    }
+    public void Dispose()
+    {
+        lock (gate) { disposed = true; pending?.Cancel(); pending?.Dispose(); preview = null; current = null; }
+        // 忽略取消的服务商可能仍占用信号量，此时不能提前释放信号量对象。
+    }
+}

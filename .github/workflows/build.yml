@@ -14,9 +14,9 @@ jobs:
       - uses: actions/setup-dotnet@v4
         with:
           global-json-file: global.json
-      - run: dotnet restore TypeLingo.sln --locked-mode
-      - run: dotnet build TypeLingo.sln -c Release --no-restore
-      - run: dotnet test tests/TypeLingo.Tests -c Release --no-build --logger trx
+      - run: dotnet restore DotKnow.sln --locked-mode
+      - run: dotnet build DotKnow.sln -c Release --no-restore
+      - run: dotnet test tests/DotKnow.Tests -c Release --no-build --logger trx
       - name: 打包宣传图和文案
         run: python3 scripts/package-promotion.py
       - uses: actions/upload-artifact@v4
@@ -32,18 +32,18 @@ jobs:
       - uses: actions/setup-dotnet@v4
         with:
           global-json-file: global.json
-      - run: dotnet restore TypeLingo.sln --locked-mode
-      - run: dotnet build TypeLingo.sln -c Release --no-restore
-      - run: dotnet test tests/TypeLingo.Tests -c Release --no-build --logger trx
+      - run: dotnet restore DotKnow.sln --locked-mode
+      - run: dotnet build DotKnow.sln -c Release --no-restore
+      - run: dotnet test tests/DotKnow.Tests -c Release --no-build --logger trx
       - run: ./scripts/publish-windows.ps1
       - name: 运行真实 WPF 设置窗口验证
         id: ui_smoke
         timeout-minutes: 5
-        run: dotnet run --project tools/TypeLingo.UiSmoke -c Release --no-build -- artifacts/ui-smoke
+        run: dotnet run --project tools/DotKnow.UiSmoke -c Release --no-build -- artifacts/ui-smoke
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: TypeLingo-settings-ui
+          name: DotKnow-settings-ui
           path: artifacts/ui-smoke/
       - name: 发布界面预览与验收诊断
         if: always() && steps.ui_smoke.outcome != 'skipped' && github.event_name == 'push' && github.ref == 'refs/heads/codex/typelingo-favorites-and-replacement'

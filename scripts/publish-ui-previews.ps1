@@ -11,7 +11,7 @@ $branch = "refs/heads/codex/ui-preview-$($env:GITHUB_SHA)"
 $existing = git ls-remote --heads origin $branch
 if ($LASTEXITCODE -ne 0) { throw '无法检查预览分支。' }
 if ($existing) { Write-Host '此源码版本已有预览，不覆盖既有结果。'; return }
-$preview = Join-Path $env:RUNNER_TEMP ('TypeLingo-preview-' + [guid]::NewGuid().ToString('N'))
+$preview = Join-Path $env:RUNNER_TEMP ('DotKnow-preview-' + [guid]::NewGuid().ToString('N'))
 git worktree add --detach $preview $env:GITHUB_SHA
 if ($LASTEXITCODE -ne 0) { throw '无法创建独立预览工作区。' }
 try {
@@ -22,7 +22,7 @@ try {
     @{ source_commit = $env:GITHUB_SHA; workflow_run = $env:GITHUB_RUN_ID; passed = $passed; captured_on = 'Windows GitHub Actions'; data = 'isolated UI fixtures; no user data' } |
         ConvertTo-Json | Set-Content (Join-Path $destination 'source.json') -Encoding utf8
     git -C $preview add -- docs/ui-preview
-    git -C $preview -c 'user.name=github-actions[bot]' -c 'user.email=41898282+github-actions[bot]@users.noreply.github.com' commit -m 'Publish verified TypeLingo Windows UI previews'
+    git -C $preview -c 'user.name=github-actions[bot]' -c 'user.email=41898282+github-actions[bot]@users.noreply.github.com' commit -m 'Publish verified DotKnow Windows UI previews'
     if ($LASTEXITCODE -ne 0) { throw '无法保存界面预览。' }
     git -C $preview push origin "HEAD:$branch"
     if ($LASTEXITCODE -ne 0) { throw '无法上传界面预览。' }

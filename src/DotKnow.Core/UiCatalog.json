@@ -1,0 +1,2158 @@
+{
+  "DotKnow · 伴译": {
+    "en-US": "DotKnow",
+    "ja-JP": "DotKnow · 伴訳"
+  },
+  "伴译  /  DotKnow": {
+    "en-US": "DotKnow / Translation companion",
+    "ja-JP": "DotKnow / 入力翻訳アシスタント"
+  },
+  "伴译": {
+    "en-US": "DotKnow",
+    "ja-JP": "伴訳"
+  },
+  "DotKnow 翻译预览": {
+    "en-US": "DotKnow translation preview",
+    "ja-JP": "DotKnow 翻訳プレビュー"
+  },
+  "输入在哪里，翻译就跟随到哪里。": {
+    "en-US": "Where you type, translation follows.",
+    "ja-JP": "入力する場所に、翻訳を。"
+  },
+  "实时预览 · 主动替换 · 原文由你掌控": {
+    "en-US": "Live preview · Confirm to replace · You control your text",
+    "ja-JP": "リアルタイムプレビュー・確認して置換・原文は自分で管理"
+  },
+  "基础": {
+    "en-US": "General",
+    "ja-JP": "基本"
+  },
+  "界面语言": {
+    "en-US": "Interface language",
+    "ja-JP": "表示言語"
+  },
+  "翻译方向": {
+    "en-US": "Translation direction",
+    "ja-JP": "翻訳方向"
+  },
+  "开启实时翻译（托盘可随时暂停全部读取）": {
+    "en-US": "Enable live translation (pause all reading from the tray)",
+    "ja-JP": "リアルタイム翻訳を有効にする（トレイから読み取りを一時停止）"
+  },
+  "源语言": {
+    "en-US": "Source language",
+    "ja-JP": "翻訳元の言語"
+  },
+  "目标语言": {
+    "en-US": "Target language",
+    "ja-JP": "翻訳先の言語"
+  },
+  "翻译风格": {
+    "en-US": "Translation style",
+    "ja-JP": "翻訳スタイル"
+  },
+  "防抖时间（毫秒）": {
+    "en-US": "Typing debounce (ms)",
+    "ja-JP": "入力待機時間（ミリ秒）"
+  },
+  "API 最小请求间隔（毫秒）": {
+    "en-US": "Minimum API request interval (ms)",
+    "ja-JP": "API の最小リクエスト間隔（ミリ秒）"
+  },
+  "最大输入字符数": {
+    "en-US": "Maximum input characters",
+    "ja-JP": "入力文字数の上限"
+  },
+  "预览不会修改原文；只有确认替换才写入。读取不到或无法安全写入的控件会自动降级。": {
+    "en-US": "Previews leave your text unchanged. Writing requires confirmation. Unsupported controls fall back safely.",
+    "ja-JP": "プレビューでは原文を変更しません。書き込みには確認が必要です。未対応の入力欄では安全な表示・コピーに切り替えます。"
+  },
+  "API 服务商": {
+    "en-US": "API provider",
+    "ja-JP": "API プロバイダー"
+  },
+  "打开官方 API 开通 / 购买平台": {
+    "en-US": "Open official API / billing platform",
+    "ja-JP": "公式 API 申し込み・購入ページを開く"
+  },
+  "API 地址（HTTPS；密钥将发送到此服务）": {
+    "en-US": "API URL (HTTPS; your key is sent to this service)",
+    "ja-JP": "API URL（HTTPS・このサービスへキーを送信します）"
+  },
+  "模型（可从列表选择，也可手动输入模型 ID）": {
+    "en-US": "Model (select from the list or enter a model ID)",
+    "ja-JP": "モデル（一覧から選択、またはモデル ID を入力）"
+  },
+  "API 密钥（每个服务商与地址单独保存，留空保留）": {
+    "en-US": "API key (stored per provider and URL; leave blank to retain)",
+    "ja-JP": "API キー（提供元と URL ごとに保存・空欄で保持）"
+  },
+  "请求超时（秒）": {
+    "en-US": "Request timeout (seconds)",
+    "ja-JP": "リクエストのタイムアウト（秒）"
+  },
+  "429 / 5xx 最大重试次数": {
+    "en-US": "Maximum retries for 429 / 5xx",
+    "ja-JP": "429 / 5xx の最大再試行回数"
+  },
+  "查询可用模型": {
+    "en-US": "Fetch available models",
+    "ja-JP": "利用可能なモデルを取得"
+  },
+  "删除当前服务商的密钥": {
+    "en-US": "Delete this provider's key",
+    "ja-JP": "選択中の提供元のキーを削除"
+  },
+  "测试翻译（固定短句）": {
+    "en-US": "Test translation (fixed sample)",
+    "ja-JP": "翻訳テスト（固定の短文）"
+  },
+  "密钥按服务商和 API 地址隔离，并使用当前 Windows 用户的 DPAPI 加密。查询模型不上传输入；测试翻译只发送固定短句 Hello，可能产生少量 API 费用。不同平台的模型列表权限不同，也可以直接填写模型 ID。": {
+    "en-US": "Keys are isolated by provider and API URL and encrypted with Windows DPAPI. Fetching models sends no input text. Translation tests send only Hello and may incur a small API charge. Model listing permissions vary; entering a model ID directly is supported.",
+    "ja-JP": "キーは提供元と API URL ごとに分離し、Windows DPAPI で暗号化します。モデル取得では入力文を送信しません。翻訳テストでは Hello のみ送信し、少額の API 料金が発生する場合があります。一覧の権限がなくてもモデル ID を直接入力できます。"
+  },
+  "缓存": {
+    "en-US": "Cache",
+    "ja-JP": "キャッシュ"
+  },
+  "启用内存缓存": {
+    "en-US": "Enable memory cache",
+    "ja-JP": "メモリキャッシュを有効にする"
+  },
+  "内存最大条目数": {
+    "en-US": "Maximum memory entries",
+    "ja-JP": "メモリの最大件数"
+  },
+  "内存有效期（分钟）": {
+    "en-US": "Memory TTL (minutes)",
+    "ja-JP": "メモリの有効期間（分）"
+  },
+  "主动启用磁盘缓存（默认关闭；可能包含私人聊天译文）": {
+    "en-US": "Opt in to disk cache (off by default; may contain private translations)",
+    "ja-JP": "ディスクキャッシュを有効にする（初期値は無効・私的な訳文が含まれる場合があります）"
+  },
+  "磁盘最大条目数": {
+    "en-US": "Maximum disk entries",
+    "ja-JP": "ディスクの最大件数"
+  },
+  "磁盘有效期（天）": {
+    "en-US": "Disk TTL (days)",
+    "ja-JP": "ディスクの有効期間（日）"
+  },
+  "立即清除全部缓存": {
+    "en-US": "Clear all caches now",
+    "ja-JP": "すべてのキャッシュを削除"
+  },
+  "磁盘中的译文使用 DPAPI 加密；只保存输入哈希，不保存原文。关闭磁盘缓存不会自动删除已有内容，请使用清除按钮。日志不记录原文、译文或 Key。": {
+    "en-US": "Disk translations are DPAPI-encrypted. Only input hashes are saved, never source text. Disabling disk cache does not delete existing entries; use Clear. Logs contain no source text, translations or keys.",
+    "ja-JP": "ディスク上の訳文は DPAPI で暗号化し、原文はハッシュのみ保存します。無効にしても既存データは残るため、削除ボタンを使用してください。原文・訳文・キーはログに記録しません。"
+  },
+  "悬浮窗": {
+    "en-US": "Overlay",
+    "ja-JP": "フローティング表示"
+  },
+  "深色模式": {
+    "en-US": "Dark mode",
+    "ja-JP": "ダークモード"
+  },
+  "字体大小（10–32）": {
+    "en-US": "Font size (10–32)",
+    "ja-JP": "文字サイズ（10–32）"
+  },
+  "不透明度（0.5–1）": {
+    "en-US": "Opacity (0.5–1)",
+    "ja-JP": "不透明度（0.5–1）"
+  },
+  "最大宽度（240–800）": {
+    "en-US": "Maximum width (240–800)",
+    "ja-JP": "最大幅（240–800）"
+  },
+  "位置偏好": {
+    "en-US": "Preferred position",
+    "ja-JP": "優先する表示位置"
+  },
+  "位置不足时依次尝试右、下、左、上；无法取得坐标时显示在屏幕角落。焦点离开、输入清空或暂停时自动隐藏。": {
+    "en-US": "If space is limited, try right, below, left, then above. With no coordinates, use a screen corner. Hide on focus loss, empty input or pause.",
+    "ja-JP": "空きがなければ右・下・左・上の順に配置し、座標不明時は画面の隅に表示します。フォーカス移動・空の入力・一時停止で非表示になります。"
+  },
+  "快捷键": {
+    "en-US": "Shortcuts",
+    "ja-JP": "ショートカット"
+  },
+  "准备替换 / 显示确认": {
+    "en-US": "Prepare replacement / confirm",
+    "ja-JP": "置換の準備・確認画面"
+  },
+  "开启 / 暂停全部读取": {
+    "en-US": "Enable / pause all reading",
+    "ja-JP": "読み取りの有効・一時停止"
+  },
+  "复制当前译文": {
+    "en-US": "Copy current translation",
+    "ja-JP": "現在の訳文をコピー"
+  },
+  "格式：Ctrl+Alt+Enter，可使用 Shift / Win。冲突会明确提示；不会监听所有按键。复制操作会按你的要求覆盖剪贴板；软件不会自动粘贴或模拟 Enter。": {
+    "en-US": "Example: Ctrl+Alt+Enter; Shift and Win are supported. Conflicts are reported; keystrokes are not logged. Copying replaces the clipboard only on request. No automatic paste or Enter simulation.",
+    "ja-JP": "例：Ctrl+Alt+Enter。Shift・Win も使用できます。競合を表示し、全キーは監視しません。コピーは操作時のみクリップボードを上書きします。自動貼り付けや Enter の送信は行いません。"
+  },
+  "隐私": {
+    "en-US": "Privacy",
+    "ja-JP": "プライバシー"
+  },
+  "先授权，再读取": {
+    "en-US": "Consent before reading",
+    "ja-JP": "同意してから読み取り"
+  },
+  "启用后，允许应用中当前输入框的完整文本会发送给所选 AI 服务进行翻译。允许浏览器意味着其所有可访问输入框均可能被读取，包括私人页面。请只允许你信任且需要翻译的应用。": {
+    "en-US": "When enabled, the entire focused input in allowed apps is sent to the chosen AI service. Allowing a browser includes accessible inputs on private pages. Allow only apps you trust and need to translate.",
+    "ja-JP": "有効にすると、許可したアプリの入力欄全体を選択した AI サービスへ送信します。ブラウザーの許可には私的なページも含まれます。信頼でき、翻訳が必要なアプリのみ許可してください。"
+  },
+  "我了解并同意读取允许应用的输入框，并上传给所选 API 翻译": {
+    "en-US": "I consent to reading allowed inputs and sending them to the selected translation API",
+    "ja-JP": "許可したアプリの入力欄を読み取り、選択した API に翻訳を依頼することに同意します"
+  },
+  "允许监控的进程名（逗号分隔；空列表不读取任何应用）": {
+    "en-US": "Allowed process names (comma-separated; empty means no reading)",
+    "ja-JP": "許可するプロセス名（カンマ区切り・空欄なら読み取りなし）"
+  },
+  "例如 notepad, chrome, msedge；填写进程名，不填写窗口标题": {
+    "en-US": "For example: notepad, chrome, msedge. Use process names, not window titles.",
+    "ja-JP": "例：notepad, chrome, msedge。ウィンドウ名ではなくプロセス名を入力します。"
+  },
+  "排除的进程名（优先于允许列表）": {
+    "en-US": "Excluded process names (override allowlist)",
+    "ja-JP": "除外するプロセス名（許可より優先）"
+  },
+  "密码框与常见敏感标签会被排除，但无障碍接口无法识别所有敏感内容。没有按网站授权的能力，请用进程排除或托盘暂停保护敏感输入。无需管理员权限，无键盘记录、注入或驱动。": {
+    "en-US": "Passwords and common sensitive labels are excluded, but accessibility cannot identify every sensitive field. Website-specific consent is unavailable; exclude processes or pause reading for private input. No admin rights, keylogging, injection or drivers.",
+    "ja-JP": "パスワード欄などを除外しますが、すべての機密情報は識別できません。サイト別の許可はなく、機密入力にはプロセス除外や一時停止を使用してください。管理者権限・キー記録・注入・ドライバーは不要です。"
+  },
+  "本次会话统计": {
+    "en-US": "Session statistics",
+    "ja-JP": "今回のセッション統計"
+  },
+  "关闭此窗口后继续在系统托盘运行": {
+    "en-US": "Closing this window keeps DotKnow in the tray",
+    "ja-JP": "閉じた後もシステムトレイで動作します"
+  },
+  "保存设置": {
+    "en-US": "Save settings",
+    "ja-JP": "設定を保存"
+  },
+  "原文保持不变": {
+    "en-US": "Your original text stays unchanged",
+    "ja-JP": "原文は変更しません"
+  },
+  "复制译文": {
+    "en-US": "Copy translation",
+    "ja-JP": "訳文をコピー"
+  },
+  "替换…": {
+    "en-US": "Replace…",
+    "ja-JP": "置換…"
+  },
+  "是否替换当前输入内容？": {
+    "en-US": "Replace the current input?",
+    "ja-JP": "現在の入力内容を置換しますか？"
+  },
+  "原文": {
+    "en-US": "Original text",
+    "ja-JP": "原文"
+  },
+  "上方译文将写入当前输入框，不会发送消息。": {
+    "en-US": "The translation above will replace the input. No message will be sent.",
+    "ja-JP": "上の訳文で入力欄を置換します。メッセージは送信しません。"
+  },
+  "取消": {
+    "en-US": "Cancel",
+    "ja-JP": "キャンセル"
+  },
+  "确认替换": {
+    "en-US": "Confirm replacement",
+    "ja-JP": "置換を確認"
+  },
+  "DotKnow 已在系统托盘运行。": {
+    "en-US": "DotKnow is already running in the system tray.",
+    "ja-JP": "DotKnow はすでにシステムトレイで動作しています。"
+  },
+  "设置 / 隐私授权": {
+    "en-US": "Settings / privacy consent",
+    "ja-JP": "設定・プライバシーの同意"
+  },
+  "暂停全部读取": {
+    "en-US": "Pause all reading",
+    "ja-JP": "すべての読み取りを一時停止"
+  },
+  "清除缓存": {
+    "en-US": "Clear cache",
+    "ja-JP": "キャッシュを削除"
+  },
+  "退出": {
+    "en-US": "Exit",
+    "ja-JP": "終了"
+  },
+  "DotKnow · 仅监控允许的应用": {
+    "en-US": "DotKnow · Allowed apps only",
+    "ja-JP": "DotKnow · 許可したアプリのみ"
+  },
+  "DotKnow · 已暂停读取": {
+    "en-US": "DotKnow · Reading paused",
+    "ja-JP": "DotKnow · 読み取り停止中"
+  },
+  "本地缓存 · 原文保持不变": {
+    "en-US": "Local cache · Original unchanged",
+    "ja-JP": "ローカルキャッシュ・原文は変更しません"
+  },
+  "译文预览 · 原文保持不变": {
+    "en-US": "Translation preview · Original unchanged",
+    "ja-JP": "訳文プレビュー・原文は変更しません"
+  },
+  "译文已复制": {
+    "en-US": "Translation copied",
+    "ja-JP": "訳文をコピーしました"
+  },
+  "剪贴板正忙，请重试。": {
+    "en-US": "Clipboard is busy. Please try again.",
+    "ja-JP": "クリップボードを使用中です。再試行してください。"
+  },
+  "输入已变化、正在组字或不支持安全写入；请重新确认或复制译文。": {
+    "en-US": "The input changed, is composing, or cannot be written safely. Confirm again or copy the translation.",
+    "ja-JP": "入力変更・変換中・安全な書き込み非対応のいずれかです。再確認するか訳文をコピーしてください。"
+  },
+  "无法安全准备替换，请重新确认或复制译文。": {
+    "en-US": "Could not prepare a safe replacement. Confirm again or copy the translation.",
+    "ja-JP": "安全な置換を準備できません。再確認するか訳文をコピーしてください。"
+  },
+  "目标、内容或配置已变化。未替换，请重新确认。": {
+    "en-US": "The target, text or settings changed. Nothing was replaced. Confirm again.",
+    "ja-JP": "対象・内容・設定が変わりました。置換せず、再確認が必要です。"
+  },
+  "控件拒绝安全写入，未执行其他输入操作。请复制译文。": {
+    "en-US": "The control rejected safe writing. No other input was sent. Copy the translation instead.",
+    "ja-JP": "入力欄が書き込みを拒否しました。他の入力は送信しません。訳文をコピーしてください。"
+  },
+  "已取消 · 原文保持不变": {
+    "en-US": "Canceled · Original unchanged",
+    "ja-JP": "キャンセルしました・原文は変更しません"
+  },
+  "密钥已加密保存，留空即可继续使用。": {
+    "en-US": "The key is encrypted and saved. Leave blank to retain it.",
+    "ja-JP": "キーは暗号化して保存済みです。空欄で保持できます。"
+  },
+  "当前服务商和 API 地址尚未保存密钥。": {
+    "en-US": "No key is saved for this provider and API URL.",
+    "ja-JP": "この提供元と API URL のキーは未保存です。"
+  },
+  "快捷键格式无效，例如 Ctrl+Alt+Enter。": {
+    "en-US": "Invalid shortcut. Example: Ctrl+Alt+Enter.",
+    "ja-JP": "ショートカットが無効です。例：Ctrl+Alt+Enter。"
+  },
+  "已保存。仅监控允许列表中的应用。": {
+    "en-US": "Saved. Only allowed apps are monitored.",
+    "ja-JP": "保存しました。許可したアプリのみ監視します。"
+  },
+  "已保存；未授权，所有文本读取保持暂停。": {
+    "en-US": "Saved. Without consent, all text reading stays paused.",
+    "ja-JP": "保存しました。同意がないため読み取りは停止しています。"
+  },
+  "请输入有效数字（小数使用英文句点）。": {
+    "en-US": "Enter valid numbers, using a dot for decimals.",
+    "ja-JP": "有効な数値を入力してください。小数点にはピリオドを使用します。"
+  },
+  "无法保存设置或加密密钥，请检查本地存储权限。": {
+    "en-US": "Could not save settings or encrypt the key. Check local storage permissions.",
+    "ja-JP": "設定の保存・キーの暗号化ができません。保存先の権限を確認してください。"
+  },
+  "正在查询模型…": {
+    "en-US": "Fetching models…",
+    "ja-JP": "モデルを取得中…"
+  },
+  "模型查询失败；仍可手动填写模型 ID，请检查密钥、地址和账户权限。": {
+    "en-US": "Model listing failed. You can still enter a model ID manually. Check the key, URL and account permissions.",
+    "ja-JP": "モデル一覧の取得に失敗しました。ID を直接入力できます。キー・URL・権限を確認してください。"
+  },
+  "正在测试固定短句 Hello…": {
+    "en-US": "Testing with the fixed sample Hello…",
+    "ja-JP": "固定の短文 Hello でテスト中…"
+  },
+  "测试翻译失败，请检查密钥、模型和网络。": {
+    "en-US": "Translation test failed. Check the key, model and network.",
+    "ja-JP": "翻訳テストに失敗しました。キー・モデル・ネットワークを確認してください。"
+  },
+  "所有缓存已清除。": {
+    "en-US": "All caches cleared.",
+    "ja-JP": "すべてのキャッシュを削除しました。"
+  },
+  "缓存清理失败，请检查文件权限。": {
+    "en-US": "Cache cleanup failed. Check file permissions.",
+    "ja-JP": "キャッシュ削除に失敗しました。ファイル権限を確認してください。"
+  },
+  "已删除当前服务商的密钥。": {
+    "en-US": "The current provider's key was deleted.",
+    "ja-JP": "選択中の提供元のキーを削除しました。"
+  },
+  "无法删除密钥，请检查文件权限。": {
+    "en-US": "Could not delete the key. Check file permissions.",
+    "ja-JP": "キーを削除できません。ファイル権限を確認してください。"
+  },
+  "无法打开浏览器，请复制下方官方平台地址。": {
+    "en-US": "Could not open the browser. Copy the official URL below.",
+    "ja-JP": "ブラウザーを開けません。下の公式 URL をコピーしてください。"
+  },
+  "连接成功，已查询到 {0} 个模型。": {
+    "en-US": "Connected. Found {0} models.",
+    "ja-JP": "接続に成功しました。{0} 個のモデルを取得しました。"
+  },
+  "当前模型不在返回列表中，可以手动修改后测试翻译。": {
+    "en-US": "The current model is not listed. You can edit the ID and test translation.",
+    "ja-JP": "現在のモデルは一覧にありません。ID を変更して翻訳テストを実行できます。"
+  },
+  "固定短句测试成功：{0}": {
+    "en-US": "Sample translation succeeded: {0}",
+    "ja-JP": "固定短文の翻訳テストに成功：{0}"
+  },
+  "HTTP 请求 {0} · 本地命中 / 节省请求 {1}\n翻译成功 {2} · 失败 {3} · 命中率 {4}%\n平均 API 延迟 {5} ms · 输入词元 {6} / 输出词元 {7}": {
+    "en-US": "HTTP requests {0} · Local hits / requests saved {1}\nSuccesses {2} · Failures {3} · Cache hit rate {4}%\nAverage API latency {5} ms · Input tokens {6} / output tokens {7}",
+    "ja-JP": "HTTP リクエスト {0}・キャッシュ利用／節約 {1}\n翻訳成功 {2}・失敗 {3}・ヒット率 {4}%\n平均 API 遅延 {5} ms・入力トークン {6}／出力トークン {7}"
+  },
+  "API 返回格式无效，未显示不完整译文。": {
+    "en-US": "Invalid API response. Incomplete text was not displayed.",
+    "ja-JP": "API 応答形式が無効です。不完全な訳文は表示しません。"
+  },
+  "译文不完整或被服务拒绝，未用于替换。": {
+    "en-US": "The translation is incomplete or blocked; it cannot be used to replace text.",
+    "ja-JP": "訳文が不完全、またはサービスに拒否されました。置換には使用しません。"
+  },
+  "模型列表格式无效。": {
+    "en-US": "Invalid model list response.",
+    "ja-JP": "モデル一覧の応答形式が無効です。"
+  },
+  "请为当前服务商和 API 地址保存密钥。": {
+    "en-US": "Save an API key for this provider and URL.",
+    "ja-JP": "現在の提供元と API URL のキーを保存してください。"
+  },
+  "API 认证失败，请检查 Key 与账户权限。": {
+    "en-US": "API authentication failed. Check the key and account permissions.",
+    "ja-JP": "API 認証に失敗しました。キーとアカウント権限を確認してください。"
+  },
+  "API 请求受限，请稍后重试。": {
+    "en-US": "API rate limit reached. Try again later.",
+    "ja-JP": "API の利用制限に達しました。しばらくしてから再試行してください。"
+  },
+  "翻译服务暂时不可用。": {
+    "en-US": "The translation service is temporarily unavailable.",
+    "ja-JP": "翻訳サービスを一時的に利用できません。"
+  },
+  "API 拒绝请求（HTTP {0}），请检查模型、地址和账户余额。": {
+    "en-US": "API request rejected (HTTP {0}). Check the model, URL and account balance.",
+    "ja-JP": "API に拒否されました（HTTP {0}）。モデル・URL・残高を確認してください。"
+  },
+  "翻译请求超时，请稍后重试。": {
+    "en-US": "Translation request timed out. Try again later.",
+    "ja-JP": "翻訳リクエストがタイムアウトしました。後で再試行してください。"
+  },
+  "无法连接 API，请检查网络与 HTTPS 证书。": {
+    "en-US": "Could not connect to the API. Check the network and HTTPS certificates.",
+    "ja-JP": "API に接続できません。ネットワークと HTTPS 証明書を確認してください。"
+  },
+  "配置损坏或版本不兼容，已暂停读取；原配置文件未覆盖。请检查后重新保存。": {
+    "en-US": "The configuration is damaged or incompatible. Reading is paused; the original file is preserved. Check and save again.",
+    "ja-JP": "設定が破損、または非対応です。読み取りを停止し、元のファイルは保持しました。確認して保存してください。"
+  },
+  "当前 Windows 用户无法解密 API Key，请重新保存。": {
+    "en-US": "This Windows user cannot decrypt the API key. Save it again.",
+    "ja-JP": "現在の Windows ユーザーではキーを復号できません。再保存してください。"
+  },
+  "不支持所选界面语言。": {
+    "en-US": "Unsupported interface language.",
+    "ja-JP": "選択した表示言語は未対応です。"
+  },
+  "请选择 API 服务商并填写模型名称。": {
+    "en-US": "Choose an API provider and enter a model name.",
+    "ja-JP": "API プロバイダーとモデル名を設定してください。"
+  },
+  "API Base URL 必须是不含凭证、查询参数或片段的 HTTPS 地址。": {
+    "en-US": "The API URL must use HTTPS without credentials, query parameters or fragments.",
+    "ja-JP": "API URL は認証情報・クエリ・フラグメントのない HTTPS アドレスにしてください。"
+  },
+  "超时范围为 1–120 秒，重试范围为 0–4。": {
+    "en-US": "Timeout must be 1–120 seconds and retries 0–4.",
+    "ja-JP": "タイムアウトは 1～120 秒、再試行回数は 0～4 にしてください。"
+  },
+  "防抖、请求间隔或文本长度不在支持范围内。": {
+    "en-US": "Debounce, request interval or text length is outside supported limits.",
+    "ja-JP": "入力待機時間・リクエスト間隔・文字数が範囲外です。"
+  },
+  "不支持所选语言或翻译风格。": {
+    "en-US": "Unsupported language or translation style.",
+    "ja-JP": "選択した言語または翻訳スタイルは未対応です。"
+  },
+  "缓存容量或有效期不在支持范围内。": {
+    "en-US": "Cache capacity or lifetime is outside supported limits.",
+    "ja-JP": "キャッシュ容量または有効期間が範囲外です。"
+  },
+  "悬浮窗参数不在支持范围内。": {
+    "en-US": "Overlay settings are outside supported limits.",
+    "ja-JP": "フローティング表示の設定が範囲外です。"
+  },
+  "应用列表仅填写进程名，例如 notepad 或 chrome。": {
+    "en-US": "Enter process names only, such as notepad or chrome.",
+    "ja-JP": "アプリ一覧には notepad や chrome などのプロセス名を入力してください。"
+  },
+  "等待输入稳定…": {
+    "en-US": "Waiting for typing to settle…",
+    "ja-JP": "入力が落ち着くのを待っています…"
+  },
+  "正在翻译…": {
+    "en-US": "Translating…",
+    "ja-JP": "翻訳中…"
+  },
+  "API 未返回有效译文。": {
+    "en-US": "The API returned no valid translation.",
+    "ja-JP": "API から有効な訳文が返されませんでした。"
+  },
+  "本地缓存 · 未调用 API": {
+    "en-US": "Local cache · No API request",
+    "ja-JP": "ローカルキャッシュ・API への送信なし"
+  },
+  "译文就绪 · 原文保持不变": {
+    "en-US": "Translation ready · Original unchanged",
+    "ja-JP": "訳文の準備完了・原文は変更しません"
+  },
+  "翻译或缓存暂时不可用，请检查配置后重试。": {
+    "en-US": "Translation or cache is unavailable. Check settings and try again.",
+    "ja-JP": "翻訳またはキャッシュを利用できません。設定を確認して再試行してください。"
+  },
+  "自动识别 → 日语": {
+    "en-US": "Auto-detect → Japanese",
+    "ja-JP": "自動検出 → 日本語"
+  },
+  "自动识别 → 英语": {
+    "en-US": "Auto-detect → English",
+    "ja-JP": "自動検出 → 英語"
+  },
+  "自动识别 → 中文": {
+    "en-US": "Auto-detect → Chinese",
+    "ja-JP": "自動検出 → 中国語"
+  },
+  "中译英": {
+    "en-US": "Chinese → English",
+    "ja-JP": "中国語 → 英語"
+  },
+  "英译中": {
+    "en-US": "English → Chinese",
+    "ja-JP": "英語 → 中国語"
+  },
+  "中译日": {
+    "en-US": "Chinese → Japanese",
+    "ja-JP": "中国語 → 日本語"
+  },
+  "日译中": {
+    "en-US": "Japanese → Chinese",
+    "ja-JP": "日本語 → 中国語"
+  },
+  "英译日": {
+    "en-US": "English → Japanese",
+    "ja-JP": "英語 → 日本語"
+  },
+  "日译英": {
+    "en-US": "Japanese → English",
+    "ja-JP": "日本語 → 英語"
+  },
+  "自定义方向": {
+    "en-US": "Custom direction",
+    "ja-JP": "方向をカスタマイズ"
+  },
+  "不支持所选翻译方向。": {
+    "en-US": "Unsupported translation direction.",
+    "ja-JP": "選択した翻訳方向は未対応です。"
+  },
+  "快捷键 {0} 已被占用，相关快捷键未启用。请修改设置。": {
+    "en-US": "Shortcut {0} is unavailable. Shortcuts were not enabled. Change settings.",
+    "ja-JP": "ショートカット {0} は使用中です。有効化できないため、設定を変更してください。"
+  },
+  "通义千问（阿里云百炼）": {
+    "en-US": "Qwen (Alibaba Cloud)",
+    "ja-JP": "Qwen（Alibaba Cloud）"
+  },
+  "不支持所选 API 服务商。": {
+    "en-US": "Unsupported API provider.",
+    "ja-JP": "選択した API プロバイダーは未対応です。"
+  },
+  "当前控件不支持安全读取，请切换输入框。": {
+    "en-US": "This control cannot be read safely. Switch inputs.",
+    "ja-JP": "この入力欄は安全に読み取れません。別の入力欄を使用してください。"
+  },
+  "输入监视暂时不可用；未执行写入，请暂停或切换应用。": {
+    "en-US": "Input monitoring is unavailable. Nothing was written. Pause or switch apps.",
+    "ja-JP": "入力の監視を利用できません。書き込みは行っていません。一時停止するかアプリを切り替えてください。"
+  },
+  "快捷键格式无效或重复，例如 Ctrl+Alt+Enter。": {
+    "en-US": "Invalid or duplicate shortcut. Example: Ctrl+Alt+Enter.",
+    "ja-JP": "ショートカットが無効、または重複しています。例：Ctrl+Alt+Enter。"
+  },
+  "自动识别": {
+    "en-US": "Auto-detect",
+    "ja-JP": "自動検出"
+  },
+  "中文": {
+    "en-US": "Chinese",
+    "ja-JP": "中国語"
+  },
+  "英语": {
+    "en-US": "English",
+    "ja-JP": "英語"
+  },
+  "日语": {
+    "en-US": "Japanese",
+    "ja-JP": "日本語"
+  },
+  "自然翻译": {
+    "en-US": "Natural",
+    "ja-JP": "自然な翻訳"
+  },
+  "直译": {
+    "en-US": "Literal",
+    "ja-JP": "直訳"
+  },
+  "商务翻译": {
+    "en-US": "Business",
+    "ja-JP": "ビジネス"
+  },
+  "敬语翻译": {
+    "en-US": "Polite / Keigo",
+    "ja-JP": "敬語"
+  },
+  "右侧": {
+    "en-US": "Right",
+    "ja-JP": "右側"
+  },
+  "下方": {
+    "en-US": "Below",
+    "ja-JP": "下"
+  },
+  "左侧": {
+    "en-US": "Left",
+    "ja-JP": "左側"
+  },
+  "上方": {
+    "en-US": "Above",
+    "ja-JP": "上"
+  },
+  "AI": {
+    "en-US": "AI",
+    "ja-JP": "AI"
+  },
+  "主页": {
+    "en-US": "Home",
+    "ja-JP": "ホーム"
+  },
+  "翻译状态与常用设置一览": {
+    "en-US": "Translation status and frequently used settings",
+    "ja-JP": "翻訳の状態とよく使う設定"
+  },
+  "状态概览": {
+    "en-US": "Status overview",
+    "ja-JP": "状態の概要"
+  },
+  "实时翻译": {
+    "en-US": "Live translation",
+    "ja-JP": "リアルタイム翻訳"
+  },
+  "缓存统计": {
+    "en-US": "Cache statistics",
+    "ja-JP": "キャッシュ統計"
+  },
+  "常规设置": {
+    "en-US": "General settings",
+    "ja-JP": "全般設定"
+  },
+  "选择语言、翻译方向与输入偏好": {
+    "en-US": "Choose languages, translation direction and typing preferences",
+    "ja-JP": "言語・翻訳方向・入力の設定"
+  },
+  "AI 服务与模型": {
+    "en-US": "AI services & models",
+    "ja-JP": "AI サービスとモデル"
+  },
+  "管理模型服务、账户密钥与连接": {
+    "en-US": "Manage model providers, account keys and connections",
+    "ja-JP": "モデル提供元・キー・接続を管理"
+  },
+  "API 密钥": {
+    "en-US": "API key",
+    "ja-JP": "API キー"
+  },
+  "API 地址": {
+    "en-US": "API URL",
+    "ja-JP": "API URL"
+  },
+  "模型": {
+    "en-US": "Model",
+    "ja-JP": "モデル"
+  },
+  "购买平台": {
+    "en-US": "API platform",
+    "ja-JP": "API 購入ページ"
+  },
+  "测试翻译": {
+    "en-US": "Test translation",
+    "ja-JP": "翻訳テスト"
+  },
+  "超时": {
+    "en-US": "Timeout",
+    "ja-JP": "タイムアウト"
+  },
+  "重试": {
+    "en-US": "Retry",
+    "ja-JP": "再試行"
+  },
+  "翻译缓存": {
+    "en-US": "Translation cache",
+    "ja-JP": "翻訳キャッシュ"
+  },
+  "减少重复请求，管理本地存储": {
+    "en-US": "Reduce repeated requests and manage local storage",
+    "ja-JP": "重複リクエストを減らし、ローカル保存を管理"
+  },
+  "内存缓存": {
+    "en-US": "Memory cache",
+    "ja-JP": "メモリキャッシュ"
+  },
+  "磁盘缓存": {
+    "en-US": "Disk cache",
+    "ja-JP": "ディスクキャッシュ"
+  },
+  "有效期": {
+    "en-US": "Lifetime",
+    "ja-JP": "有効期間"
+  },
+  "容量": {
+    "en-US": "Capacity",
+    "ja-JP": "容量"
+  },
+  "请求统计": {
+    "en-US": "Request statistics",
+    "ja-JP": "リクエスト統計"
+  },
+  "外观与悬浮窗": {
+    "en-US": "Appearance & overlay",
+    "ja-JP": "外観とフローティング表示"
+  },
+  "让翻译窗口融入你的桌面": {
+    "en-US": "Make the translation overlay fit your desktop",
+    "ja-JP": "デスクトップに合った翻訳ウィンドウに"
+  },
+  "字体大小": {
+    "en-US": "Font size",
+    "ja-JP": "文字サイズ"
+  },
+  "不透明度": {
+    "en-US": "Opacity",
+    "ja-JP": "不透明度"
+  },
+  "最大宽度": {
+    "en-US": "Maximum width",
+    "ja-JP": "最大幅"
+  },
+  "主题": {
+    "en-US": "Theme",
+    "ja-JP": "テーマ"
+  },
+  "使用键盘快速预览、复制与替换": {
+    "en-US": "Quickly preview, copy and replace using the keyboard",
+    "ja-JP": "キーボードでプレビュー・コピー・置換"
+  },
+  "隐私与应用": {
+    "en-US": "Privacy & apps",
+    "ja-JP": "プライバシーとアプリ"
+  },
+  "控制监控范围与数据访问": {
+    "en-US": "Control app coverage and data access",
+    "ja-JP": "対象アプリとデータアクセスを管理"
+  },
+  "监控所有应用": {
+    "en-US": "Monitor all apps",
+    "ja-JP": "すべてのアプリを対象にする"
+  },
+  "仅允许指定应用": {
+    "en-US": "Selected apps only",
+    "ja-JP": "指定したアプリのみ"
+  },
+  "排除的进程名": {
+    "en-US": "Excluded process names",
+    "ja-JP": "除外するプロセス名"
+  },
+  "密码框": {
+    "en-US": "Password fields",
+    "ja-JP": "パスワード欄"
+  },
+  "隐私授权": {
+    "en-US": "Privacy consent",
+    "ja-JP": "プライバシーの同意"
+  },
+  "暂停所有读取": {
+    "en-US": "Pause all reading",
+    "ja-JP": "すべての読み取りを一時停止"
+  },
+  "实时输入翻译助手": {
+    "en-US": "Real-time typing translation assistant",
+    "ja-JP": "リアルタイム入力翻訳アシスタント"
+  },
+  "查找设置": {
+    "en-US": "Find a setting",
+    "ja-JP": "設定の検索"
+  },
+  "未找到相关设置": {
+    "en-US": "No matching settings found",
+    "ja-JP": "該当する設定が見つかりません"
+  },
+  "实时预览，确认后替换": {
+    "en-US": "Live preview. Confirm before replacing.",
+    "ja-JP": "リアルタイムで表示し、確認して置換"
+  },
+  "设置": {
+    "en-US": "Settings",
+    "ja-JP": "設定"
+  },
+  "让翻译，跟上你的表达": {
+    "en-US": "Translation that keeps up with you",
+    "ja-JP": "あなたの言葉に、翻訳が寄り添う"
+  },
+  "HTTP 请求": {
+    "en-US": "HTTP requests",
+    "ja-JP": "HTTP リクエスト"
+  },
+  "本地缓存命中": {
+    "en-US": "Local cache hits",
+    "ja-JP": "キャッシュのヒット"
+  },
+  "翻译成功": {
+    "en-US": "Successful translations",
+    "ja-JP": "翻訳成功"
+  },
+  "快速访问": {
+    "en-US": "Quick access",
+    "ja-JP": "クイックアクセス"
+  },
+  "当前翻译方向": {
+    "en-US": "Current translation direction",
+    "ja-JP": "現在の翻訳方向"
+  },
+  "更改翻译方向": {
+    "en-US": "Change direction",
+    "ja-JP": "翻訳方向を変更"
+  },
+  "选择源语言与目标语言的组合": {
+    "en-US": "Choose a source and target language pair",
+    "ja-JP": "翻訳元と翻訳先の言語を選択"
+  },
+  "管理模型服务": {
+    "en-US": "Manage AI services",
+    "ja-JP": "AI サービスを管理"
+  },
+  "应用访问范围": {
+    "en-US": "App coverage",
+    "ja-JP": "対象アプリ"
+  },
+  "管理应用权限": {
+    "en-US": "Manage app permissions",
+    "ja-JP": "アプリの権限を管理"
+  },
+  "所有应用或指定应用，随时由你决定": {
+    "en-US": "All apps or selected apps. You decide.",
+    "ja-JP": "すべてのアプリか、指定したアプリかを選択"
+  },
+  "输入与翻译": {
+    "en-US": "Typing & translation",
+    "ja-JP": "入力と翻訳"
+  },
+  "停止输入后自动显示译文，不会修改原文": {
+    "en-US": "Show a preview after typing pauses, leaving the original unchanged",
+    "ja-JP": "入力が止まると訳文を表示し、原文は変更しません"
+  },
+  "语言与方向": {
+    "en-US": "Languages & direction",
+    "ja-JP": "言語と翻訳方向"
+  },
+  "独立于翻译语言，支持简体中文、英语和日语": {
+    "en-US": "Separate from translation languages; Chinese, English and Japanese supported",
+    "ja-JP": "翻訳言語とは別に、中国語・英語・日本語を選択"
+  },
+  "按场景选择自然、直译、商务或敬语表达": {
+    "en-US": "Choose natural, literal, business or polite language",
+    "ja-JP": "自然・直訳・ビジネス・敬語から選択"
+  },
+  "输入偏好": {
+    "en-US": "Typing preferences",
+    "ja-JP": "入力設定"
+  },
+  "输入停顿达到此时间后请求翻译": {
+    "en-US": "Request translation after this pause in typing",
+    "ja-JP": "入力が止まってから翻訳までの待機時間"
+  },
+  "控制连续请求频率，减少 API 消耗": {
+    "en-US": "Limit request frequency to reduce API use",
+    "ja-JP": "リクエスト頻度を抑え、API 利用を削減"
+  },
+  "服务与模型": {
+    "en-US": "Provider & model",
+    "ja-JP": "サービスとモデル"
+  },
+  "五家主流服务，模型由你选择": {
+    "en-US": "Five major providers. Choose your own model.",
+    "ja-JP": "主要な 5 社に対応し、モデルを自分で選択"
+  },
+  "从账户列表选择，或手动输入模型 ID": {
+    "en-US": "Select from your account or enter a model ID",
+    "ja-JP": "アカウントの一覧から選択、または ID を入力"
+  },
+  "使用 HTTPS，可连接所选平台的自定义兼容地址": {
+    "en-US": "HTTPS is required; compatible custom endpoints are supported",
+    "ja-JP": "HTTPS 必須。選択したサービスの互換 URL も使用可能"
+  },
+  "账户与连接": {
+    "en-US": "Account & connection",
+    "ja-JP": "アカウントと接続"
+  },
+  "按服务商和地址分别加密保存；留空保留已有密钥": {
+    "en-US": "Encrypted per provider and URL; leave blank to keep the saved key",
+    "ja-JP": "提供元と URL ごとに暗号化し、空欄なら既存キーを保持"
+  },
+  "官方 API 平台": {
+    "en-US": "Official API platform",
+    "ja-JP": "公式 API プラットフォーム"
+  },
+  "开通 / 购买 API": {
+    "en-US": "Get API access / credits",
+    "ja-JP": "API の申し込み・購入"
+  },
+  "前往官方平台获取密钥、管理额度与账单": {
+    "en-US": "Get keys and manage credits and billing on the official platform",
+    "ja-JP": "公式サイトでキー・利用枠・請求を管理"
+  },
+  "连接测试": {
+    "en-US": "Connection tests",
+    "ja-JP": "接続テスト"
+  },
+  "模型查询不上传输入；翻译测试只发送 Hello": {
+    "en-US": "Model queries send no input; translation tests send only Hello",
+    "ja-JP": "モデル取得では入力を送信せず、翻訳テストは Hello のみ"
+  },
+  "删除密钥": {
+    "en-US": "Delete key",
+    "ja-JP": "キーを削除"
+  },
+  "仅删除当前服务商与 API 地址的本地密钥": {
+    "en-US": "Delete only the local key for this provider and URL",
+    "ja-JP": "選択中の提供元と URL のローカルキーのみ削除"
+  },
+  "请求控制": {
+    "en-US": "Request controls",
+    "ja-JP": "リクエストの設定"
+  },
+  "仅对限流与临时服务错误进行有限重试": {
+    "en-US": "Bounded retries only for rate limits and temporary server errors",
+    "ja-JP": "利用制限と一時的なサーバー障害のみ有限回再試行"
+  },
+  "相同内容优先复用译文，退出后自动释放": {
+    "en-US": "Reuse translations for identical input; cleared on exit",
+    "ja-JP": "同じ入力には訳文を再利用し、終了時に解放"
+  },
+  "本地磁盘": {
+    "en-US": "Local disk",
+    "ja-JP": "ローカルディスク"
+  },
+  "启用磁盘缓存": {
+    "en-US": "Enable disk cache",
+    "ja-JP": "ディスクキャッシュを有効にする"
+  },
+  "默认关闭；开启后以加密形式保留译文": {
+    "en-US": "Off by default; translations are encrypted when enabled",
+    "ja-JP": "初期値は無効。有効時は訳文を暗号化して保存"
+  },
+  "同时清理内存和已保存的磁盘译文": {
+    "en-US": "Clear memory entries and saved disk translations",
+    "ja-JP": "メモリと保存済みディスクの訳文を削除"
+  },
+  "主题与显示": {
+    "en-US": "Theme & display",
+    "ja-JP": "テーマと表示"
+  },
+  "设置窗口与翻译悬浮窗使用一致的配色": {
+    "en-US": "Use a consistent theme for settings and the overlay",
+    "ja-JP": "設定とフローティング表示に同じ配色を使用"
+  },
+  "调整悬浮窗中的译文字号": {
+    "en-US": "Adjust translation text size in the overlay",
+    "ja-JP": "フローティング表示の訳文サイズを変更"
+  },
+  "悬浮窗位置": {
+    "en-US": "Overlay position",
+    "ja-JP": "フローティング表示の位置"
+  },
+  "优先放置在输入框旁，空间不足时自动调整": {
+    "en-US": "Place beside the input and adjust when space is limited",
+    "ja-JP": "入力欄の横を優先し、空きに応じて自動調整"
+  },
+  "全局快捷键": {
+    "en-US": "Global shortcuts",
+    "ja-JP": "グローバルショートカット"
+  },
+  "打开原文与译文确认，确认后才写入": {
+    "en-US": "Review the original and translation; write only after confirmation",
+    "ja-JP": "原文と訳文を確認し、同意後にのみ書き込み"
+  },
+  "应用访问": {
+    "en-US": "App access",
+    "ja-JP": "アプリへのアクセス"
+  },
+  "覆盖全部可访问应用，无需逐一添加进程": {
+    "en-US": "Cover all accessible apps without adding processes individually",
+    "ja-JP": "アクセス可能な全アプリを対象にし、個別登録は不要"
+  },
+  "允许的进程名": {
+    "en-US": "Allowed process names",
+    "ja-JP": "許可するプロセス名"
+  },
+  "关闭所有应用模式后，仅监控此列表": {
+    "en-US": "When all-app mode is off, monitor only this list",
+    "ja-JP": "全アプリモードを無効にすると、この一覧のみ対象"
+  },
+  "始终优先排除；用逗号或换行分隔进程名": {
+    "en-US": "Always excluded; separate process names with commas or new lines",
+    "ja-JP": "常に除外を優先。プロセス名はカンマまたは改行で区切る"
+  },
+  "授权与保护": {
+    "en-US": "Consent & protection",
+    "ja-JP": "同意と保護"
+  },
+  "我同意上传输入内容用于翻译": {
+    "en-US": "I consent to sending input for translation",
+    "ja-JP": "翻訳のため入力内容を送信することに同意します"
+  },
+  "启用前明确同意将当前输入框内容发送给所选 AI": {
+    "en-US": "Consent is required to send focused input to your chosen AI",
+    "ja-JP": "入力欄の内容を選択した AI に送信するには同意が必要"
+  },
+  "立即暂停": {
+    "en-US": "Pause now",
+    "ja-JP": "今すぐ一時停止"
+  },
+  "立即停止监控与翻译，并隐藏悬浮窗": {
+    "en-US": "Stop monitoring and translation and hide the overlay now",
+    "ja-JP": "監視と翻訳を停止し、フローティング表示を非表示に"
+  },
+  "密码框、敏感控件和排除列表始终跳过。所有应用模式只覆盖系统无障碍接口允许访问的输入框，不会提权或绕过其他程序的安全限制。": {
+    "en-US": "Password fields, sensitive controls and excluded apps are always skipped. All-app mode covers only inputs exposed by system accessibility, without elevation or bypassing app security.",
+    "ja-JP": "パスワード欄・機密入力・除外アプリは常にスキップします。全アプリモードもシステムのアクセシビリティで取得できる入力欄だけが対象で、権限昇格や制限回避は行いません。"
+  },
+  "开启全部应用监控后，可访问输入框的完整内容可能发送给所选 AI 服务。处理私人内容时可随时暂停，也可以切换回仅允许指定应用。": {
+    "en-US": "With all-app monitoring enabled, the full accessible input may be sent to your chosen AI service. Pause for private content or switch back to selected apps only.",
+    "ja-JP": "全アプリを対象にすると、アクセス可能な入力欄全体が選択した AI に送信される場合があります。私的な内容では一時停止するか、指定アプリのみに戻してください。"
+  },
+  "更改设置后点击保存；关闭窗口仍在托盘运行": {
+    "en-US": "Save to apply changes. Closing keeps DotKnow in the tray.",
+    "ja-JP": "変更後は保存してください。閉じた後もトレイで動作します。"
+  },
+  "搜索结果": {
+    "en-US": "Search results",
+    "ja-JP": "検索結果"
+  },
+  "已暂停所有读取。": {
+    "en-US": "All reading is paused.",
+    "ja-JP": "すべての読み取りを停止しました。"
+  },
+  "已保存。监控全部可访问应用，排除列表仍生效。": {
+    "en-US": "Saved. All accessible apps are covered; exclusions still apply.",
+    "ja-JP": "保存しました。アクセス可能な全アプリを対象にし、除外設定も適用します。"
+  },
+  "等待隐私授权": {
+    "en-US": "Waiting for privacy consent",
+    "ja-JP": "プライバシーの同意待ち"
+  },
+  "实时翻译已开启": {
+    "en-US": "Live translation is on",
+    "ja-JP": "リアルタイム翻訳は有効です"
+  },
+  "实时翻译已暂停": {
+    "en-US": "Live translation is paused",
+    "ja-JP": "リアルタイム翻訳は停止中です"
+  },
+  "全部可访问应用": {
+    "en-US": "All accessible apps",
+    "ja-JP": "アクセス可能な全アプリ"
+  },
+  "DotKnow · 监控全部可访问应用": {
+    "en-US": "DotKnow · All accessible apps",
+    "ja-JP": "DotKnow · アクセス可能な全アプリ"
+  },
+  "超过长度限制时跳过翻译": {
+    "en-US": "Skip translation above this length limit",
+    "ja-JP": "文字数の上限を超えると翻訳をスキップ"
+  },
+  "浅色": {
+    "en-US": "Light",
+    "ja-JP": "ライト"
+  },
+  "深色": {
+    "en-US": "Dark",
+    "ja-JP": "ダーク"
+  },
+  "跟随系统": {
+    "en-US": "System",
+    "ja-JP": "システムに合わせる"
+  },
+  "打开配置文件": {
+    "en-US": "Open configuration",
+    "ja-JP": "設定ファイルを開く"
+  },
+  "关闭": {
+    "en-US": "Close",
+    "ja-JP": "閉じる"
+  },
+  "悬浮窗出现方式": {
+    "en-US": "Preview trigger",
+    "ja-JP": "プレビューの表示方法"
+  },
+  "选择何时翻译并显示悬浮窗": {
+    "en-US": "Choose when to translate and show the preview",
+    "ja-JP": "翻訳とプレビューのタイミングを選択"
+  },
+  "输入后自动出现": {
+    "en-US": "After typing",
+    "ja-JP": "入力後に自動表示"
+  },
+  "按快捷键出现": {
+    "en-US": "With a shortcut",
+    "ja-JP": "ショートカットで表示"
+  },
+  "选中文字后出现": {
+    "en-US": "After selecting text",
+    "ja-JP": "テキスト選択後に表示"
+  },
+  "按所选出现方式翻译，不会自动修改原文": {
+    "en-US": "Translate using the selected trigger; keep the original unchanged",
+    "ja-JP": "選択した方法で翻訳し、原文は自動変更しません"
+  },
+  "自动隐藏（秒）": {
+    "en-US": "Auto-hide (seconds)",
+    "ja-JP": "自動的に閉じる（秒）"
+  },
+  "0 表示不自动隐藏；操作悬浮窗时保持显示": {
+    "en-US": "0 keeps it open; stays visible while you use it",
+    "ja-JP": "0 は自動非表示を無効化。操作中は表示を維持"
+  },
+  "悬浮窗仅显示译文和图标；背景半透明，鼠标悬停时恢复清晰。选区译文只支持复制。": {
+    "en-US": "Compact preview with a translucent background; hover for clarity. Selected text can be copied.",
+    "ja-JP": "訳文とアイコンだけの半透明プレビュー。マウスを置くと鮮明になります。選択範囲はコピーのみ対応。"
+  },
+  "显示翻译预览": {
+    "en-US": "Show translation preview",
+    "ja-JP": "翻訳プレビューを表示"
+  },
+  "默认 Ctrl+Alt+T；优先翻译选区，否则翻译当前输入框": {
+    "en-US": "Default Ctrl+Alt+T; translate the selection or the current input",
+    "ja-JP": "既定は Ctrl+Alt+T。選択範囲、または現在の入力欄を翻訳"
+  },
+  "无法打开配置文件，请检查文件关联与本地存储权限。": {
+    "en-US": "Unable to open configuration. Check file associations and storage access.",
+    "ja-JP": "設定ファイルを開けません。関連付けと保存先の権限を確認してください。"
+  },
+  "无法读取当前输入或选区，请切换应用后重试。": {
+    "en-US": "Unable to read this input or selection. Switch applications and try again.",
+    "ja-JP": "入力や選択範囲を読み取れません。アプリを切り替えて再試行してください。"
+  },
+  "悬浮窗触发方式、主题或自动隐藏参数无效。": {
+    "en-US": "Invalid preview trigger, theme or auto-hide setting.",
+    "ja-JP": "プレビューの表示方法、テーマ、自動非表示の設定が無効です。"
+  },
+  "外观": {
+    "en-US": "Appearance",
+    "ja-JP": "外観"
+  },
+  "翻译暂不可用": {
+    "en-US": "Translation unavailable",
+    "ja-JP": "翻訳できません"
+  },
+  "不透明度（0.4–1）": {
+    "en-US": "Opacity (0.4–1)",
+    "ja-JP": "不透明度（0.4–1）"
+  },
+  "最大宽度（160–800）": {
+    "en-US": "Maximum width (160–800)",
+    "ja-JP": "最大幅（160–800）"
+  },
+  "本地收藏与复习": {
+    "en-US": "Favorites & review",
+    "ja-JP": "ローカル保存と復習"
+  },
+  "保存常用表达，用卡片巩固记忆": {
+    "en-US": "Save useful expressions and review with flashcards",
+    "ja-JP": "よく使う表現を保存してカードで復習"
+  },
+  "显示 Loading": {
+    "en-US": "Show loading indicator",
+    "ja-JP": "読み込み状況を表示"
+  },
+  "等待输入稳定和翻译期间显示进度，关闭后仅显示结果": {
+    "en-US": "Show progress while waiting and translating; turn off to show results only",
+    "ja-JP": "入力待機中と翻訳中に進捗を表示。オフにすると結果のみ表示"
+  },
+  "点击译文准备替换选区或当前行": {
+    "en-US": "Click the translation to prepare replacing the selection or current line",
+    "ja-JP": "訳文をクリックして選択範囲または現在の行の置換を確認"
+  },
+  "当前控件仅支持复制与收藏": {
+    "en-US": "This control supports copying and saving only",
+    "ja-JP": "この入力欄ではコピーと保存が可能です"
+  },
+  "收藏译文": {
+    "en-US": "Save translation",
+    "ja-JP": "訳文を保存"
+  },
+  "已收藏，可在本地收藏与复习中查看。": {
+    "en-US": "Saved. Find it in Favorites & review.",
+    "ja-JP": "保存しました。「ローカル保存と復習」で確認できます。"
+  },
+  "收藏失败，请检查本地文件与存储权限。": {
+    "en-US": "Could not save. Check local files and storage permissions.",
+    "ja-JP": "保存できません。ローカルファイルと書き込み権限を確認してください。"
+  },
+  "点击悬浮窗的星标保存原文与译文；仅在本机加密保存，不自动收藏。": {
+    "en-US": "Click the bubble star to save source and translation, encrypted on this device. Saving is always manual.",
+    "ja-JP": "吹き出しの星で原文と訳文を保存します。この端末に暗号化して保存され、自動保存はしません。"
+  },
+  "共 {0} 条收藏 · {1} 条待复习": {
+    "en-US": "{0} saved · {1} due for review",
+    "ja-JP": "保存 {0} 件・復習待ち {1} 件"
+  },
+  "开始到期复习": {
+    "en-US": "Review due cards",
+    "ja-JP": "復習を始める"
+  },
+  "刷新收藏": {
+    "en-US": "Refresh favorites",
+    "ja-JP": "保存一覧を更新"
+  },
+  "显示译文": {
+    "en-US": "Show translation",
+    "ja-JP": "訳文を表示"
+  },
+  "再练一次": {
+    "en-US": "Practice again",
+    "ja-JP": "もう一度"
+  },
+  "记住了": {
+    "en-US": "Remembered",
+    "ja-JP": "覚えた"
+  },
+  "搜索本地收藏": {
+    "en-US": "Search local favorites",
+    "ja-JP": "保存した表現を検索"
+  },
+  "暂无匹配的收藏；翻译后点击星标即可保存。": {
+    "en-US": "No matching favorites. Click the star after translating to save one.",
+    "ja-JP": "該当する保存はありません。翻訳後に星をクリックすると保存できます。"
+  },
+  "删除收藏": {
+    "en-US": "Delete favorite",
+    "ja-JP": "保存を削除"
+  },
+  "删除这条收藏及其复习进度？": {
+    "en-US": "Delete this favorite and its review progress?",
+    "ja-JP": "この保存と復習履歴を削除しますか？"
+  },
+  "收藏操作失败，请检查本地文件与存储权限。": {
+    "en-US": "Could not update favorites. Check local files and storage permissions.",
+    "ja-JP": "保存内容を更新できません。ファイルと書き込み権限を確認してください。"
+  },
+  "收藏文件无法读取，原文件已保留。请检查本地文件或 Windows 用户。": {
+    "en-US": "Cannot read favorites. The original file is preserved. Check local files or the Windows user.",
+    "ja-JP": "保存ファイルを読み込めません。元のファイルは保持されています。ファイルと Windows ユーザーを確認してください。"
+  },
+  "本轮复习完成。": {
+    "en-US": "Review session complete.",
+    "ja-JP": "今回の復習が完了しました。"
+  },
+  "复习 {0} / {1}": {
+    "en-US": "Review {0} / {1}",
+    "ja-JP": "復習 {0} / {1}"
+  },
+  "悬浮窗显示译文、复制、收藏与替换；点击译文可准备替换选区或当前行。": {
+    "en-US": "The bubble shows translation, copy, save and replace. Click the translation to prepare replacing the selection or current line.",
+    "ja-JP": "吹き出しからコピー・保存・置換ができます。訳文をクリックすると選択範囲か現在の行の置換を確認できます。"
+  },
+  "默认 Ctrl+Alt+T；优先翻译选区，否则翻译光标所在行": {
+    "en-US": "Default Ctrl+Alt+T; translate the selection, otherwise the current line",
+    "ja-JP": "既定 Ctrl+Alt+T。選択範囲を優先し、なければカーソル行を翻訳"
+  },
+  "收藏译文，稍后复习": {
+    "en-US": "Save expressions. Review later.",
+    "ja-JP": "表現を保存して、あとで復習"
+  },
+  "是否替换当前选区或所在行？": {
+    "en-US": "Replace the selection or current line?",
+    "ja-JP": "選択範囲または現在の行を置換しますか？"
+  },
+  "上方译文只替换选区或当前行，不会发送消息。": {
+    "en-US": "The translation replaces only the selection or current line. No message is sent.",
+    "ja-JP": "訳文は選択範囲か現在の行のみを置換します。送信はしません。"
+  },
+  "开启全部应用监控后，选区或光标所在行可能发送给所选 AI；范围核对会在本机临时读取输入框全文。私人内容可随时暂停或改为指定应用。": {
+    "en-US": "With all-app monitoring, the selection or current line may be sent to the selected AI. Full editor text is read locally to verify ranges. Pause or restrict applications when handling private content.",
+    "ja-JP": "全アプリ監視では選択範囲や現在の行を AI に送信します。範囲確認のため入力欄全文を端末内で一時的に読み取ります。私的な内容では一時停止または対象アプリを制限してください。"
+  },
+  "翻译窗口显示时机": {
+    "en-US": "Translation window display timing",
+    "ja-JP": "翻訳ウィンドウの表示タイミング"
+  },
+  "选择翻译中显示进度，或翻译完成后再显示窗口": {
+    "en-US": "Show progress while translating, or open the window when the result is ready",
+    "ja-JP": "翻訳中に進捗を表示するか、完了後にウィンドウを表示します"
+  },
+  "翻译中显示 Loading": {
+    "en-US": "Show loading while translating",
+    "ja-JP": "翻訳中から表示"
+  },
+  "翻译完成后显示": {
+    "en-US": "Show when translation is ready",
+    "ja-JP": "翻訳完了後に表示"
+  },
+  "选中文字，即刻翻译": {
+    "en-US": "Select text to translate",
+    "ja-JP": "テキストを選んで翻訳"
+  },
+  "默认鼠标拖选并松开后翻译，支持网页、文档和应用阅读文本": {
+    "en-US": "By default, release a text selection to translate in webpages, documents and apps",
+    "ja-JP": "既定ではマウスでテキストを選択し、離すと翻訳。Web ページ、文書、アプリの閲覧に対応"
+  },
+  "选区稳定或输入停顿达到此时间后请求翻译": {
+    "en-US": "Translate after the selection or typed text settles for this duration",
+    "ja-JP": "選択範囲または入力がこの時間変化しなければ翻訳"
+  },
+  "优先放置在选中文字旁，空间不足时自动调整": {
+    "en-US": "Place beside the selected text; adjust when space is limited",
+    "ja-JP": "選択したテキストの近くに表示。空きスペースに応じて調整"
+  },
+  "阅读选区可预览、复制与收藏；可安全编辑的输入框还支持确认替换。": {
+    "en-US": "Preview, copy and save reading selections; supported editors also allow confirmed replacement.",
+    "ja-JP": "閲覧中の選択範囲は翻訳・コピー・保存に対応。安全に編集できる入力欄では確認後に置換できます。"
+  },
+  "默认 Ctrl+Alt+T；划词模式仅翻译选区，其他模式可翻译输入当前行": {
+    "en-US": "Default Ctrl+Alt+T; selection mode requires selected text; other modes can translate the current input line",
+    "ja-JP": "既定は Ctrl+Alt+T。選択モードは選択範囲のみ、他のモードでは入力中の行も翻訳"
+  },
+  "启用前同意将所选文字发送给所选 AI；输入模式发送当前行": {
+    "en-US": "Consent to send selected text to your AI service; typing mode sends the current line",
+    "ja-JP": "選択したテキストを AI に送信することに同意。入力モードでは現在の行を送信"
+  },
+  "我同意上传所选文字或输入当前行用于翻译": {
+    "en-US": "I agree to send selected text or the current input line for translation",
+    "ja-JP": "選択したテキストまたは入力中の行を翻訳のために送信することに同意します"
+  },
+  "密码框、敏感控件和排除列表始终跳过。支持通过系统无障碍接口公开选区的应用；未公开文本的画面无法划词翻译。": {
+    "en-US": "Password fields, sensitive controls and excluded apps are skipped. Apps must expose their selection through Windows accessibility; inaccessible text cannot be translated by selection.",
+    "ja-JP": "パスワード欄、機密コントロール、除外アプリは読み取りません。Windows のアクセシビリティ機能で選択範囲を公開するアプリに対応します。"
+  },
+  "默认仅发送所选文字，不自动翻译整页。输入模式发送当前行；核对替换范围时会在本机临时读取编辑框全文。可暂停或限定应用。": {
+    "en-US": "By default, only selected text is sent, never the whole page. Typing mode sends the current line; full editor text may be read locally to verify replacement ranges. Pause or restrict apps at any time.",
+    "ja-JP": "既定では選択したテキストのみを送信し、ページ全体は自動翻訳しません。入力モードでは現在の行を送信。置換範囲の確認時は入力欄全体を端末内で一時的に読み取ります。"
+  },
+  "鼠标选中后翻译（默认）": {
+    "en-US": "Translate selected text (default)",
+    "ja-JP": "マウス選択後に翻訳（既定）"
+  },
+  "当前控件不支持安全读取选区，请尝试其他文本。": {
+    "en-US": "This control does not expose a readable selection. Try other text.",
+    "ja-JP": "このコントロールの選択範囲は読み取れません。他のテキストをお試しください。"
+  },
+  "选择语言、翻译方向与划词偏好": {
+    "en-US": "Choose languages, translation direction and text selection preferences",
+    "ja-JP": "言語、翻訳方向、選択範囲の翻訳を設定"
+  },
+  "离线题库": {
+    "en-US": "Offline vocabulary",
+    "ja-JP": "オフライン辞書"
+  },
+  "优先查询本地词库，积累常用表达": {
+    "en-US": "Use local translations first and grow your vocabulary",
+    "ja-JP": "ローカル辞書を優先し、よく使う表現を蓄積"
+  },
+  "先查本地题库，未命中再在线翻译；内置 32159 条中英日六向记录。": {
+    "en-US": "Look up locally before translating online. Includes 32,159 Chinese, English and Japanese directional entries.",
+    "ja-JP": "ローカル辞書を先に検索し、見つからなければオンライン翻訳。中英日 6 方向の 32,159 件を収録。"
+  },
+  "优先使用离线题库": {
+    "en-US": "Prefer offline vocabulary",
+    "ja-JP": "オフライン辞書を優先"
+  },
+  "默认开启；命中时无需 API Key，也不调用在线服务": {
+    "en-US": "Enabled by default. Local matches need no API key or online request.",
+    "ja-JP": "既定で有効。一致した場合は API キーも通信も不要。"
+  },
+  "未命中时允许在线翻译": {
+    "en-US": "Allow online translation on a miss",
+    "ja-JP": "見つからない場合はオンライン翻訳"
+  },
+  "关闭后仅查询题库；未命中会提示，不发送文本": {
+    "en-US": "Turn off to use only the vocabulary. Misses show a message without sending text.",
+    "ja-JP": "無効にすると辞書のみを使用。見つからなくてもテキストは送信しません。"
+  },
+  "自动积累在线译文": {
+    "en-US": "Save online translations to vocabulary",
+    "ja-JP": "オンライン訳文を自動保存"
+  },
+  "将在线结果和以后命中的旧缓存连同原文加密保存；不覆盖人工条目": {
+    "en-US": "Encrypt and save online results and future cache hits with their originals; preserve manual edits.",
+    "ja-JP": "オンライン結果や今後使う既存キャッシュを原文と共に暗号化して保存。手動編集は上書きしません。"
+  },
+  "正在加载离线题库…": {
+    "en-US": "Loading offline vocabulary…",
+    "ja-JP": "オフライン辞書を読み込み中…"
+  },
+  "按原文、语言方向和风格精确匹配；自动源语言有歧义时不猜测。": {
+    "en-US": "Match exact text, language direction and style. Ambiguous automatic source queries are not guessed.",
+    "ja-JP": "原文・翻訳方向・スタイルが完全一致する項目を検索。言語の自動判定に曖昧さがある場合は推測しません。"
+  },
+  "导入题库": {
+    "en-US": "Import vocabulary",
+    "ja-JP": "辞書をインポート"
+  },
+  "导出题库": {
+    "en-US": "Export vocabulary",
+    "ja-JP": "辞書をエクスポート"
+  },
+  "刷新题库": {
+    "en-US": "Refresh vocabulary",
+    "ja-JP": "辞書を更新"
+  },
+  "恢复内置词库": {
+    "en-US": "Restore bundled vocabulary",
+    "ja-JP": "内蔵辞書を復元"
+  },
+  "清空题库": {
+    "en-US": "Clear vocabulary",
+    "ja-JP": "辞書を消去"
+  },
+  "搜索原文或译文": {
+    "en-US": "Search originals or translations",
+    "ja-JP": "原文または訳文を検索"
+  },
+  "列表最多显示 100 条；输入关键词缩小范围，选中后可修改译文。": {
+    "en-US": "Shows up to 100 entries. Search to narrow results; select an entry to edit its translation.",
+    "ja-JP": "最大 100 件を表示。キーワードで絞り込み、項目を選ぶと訳文を編集できます。"
+  },
+  "修改所选条目的译文": {
+    "en-US": "Edit the selected translation",
+    "ja-JP": "選択した項目の訳文を編集"
+  },
+  "保存译文": {
+    "en-US": "Save translation",
+    "ja-JP": "訳文を保存"
+  },
+  "删除题库条目": {
+    "en-US": "Delete vocabulary entry",
+    "ja-JP": "辞書の項目を削除"
+  },
+  "个人条目在本机加密保存，没有有效期，与临时缓存分开；导出文件包含明文，请妥善保管。": {
+    "en-US": "Personal entries are encrypted locally, do not expire, and are separate from cache. Exports contain plain text; keep them private.",
+    "ja-JP": "個人項目は端末内で暗号化され、有効期限はなくキャッシュとは別に保存されます。エクスポートは平文なので適切に保管してください。"
+  },
+  "内置词库由用户提供，原始三语词条 6426 组；署名 DotKnow vocabulary authors，许可 CC BY 4.0。说明随安装包提供。": {
+    "en-US": "User-provided vocabulary: 6,426 trilingual groups. Credit: DotKnow vocabulary authors, CC BY 4.0. Documentation is included.",
+    "ja-JP": "ユーザー提供の辞書：三言語 6,426 組。著作者 DotKnow vocabulary authors、CC BY 4.0。説明書を同梱。"
+  },
+  "允许读取选区以查询本地题库；开启在线回退后，未命中内容会发送给所选 AI": {
+    "en-US": "Allow reading selections for local lookup. Online fallback sends unmatched text to your AI service.",
+    "ja-JP": "選択範囲を読み取り辞書を検索。オンライン翻訳を許可すると未登録のテキストを AI に送信します。"
+  },
+  "我同意读取选区，并按在线回退设置发送待翻译内容": {
+    "en-US": "I agree to read selections and send text according to my online fallback setting",
+    "ja-JP": "選択範囲の読み取りと、オンライン翻訳設定に基づくテキスト送信に同意します"
+  },
+  "题库命中时不发送文本。允许在线回退后，未命中选区或当前行会发送给所选 AI。核对替换范围时会在本机临时读取编辑框全文。": {
+    "en-US": "Local matches send no text. Online fallback sends unmatched selections or input lines to your AI service. Full editor text may be read locally to verify replacement ranges.",
+    "ja-JP": "辞書で一致した場合は送信しません。オンライン翻訳が有効な場合、未登録の選択範囲や入力行を AI に送信します。置換範囲の確認時は入力欄全体を端末内で一時的に読み取ります。"
+  },
+  "可用 {0} 条 · 歧义隔离 {1} 条 · 在线积累 {2} 条 · 人工编辑 {3} 条": {
+    "en-US": "{0} usable · {1} ambiguous · {2} learned · {3} manually edited",
+    "ja-JP": "利用可能 {0} 件 · 曖昧 {1} 件 · 自動保存 {2} 件 · 手動編集 {3} 件"
+  },
+  "歧义条目，需人工确认后使用": {
+    "en-US": "Ambiguous entry; confirm manually before use",
+    "ja-JP": "曖昧な項目。手動で確認後に使用可能"
+  },
+  "内置词库": {
+    "en-US": "Bundled vocabulary",
+    "ja-JP": "内蔵辞書"
+  },
+  "在线积累": {
+    "en-US": "Learned online",
+    "ja-JP": "オンラインから保存"
+  },
+  "人工编辑": {
+    "en-US": "Manually edited",
+    "ja-JP": "手動編集"
+  },
+  "导入词库": {
+    "en-US": "Imported vocabulary",
+    "ja-JP": "インポート辞書"
+  },
+  "题库暂时无法读取，原有文件已保留。": {
+    "en-US": "Vocabulary is unavailable. Existing files have been preserved.",
+    "ja-JP": "辞書を読み取れません。既存ファイルは保持されています。"
+  },
+  "题库操作失败，请检查文件格式、校验值和存储权限；原有内容未被清空。": {
+    "en-US": "Vocabulary operation failed. Check format, checksums and storage permissions. Existing contents were not cleared.",
+    "ja-JP": "辞書の操作に失敗。形式、チェックサム、保存先の権限をご確認ください。既存の内容は消去されていません。"
+  },
+  "题库导入完成。": {
+    "en-US": "Vocabulary import completed.",
+    "ja-JP": "辞書のインポートが完了しました。"
+  },
+  "新增 {0} 条 · 重复 {1} 条 · 隔离冲突 {2} 条 · 无效 {3} 条 · 保留人工条目 {4} 条": {
+    "en-US": "{0} added · {1} duplicates · {2} conflicts isolated · {3} invalid · {4} manual entries preserved",
+    "ja-JP": "追加 {0} 件 · 重複 {1} 件 · 競合隔離 {2} 件 · 無効 {3} 件 · 手動項目保持 {4} 件"
+  },
+  "导出文件包含明文原文、译文与个人积累。是否继续？": {
+    "en-US": "The export contains plain-text originals, translations and personal entries. Continue?",
+    "ja-JP": "原文、訳文、個人項目が平文で出力されます。続行しますか？"
+  },
+  "题库已导出，请妥善保管明文文件。": {
+    "en-US": "Vocabulary exported. Keep the plain-text file private.",
+    "ja-JP": "辞書をエクスポートしました。平文ファイルを適切に保管してください。"
+  },
+  "译文已保存，自动积累不会覆盖人工编辑。": {
+    "en-US": "Translation saved. Automatic learning will preserve your edit.",
+    "ja-JP": "訳文を保存しました。自動保存ではこの編集を上書きしません。"
+  },
+  "删除此题库条目？自动积累不会重新保存已删除的查询。": {
+    "en-US": "Delete this entry? Automatic learning will not recreate this deleted query.",
+    "ja-JP": "この項目を削除しますか？自動保存による再登録は行いません。"
+  },
+  "题库条目已删除。": {
+    "en-US": "Vocabulary entry deleted.",
+    "ja-JP": "辞書の項目を削除しました。"
+  },
+  "清空题库将删除个人积累、导入和编辑，并停用内置词库。收藏和缓存保留。是否继续？": {
+    "en-US": "Clear personal, imported and edited entries and disable the bundled vocabulary? Favorites and cache are kept.",
+    "ja-JP": "個人・インポート・編集項目を消去し、内蔵辞書を無効にしますか？お気に入りとキャッシュは保持されます。"
+  },
+  "题库已清空；可随时恢复内置词库。": {
+    "en-US": "Vocabulary cleared. You can restore the bundled vocabulary at any time.",
+    "ja-JP": "辞書を消去しました。内蔵辞書はいつでも復元できます。"
+  },
+  "内置词库已恢复，保留个人积累与编辑。": {
+    "en-US": "Bundled vocabulary restored. Personal entries and edits were kept.",
+    "ja-JP": "内蔵辞書を復元しました。個人項目と編集は保持されています。"
+  },
+  "离线题库 · 未调用 API": {
+    "en-US": "Offline vocabulary · No API request",
+    "ja-JP": "オフライン辞書 · API 通信なし"
+  },
+  "离线题库未命中，已关闭在线翻译。": {
+    "en-US": "No offline match. Online translation is disabled.",
+    "ja-JP": "辞書に一致する項目がありません。オンライン翻訳は無効です。"
+  },
+  "译文就绪，但本地保存失败；请检查存储权限。": {
+    "en-US": "Translation ready, but local saving failed. Check storage permissions.",
+    "ja-JP": "翻訳は完了しましたが保存に失敗。保存先の権限をご確認ください。"
+  },
+  "在线翻译": {
+    "en-US": "Online translation",
+    "ja-JP": "オンライン翻訳"
+  },
+  "本地缓存": {
+    "en-US": "Local cache",
+    "ja-JP": "ローカルキャッシュ"
+  },
+  "离线题库无法初始化，原有文件已保留；请检查存储权限。": {
+    "en-US": "Cannot initialize offline vocabulary. Existing files are preserved. Check storage permissions.",
+    "ja-JP": "オフライン辞書を初期化できません。既存ファイルは保持されています。保存先の権限をご確認ください。"
+  },
+  "HTTP 请求 {0} · 题库命中 {1} · 缓存命中 {2}\n在线成功 {3} · 失败 {4} · 本地命中率 {5}%\n平均 API 延迟 {6} ms · 输入词元 {7} / 输出词元 {8}": {
+    "en-US": "HTTP requests {0} · Vocabulary hits {1} · Cache hits {2}\nOnline successes {3} · Failures {4} · Local hit rate {5}%\nAverage API latency {6} ms · Input tokens {7} / Output tokens {8}",
+    "ja-JP": "HTTP リクエスト {0} · 辞書ヒット {1} · キャッシュヒット {2}\nオンライン成功 {3} · 失敗 {4} · ローカルヒット率 {5}%\n平均 API 遅延 {6} ms · 入力トークン {7} / 出力トークン {8}"
+  },
+  "享受生活中的小美好。": {
+    "en-US": "Enjoy the little things.",
+    "ja-JP": "日々の小さな幸せを楽しもう。"
+  },
+  "你的工作台": {
+    "en-US": "YOUR WORKSPACE",
+    "ja-JP": "ワークスペース"
+  },
+  "即时预览；保存后保留，关闭窗口恢复已保存的外观。": {
+    "en-US": "Preview changes instantly. Save to keep them; closing restores your saved appearance.",
+    "ja-JP": "変更はすぐにプレビューされます。保存すると保持され、閉じると保存済みの外観に戻ります。"
+  },
+  "四套配色，每一套都支持浅色、深色与跟随系统。": {
+    "en-US": "Four palettes, each with light, dark and system modes.",
+    "ja-JP": "4つの配色すべてで、ライト・ダーク・システム設定を選べます。"
+  },
+  "复习进度": {
+    "en-US": "Review progress",
+    "ja-JP": "復習の進捗"
+  },
+  "外观主题": {
+    "en-US": "Appearance",
+    "ja-JP": "外観テーマ"
+  },
+  "官网同款": {
+    "en-US": "Website original",
+    "ja-JP": "公式サイトと同じ"
+  },
+  "常用的，留在本地。": {
+    "en-US": "Keep the familiar close.",
+    "ja-JP": "よく使う言葉は、手元に。"
+  },
+  "开始使用": {
+    "en-US": "Get started",
+    "ja-JP": "はじめる"
+  },
+  "把好表达，变成自己的。": {
+    "en-US": "Make good expressions yours.",
+    "ja-JP": "よい表現を、自分のものに。"
+  },
+  "把好表达，留在本地。": {
+    "en-US": "Keep good expressions close.",
+    "ja-JP": "よい表現を、手元に残そう。"
+  },
+  "收藏与复习": {
+    "en-US": "Favorites & review",
+    "ja-JP": "お気に入りと復習"
+  },
+  "明暗模式": {
+    "en-US": "Light & dark",
+    "ja-JP": "明るさの設定"
+  },
+  "暮紫": {
+    "en-US": "Lavender",
+    "ja-JP": "ラベンダー"
+  },
+  "最小化": {
+    "en-US": "Minimize",
+    "ja-JP": "最小化"
+  },
+  "本地命中": {
+    "en-US": "Local matches",
+    "ja-JP": "ローカルの一致"
+  },
+  "本次运行": {
+    "en-US": "THIS SESSION",
+    "ja-JP": "今回のセッション"
+  },
+  "柔和丁香": {
+    "en-US": "Soft lilac",
+    "ja-JP": "柔らかなライラック"
+  },
+  "每一次理解，都算数。": {
+    "en-US": "Every little understanding counts.",
+    "ja-JP": "小さな理解を、一つずつ。"
+  },
+  "浅纸": {
+    "en-US": "Paper",
+    "ja-JP": "ペーパー"
+  },
+  "浮窗显示": {
+    "en-US": "Overlay display",
+    "ja-JP": "翻訳ウィンドウの表示"
+  },
+  "深林": {
+    "en-US": "Forest",
+    "ja-JP": "フォレスト"
+  },
+  "清透蓝灰": {
+    "en-US": "Calm blue grey",
+    "ja-JP": "澄んだブルーグレー"
+  },
+  "界面外观": {
+    "en-US": "App appearance",
+    "ja-JP": "アプリの外観"
+  },
+  "看懂世界。": {
+    "en-US": "Understand the world.",
+    "ja-JP": "世界を理解する。"
+  },
+  "翻译偏好": {
+    "en-US": "Translation preferences",
+    "ja-JP": "翻訳の設定"
+  },
+  "翻译浮窗预览": {
+    "en-US": "Translation overlay preview",
+    "ja-JP": "翻訳ウィンドウのプレビュー"
+  },
+  "自定义外观": {
+    "en-US": "Personalize",
+    "ja-JP": "外観をカスタマイズ"
+  },
+  "自然草木": {
+    "en-US": "Botanical greens",
+    "ja-JP": "自然なグリーン"
+  },
+  "让伴译更像你的桌面。": {
+    "en-US": "Make yourself at home.",
+    "ja-JP": "デスクトップになじむ外観へ。"
+  },
+  "语言、风格与划词方式": {
+    "en-US": "Language, style & selection",
+    "ja-JP": "言語・スタイル・選択方法"
+  },
+  "选中一句，": {
+    "en-US": "Select a thought.",
+    "ja-JP": "言葉を選んで、"
+  },
+  "选择你的配色": {
+    "en-US": "Find your palette",
+    "ja-JP": "好きな配色を選ぶ"
+  },
+  "配色、明暗与悬浮窗样式": {
+    "en-US": "Palettes, light & dark, and overlay styling",
+    "ja-JP": "配色・明るさ・翻訳ウィンドウのスタイル"
+  },
+  "配色将同步应用到设置、收藏和翻译浮窗。": {
+    "en-US": "Your palette follows you across the app.",
+    "ja-JP": "設定・お気に入り・翻訳ウィンドウに同じ配色を適用します。"
+  },
+  "雾蓝": {
+    "en-US": "Ocean",
+    "ja-JP": "オーシャン"
+  },
+  "默认划词，随选随译。查看并确认后，才会替换原文。": {
+    "en-US": "Select text to translate. Replacement always waits for your confirmation.",
+    "ja-JP": "選んだ言葉をすぐ翻訳。原文の置き換えは、確認してから。"
+  },
+  "米白与荧光绿，延续官网风格": {
+    "en-US": "Warm paper and fresh lime, just like the website.",
+    "ja-JP": "公式サイトと同じ、生成りとライムグリーン。"
+  },
+  "低饱和草木绿，让阅读安静下来": {
+    "en-US": "Quiet botanical greens for unhurried reading.",
+    "ja-JP": "落ち着いた草木のグリーンで、穏やかな読書を。"
+  },
+  "清透的蓝灰，为专注留一点空间": {
+    "en-US": "Clear blue greys, with room to focus.",
+    "ja-JP": "澄んだブルーグレーで、集中できる余白を。"
+  },
+  "柔和的丁香紫，给表达一点灵感": {
+    "en-US": "A little lilac inspiration for your next thought.",
+    "ja-JP": "柔らかなライラックで、表現にひらめきを。"
+  },
+  "点知": {
+    "en-US": "DotKnow",
+    "ja-JP": "点知"
+  },
+  "点知 · DotKnow": {
+    "en-US": "DotKnow",
+    "ja-JP": "点知 · DotKnow"
+  },
+  "点知 · 划选即问": {
+    "en-US": "DotKnow · Select and ask",
+    "ja-JP": "点知 · 選択して質問"
+  },
+  "哪里不会，": {
+    "en-US": "Something unclear?",
+    "ja-JP": "わからないところを、"
+  },
+  "点哪里。": {
+    "en-US": "Select and ask.",
+    "ja-JP": "選んで聞こう。"
+  },
+  "哪里不会，点哪里。": {
+    "en-US": "Something unclear? Select and ask.",
+    "ja-JP": "わからないところを、選んで聞こう。"
+  },
+  "任务与提示词": {
+    "en-US": "Tasks & prompts",
+    "ja-JP": "タスクとプロンプト"
+  },
+  "你的桌面点读机": {
+    "en-US": "Your desktop reading companion",
+    "ja-JP": "デスクトップの学習パートナー"
+  },
+  "划选不懂的内容，选择预设或输入问题。翻译依然在这里，离线词库只用于翻译模式。": {
+    "en-US": "Select something unclear, choose a task or ask a question. Translation keeps its offline vocabulary.",
+    "ja-JP": "疑問のある文章を選び、タスクや質問を指定。翻訳モードではオフライン辞書も使えます。"
+  },
+  "默认任务": {
+    "en-US": "Default task",
+    "ja-JP": "既定のタスク"
+  },
+  "划选之后": {
+    "en-US": "After selecting",
+    "ja-JP": "選択した後の動作"
+  },
+  "回答语言": {
+    "en-US": "Answer language",
+    "ja-JP": "回答言語"
+  },
+  "百科等任务的回答语言；翻译方向在常规设置中单独选择。": {
+    "en-US": "Language for AI answers. Translation languages are set separately under General.",
+    "ja-JP": "AI 回答の言語。翻訳方向は一般設定で指定します。"
+  },
+  "预设提示词": {
+    "en-US": "Prompt presets",
+    "ja-JP": "プロンプトのプリセット"
+  },
+  "新建提示词": {
+    "en-US": "New prompt",
+    "ja-JP": "プロンプトを追加"
+  },
+  "名称": {
+    "en-US": "Name",
+    "ja-JP": "名前"
+  },
+  "提示词名称": {
+    "en-US": "Prompt name",
+    "ja-JP": "プロンプト名"
+  },
+  "任务指令": {
+    "en-US": "Task instructions",
+    "ja-JP": "タスクの指示"
+  },
+  "只写希望 AI 如何回答；选中的文本会单独提供，无需填写占位符。内置预设只读，可新建自己的版本。": {
+    "en-US": "Describe how AI should respond. Selected text is provided separately; no placeholder is needed. Built-ins are read-only; create your own version.",
+    "ja-JP": "AI の回答方法を記入。選択テキストは別途送信するためプレースホルダーは不要です。内蔵プリセットは読み取り専用です。"
+  },
+  "保存此预设": {
+    "en-US": "Save preset",
+    "ja-JP": "プリセットを保存"
+  },
+  "删除此预设": {
+    "en-US": "Delete preset",
+    "ja-JP": "プリセットを削除"
+  },
+  "百科等任务需要配置在线 API。离线优先、仅离线和自动积累只影响纯翻译；补充问题将作为 AI 任务处理。": {
+    "en-US": "AI tasks need an online API. Offline priority, offline-only and vocabulary learning apply to plain translation. Additional questions use AI.",
+    "ja-JP": "AI タスクにはオンライン API が必要です。オフライン優先・オフライン限定・辞書への蓄積は通常の翻訳にのみ適用。追加質問は AI が処理します。"
+  },
+  "先选择任务或输入问题（推荐）": {
+    "en-US": "Choose a task or ask first (recommended)",
+    "ja-JP": "タスクを選択・質問を入力（推奨）"
+  },
+  "立即执行默认预设": {
+    "en-US": "Run default task immediately",
+    "ja-JP": "既定のタスクをすぐ実行"
+  },
+  "百科": {
+    "en-US": "Encyclopedia",
+    "ja-JP": "百科"
+  },
+  "翻译": {
+    "en-US": "Translate",
+    "ja-JP": "翻訳"
+  },
+  "通俗解释": {
+    "en-US": "Plain explanation",
+    "ja-JP": "やさしく説明"
+  },
+  "提炼重点": {
+    "en-US": "Key points",
+    "ja-JP": "要点をまとめる"
+  },
+  "写作润色": {
+    "en-US": "Polish writing",
+    "ja-JP": "文章を推敲"
+  },
+  "代码解读": {
+    "en-US": "Explain code",
+    "ja-JP": "コードを解説"
+  },
+  "自由提问": {
+    "en-US": "Ask anything",
+    "ja-JP": "自由に質問"
+  },
+  "选中的内容": {
+    "en-US": "Selected text",
+    "ja-JP": "選択した内容"
+  },
+  "选择任务": {
+    "en-US": "Choose task",
+    "ja-JP": "タスクを選択"
+  },
+  "开始查询": {
+    "en-US": "Ask AI",
+    "ja-JP": "質問する"
+  },
+  "补充问题（自由提问时必填）": {
+    "en-US": "Additional question (required for Ask anything)",
+    "ja-JP": "追加の質問（自由に質問では必須）"
+  },
+  "输入你的问题": {
+    "en-US": "Your question",
+    "ja-JP": "質問を入力"
+  },
+  "例如：用一个生活中的例子解释。Ctrl+Enter 发送": {
+    "en-US": "E.g. explain with an everyday example. Ctrl+Enter to send.",
+    "ja-JP": "例：日常の例で説明して。Ctrl+Enter で送信"
+  },
+  "选一个预设直接查询，或写下你的问题。": {
+    "en-US": "Choose a preset or write your question.",
+    "ja-JP": "プリセットを選ぶか、質問を入力してください。"
+  },
+  "查询结果": {
+    "en-US": "Answer",
+    "ja-JP": "回答"
+  },
+  "复制结果": {
+    "en-US": "Copy answer",
+    "ja-JP": "回答をコピー"
+  },
+  "收藏": {
+    "en-US": "Save",
+    "ja-JP": "保存"
+  },
+  "AI 回答可能有误；百科等任务需要在线模型，不提供实时联网检索。": {
+    "en-US": "AI can make mistakes. AI tasks need an online model; live web search is not provided.",
+    "ja-JP": "AI は誤る場合があります。AI タスクにはオンラインモデルが必要で、リアルタイムのウェブ検索は行いません。"
+  },
+  "选区已保留，输入问题不会读取其他内容。": {
+    "en-US": "Selection captured. Typing a question will not read other content.",
+    "ja-JP": "選択内容を保持しています。質問の入力中に他の内容は読み取りません。"
+  },
+  "翻译模式：沿用翻译方向、离线优先和自动积累设置。": {
+    "en-US": "Translation uses your language, offline priority and vocabulary settings.",
+    "ja-JP": "翻訳方向・オフライン優先・辞書への蓄積の設定を使用します。"
+  },
+  "在线 AI 任务：选区作为参考内容，提示词和补充问题决定回答方式。": {
+    "en-US": "Online AI task: the selected text is context; your prompt and question guide the answer.",
+    "ja-JP": "オンライン AI タスク。選択内容を参考に、プロンプトと質問に沿って回答します。"
+  },
+  "正在查询…": {
+    "en-US": "Working on your question…",
+    "ja-JP": "回答を作成中…"
+  },
+  "回答就绪 · AI 生成": {
+    "en-US": "Answer ready · AI generated",
+    "ja-JP": "回答しました · AI 生成"
+  },
+  "结果已复制": {
+    "en-US": "Answer copied",
+    "ja-JP": "回答をコピーしました"
+  },
+  "收藏失败，请检查本地存储权限。": {
+    "en-US": "Could not save. Check local storage permissions.",
+    "ja-JP": "保存できません。ローカル保存先の権限を確認してください。"
+  },
+  "所选提示词已不存在，请重新选择。": {
+    "en-US": "This prompt no longer exists. Choose another.",
+    "ja-JP": "このプロンプトは存在しません。選び直してください。"
+  },
+  "补充问题最多 4000 字。": {
+    "en-US": "Questions can contain up to 4,000 characters.",
+    "ja-JP": "追加の質問は 4,000 文字以内です。"
+  },
+  "请输入你想问的问题。": {
+    "en-US": "Enter your question.",
+    "ja-JP": "質問を入力してください。"
+  },
+  "自定义提示词最多 20 套；名称 1–40 字，提示词 1–6000 字，标识不能重复。": {
+    "en-US": "Up to 20 custom prompts; names 1–40 characters and instructions 1–6,000. IDs must be unique.",
+    "ja-JP": "カスタムプロンプトは最大 20 個。名前は 1～40 文字、指示は 1～6,000 文字。ID は重複不可です。"
+  },
+  "助手任务、划选动作或回答语言无效。": {
+    "en-US": "Invalid assistant task, selection action or answer language.",
+    "ja-JP": "タスク・選択後の動作・回答言語が無効です。"
+  },
+  "提示词已加入待保存设置，请点击保存设置。": {
+    "en-US": "Prompt updated. Click Save settings to keep it.",
+    "ja-JP": "プロンプトを更新しました。「設定を保存」で確定してください。"
+  },
+  "提示词已从待保存设置移除，请点击保存设置。": {
+    "en-US": "Prompt removed. Click Save settings to keep the change.",
+    "ja-JP": "プロンプトを削除しました。「設定を保存」で確定してください。"
+  },
+  "百科、翻译与自定义提问": {
+    "en-US": "Encyclopedia, translation & your questions",
+    "ja-JP": "百科・翻訳・自分の質問"
+  },
+  "把新知识，变成自己的。": {
+    "en-US": "Make new knowledge your own.",
+    "ja-JP": "新しい知識を自分のものに。"
+  },
+  "让点知更像你的桌面。": {
+    "en-US": "Make DotKnow feel at home.",
+    "ja-JP": "点知をあなたのデスクトップに。"
+  },
+  "默认划选即问。选预设，或写下自己的问题。翻译模式保留离线词库。": {
+    "en-US": "Select and ask. Choose a preset or write a question. Translation keeps its offline vocabulary.",
+    "ja-JP": "選択して質問。プリセットや自分の質問を指定。翻訳のオフライン辞書もそのまま。"
+  },
+  "完成查询": {
+    "en-US": "Answers",
+    "ja-JP": "回答数"
+  },
+  "划选助手已开启": {
+    "en-US": "Selection assistant is on",
+    "ja-JP": "選択アシスタントは有効"
+  },
+  "划选助手已暂停": {
+    "en-US": "Selection assistant is paused",
+    "ja-JP": "選択アシスタントは一時停止中"
+  },
+  "结果缓存": {
+    "en-US": "Answer cache",
+    "ja-JP": "回答キャッシュ"
+  },
+  "鼠标划选后出现（默认）": {
+    "en-US": "After mouse selection (default)",
+    "ja-JP": "マウスで選択後（既定）"
+  },
+  "自动查询窗口显示时机": {
+    "en-US": "Automatic answer display",
+    "ja-JP": "自動回答の表示タイミング"
+  },
+  "查询中显示 Loading": {
+    "en-US": "Show progress while working",
+    "ja-JP": "処理中に表示"
+  },
+  "查询完成后显示": {
+    "en-US": "Show when ready",
+    "ja-JP": "完了後に表示"
+  },
+  "显示查询面板": {
+    "en-US": "Show question panel",
+    "ja-JP": "質問パネルを表示"
+  },
+  "复制当前结果": {
+    "en-US": "Copy current answer",
+    "ja-JP": "現在の回答をコピー"
+  },
+  "开启划选助手": {
+    "en-US": "Enable selection assistant",
+    "ja-JP": "選択アシスタントを有効化"
+  },
+  "选区稳定或输入停顿达到此时间后执行自动任务": {
+    "en-US": "Wait this long after selection or typing stops before automatic tasks.",
+    "ja-JP": "選択や入力が止まってから自動タスクを実行するまでの待機時間。"
+  },
+  "超过长度限制时跳过读取": {
+    "en-US": "Skip content longer than this limit.",
+    "ja-JP": "この文字数を超える内容は読み取りません。"
+  },
+  "点知（或旧版伴译）已在系统托盘运行。": {
+    "en-US": "DotKnow (or DotKnow) is already running in the tray.",
+    "ja-JP": "点知（または旧版 DotKnow）はトレイで動作中です。"
+  },
+  "点知 · 已暂停读取": {
+    "en-US": "DotKnow · Paused",
+    "ja-JP": "点知 · 一時停止中"
+  },
+  "点知 · 监控全部可访问应用": {
+    "en-US": "DotKnow · All accessible apps",
+    "ja-JP": "点知 · アクセス可能なアプリ"
+  },
+  "点知 · 仅监控允许的应用": {
+    "en-US": "DotKnow · Allowed apps only",
+    "ja-JP": "点知 · 許可したアプリのみ"
+  },
+  "查看答案": {
+    "en-US": "Reveal answer",
+    "ja-JP": "回答を表示"
+  },
+  "划选助手": {
+    "en-US": "Selection assistant",
+    "ja-JP": "選択アシスタント"
+  },
+  "按所选出现方式查询，不会自动修改原文": {
+    "en-US": "Query using your chosen trigger without changing the original text.",
+    "ja-JP": "選択した方法で質問し、元の文章は自動変更しません。"
+  },
+  "允许读取选区；在线任务发送选区、指令和问题给所选 AI，纯翻译按离线回退设置处理": {
+    "en-US": "Allow selection reading. Online tasks send selected text, instructions and questions to your AI provider. Plain translation follows offline settings.",
+    "ja-JP": "選択内容の読み取りを許可します。オンラインタスクは選択内容・指示・質問を AI に送信し、通常の翻訳はオフライン設定に従います。"
+  },
+  "我同意读取选区，并按所选任务发送内容给 AI": {
+    "en-US": "I consent to reading selections and sending content for my chosen AI tasks.",
+    "ja-JP": "選択内容の読み取りと、選んだ AI タスクへの送信に同意します。"
+  },
+  "立即停止读取与查询，并隐藏面板": {
+    "en-US": "Stop reading and queries, and hide panels.",
+    "ja-JP": "読み取りと質問を停止し、パネルを非表示にします。"
+  },
+  "纯翻译题库命中时不发送文本。百科等在线任务发送选区、指令与问题给所选 AI。核对翻译替换范围时会在本机临时读取编辑框全文。": {
+    "en-US": "Offline translation hits do not send text. Online AI tasks send the selection, instructions and question to your provider. Safe replacement temporarily checks the full editor text locally.",
+    "ja-JP": "翻訳辞書に一致した場合は送信しません。オンライン AI タスクは選択内容・指示・質問を送信します。安全な置換の確認時は編集欄の全文をローカルで一時確認します。"
+  },
+  "密码框、敏感控件和排除列表始终跳过。仅支持公开文本选区的应用；不识别图片或扫描件。": {
+    "en-US": "Password fields, sensitive controls and exclusions are skipped. Apps must expose text selections; images and scans are unsupported.",
+    "ja-JP": "パスワード欄・機密コントロール・除外リストは常にスキップ。テキスト選択を公開するアプリのみ対応し、画像やスキャンは非対応です。"
+  },
+  "把新知识，留在本地。": {
+    "en-US": "Keep new knowledge close.",
+    "ja-JP": "新しい知識をローカルに。"
+  },
+  "主动收藏有用的回答和译文；保留原文与问题，仅在本机加密保存。": {
+    "en-US": "Save useful answers and translations with their original text and question, encrypted locally.",
+    "ja-JP": "役立つ回答や翻訳を、元の文章・質問と一緒にローカルで暗号化保存します。"
+  },
+  "显示答案": {
+    "en-US": "Reveal answer",
+    "ja-JP": "回答を表示"
+  },
+  "划选助手状态与常用设置一览": {
+    "en-US": "Assistant status and common settings",
+    "ja-JP": "アシスタントの状態とよく使う設定"
+  },
+  "百科、翻译和你的专属提问方式": {
+    "en-US": "Encyclopedia, translation and your own prompts",
+    "ja-JP": "百科・翻訳・あなた専用の質問"
+  },
+  "让助手窗口融入你的桌面": {
+    "en-US": "Make the assistant fit your desktop",
+    "ja-JP": "アシスタントをデスクトップに合わせる"
+  },
+  "保存知识与表达，用卡片巩固记忆": {
+    "en-US": "Save knowledge and expressions, then review with cards",
+    "ja-JP": "知識や表現を保存し、カードで復習"
+  },
+  "助手设置无效。": {
+    "en-US": "Invalid assistant settings.",
+    "ja-JP": "アシスタント設定が無効です。"
+  },
+  "API 未返回有效内容。": {
+    "en-US": "The API returned no usable content.",
+    "ja-JP": "API から有効な内容が返されませんでした。"
+  },
+  "点知 · 翻译预览": {
+    "en-US": "DotKnow · Translation preview",
+    "ja-JP": "点知 · 翻訳プレビュー"
+  },
+  "纯白": {
+    "en-US": "White",
+    "ja-JP": "ホワイト"
+  },
+  "纯白与中性灰": {
+    "en-US": "White and neutral gray",
+    "ja-JP": "白とニュートラルグレー"
+  },
+  "五套配色，每一套都支持浅色、深色与跟随系统。": {
+    "en-US": "Five palettes, each with light, dark, and system modes.",
+    "ja-JP": "5 種類の配色。ライト・ダーク・システム連動に対応。"
+  },
+  "微信划选兼容": {
+    "en-US": "WeChat selection compatibility",
+    "ja-JP": "WeChat の選択互換機能"
+  },
+  "微信无法直接读取选区时，划选后临时复制所选文字并恢复剪贴板。": {
+    "en-US": "If WeChat cannot expose a selection, temporarily copy it after selecting and restore the clipboard.",
+    "ja-JP": "WeChat の選択を直接取得できない場合、一時コピーしてクリップボードを復元します。"
+  },
+  "微信选区已读取，但剪贴板恢复失败，请检查剪贴板内容。": {
+    "en-US": "WeChat selection captured, but clipboard restoration failed. Please check your clipboard.",
+    "ja-JP": "WeChat の選択を取得しましたが、クリップボードの復元に失敗しました。内容をご確認ください。"
+  },
+  "补充问题": {
+    "en-US": "Add a question",
+    "ja-JP": "質問を追加"
+  },
+  "收起问题": {
+    "en-US": "Hide question",
+    "ja-JP": "質問を閉じる"
+  },
+  "追问": {
+    "en-US": "Follow up",
+    "ja-JP": "追加質問"
+  }
+}

@@ -6,7 +6,17 @@
 
 点知由 TypeLingo · 伴译升级而来。翻译依然是重要功能：中英日互译、离线词库优先、在线译文自动积累和确认替换继续保留。离线词库只用于纯翻译，百科等任务使用在线模型，不会污染词库。
 
-当前版本：**v0.5.0-preview.1**，Windows 10 / 11 x64。图形继续使用已选定的 C 标志；界面和官网统一为浅纸、深林、雾蓝、暮紫四套配色，并支持浅色、深色和跟随系统。
+当前版本：**v0.5.0-preview.2**，Windows 10 / 11 x64。图形继续使用已选定的 C 标志；界面和官网统一为纯白、浅纸、深林、雾蓝、暮紫五套配色，并支持浅色、深色和跟随系统。
+
+## v0.5.0-preview.2
+
+- 新增纯白配色；下拉框宽度跟随当前选项文字，减少无用留白。
+- 微信自绘文本无法通过辅助功能接口读取时，支持划选后临时复制所选文字，随后恢复原剪贴板。可在常规设置关闭；该路径仅可阅读、复制与收藏，不执行输入替换。
+- 关闭或自动隐藏结果后，同一选区保持关闭，重新划选或按 Ctrl+Alt+T 可再次查询。
+- 百科回答使用简洁阅读界面，原文和输入按需展开，支持继续追问。
+- 解决方案、项目、命名空间、程序集和图标资源统一为 DotKnow，旧版数据保持兼容。
+
+微信兼容已增加独立进程的自绘控件验收；实际微信版本与权限环境仍需在用户机器上确认。仓库远端改名需要 GitHub 管理 API，当前云环境尚未允许访问；现有仓库和下载地址继续有效。
 
 ## 下载和开始使用
 
@@ -57,12 +67,12 @@
 
 ```bash
 source scripts/dotnet-env.sh # 本云环境
-dotnet restore TypeLingo.sln --locked-mode
-dotnet build TypeLingo.sln -c Release --no-restore
-dotnet test tests/TypeLingo.Tests -c Release --no-build
+dotnet restore DotKnow.sln --locked-mode
+dotnet build DotKnow.sln -c Release --no-restore
+dotnet test tests/DotKnow.Tests -c Release --no-build
 ```
 
-Windows 运行：`dotnet run --project src/TypeLingo.App -c Release`。Linux 可交叉编译，实际 WPF 和 UIA 验收在 Windows CI 上运行。
+Windows 运行：`dotnet run --project src/DotKnow.App -c Release`。Linux 可交叉编译，实际 WPF 和 UIA 验收在 Windows CI 上运行。
 
 ```powershell
 ./scripts/publish-windows.ps1
@@ -70,6 +80,6 @@ python scripts/package-release.py
 python scripts/package-promotion.py
 ```
 
-生成 `artifacts/DotKnow-Windows-x64.zip`、`DotKnow-Source.zip` 和 `DotKnow-Promotion.zip`。内部程序集和仓库名称暂保留 TypeLingo，保证资源地址、存储和旧版本兼容。自包含程序未签名，不含自动更新或 MSI。
+生成 `artifacts/DotKnow-Windows-x64.zip`、`DotKnow-Source.zip` 和 `DotKnow-Promotion.zip`。解决方案、项目、命名空间、程序集与图标资源统一为 DotKnow；本地数据目录、加密上下文和单实例标识继续兼容旧版。自包含程序未签名，不含自动更新或 MSI。
 
 官网源码在 [website](website/README.md)，支持 Vercel 部署，下载链接由版本清单统一生成，禁用 JavaScript 也可下载。当前环境尚未连接 Vercel 账户，部署状态见网站说明。品牌定位、推广文案和素材见 [宣传方案](docs/promotion/campaign.zh-CN.md)。
