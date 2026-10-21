@@ -34,6 +34,9 @@ internal static class WeChatFixture
                 }
                 var config = new AppSettings { PrivacyConsent = true };
                 using var observer = new InputObserver(() => Volatile.Read(ref config));
+                var diagnostics = new System.Collections.Concurrent.ConcurrentQueue<string>();
+                observer.Diagnostics += message => diagnostics.Enqueue(message);
+                observer.StatusChanged += message => diagnostics.Enqueue(message);
                 var original = new DataObject();
                 original.SetData(DataFormats.UnicodeText, "original clipboard fixture");
                 original.SetData(DataFormats.Html, "<b>original clipboard fixture</b>");
@@ -41,7 +44,8 @@ internal static class WeChatFixture
                 Command("custom-select");
                 var selected = InputFixture.WaitWithDispatcher(observer.RequestPreviewAsync(default));
                 check(selected is { Text: "微信自绘文字选区", IsSelection: true, CanWrite: false, EditRange: null },
-                    "微信式无 TextPattern 自绘文本可通过快捷键捕获选区，且不具备替换权限");
+                    "微信式无 TextPattern 自绘文本可通过快捷键捕获选区，且不具备替换权限：" +
+                    System.Text.Json.JsonSerializer.Serialize(selected) + "; " + string.Join("; ", diagnostics));
                 check(Clipboard.GetText() == "original clipboard fixture" && Clipboard.GetData(DataFormats.Html) as string == "<b>original clipboard fixture</b>",
                     "兼容读取后恢复原剪贴板文字和 HTML 格式");
                 Command("custom-clear");

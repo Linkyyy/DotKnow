@@ -30,6 +30,7 @@ internal sealed class InputObserver : IInputTarget, IDisposable
     private nint selectionWindow;
     public event Action<InputSnapshot?>? SnapshotChanged;
     public event Action<string>? StatusChanged;
+    internal event Action<string>? Diagnostics;
     public InputObserver(Func<AppSettings> settings)
     {
         this.settings = settings;
@@ -89,12 +90,14 @@ internal sealed class InputObserver : IInputTarget, IDisposable
         InputSnapshot? content;
         try { content = CaptureAccessibleContent(config); }
         catch (Exception e) when (IsUiaFailure(e)) { content = null; }
+        if (explicitRequest) Diagnostics?.Invoke($"UIA result={content != null}; blocked={blocked}");
         if (content != null)
             return content with { SelectionRevision = gesture.Window == foreground ? gesture.SelectionRevision : 0 };
         if (blocked || !config.Overlay.WeChatClipboardFallback || Native.GetForegroundWindow() != foreground || Native.IsSelecting || Native.IsComposing(foreground)) return null;
         Native.GetWindowThreadProcessId(foreground, out var pid);
         if (pid == 0 || pid == Environment.ProcessId) return null;
         using var process = Process.GetProcessById((int)pid);
+        if (explicitRequest) Diagnostics?.Invoke($"foreground process={process.ProcessName}");
         if (process.ProcessName is not ("WeChat" or "Weixin") || !PrivacyGuard.Allows(config, process.ProcessName, false, false)) return null;
         if (!explicitRequest && fallbackGesture == gesture.Id && fallbackSelection != null && fallbackSelection.Identity == $"{pid}:{foreground}:selection-copy") return fallbackSelection;
         fallbackSelection = null;
@@ -105,7 +108,7 @@ internal sealed class InputObserver : IInputTarget, IDisposable
         if (explicitRequest) Native.GetCursorPos(out point);
         var text = ClipboardSelectionReader.ReadAsync(foreground, config.Translation.MaxInputCharacters,
             () => ReferenceEquals(config, settings()) && gestures.Current.Id == gesture.Id && !stopping,
-            message => StatusChanged?.Invoke(message)).GetAwaiter().GetResult();
+            message => StatusChanged?.Invoke(message), message => Diagnostics?.Invoke(message)).GetAwaiter().GetResult();
         if (text == null) return null;
         // Custom-drawn WeChat text has no verified editable range; the fallback is strictly read-only.
         fallbackSelection = new($"{pid}:{foreground}:selection-copy", text, new(point.X, point.Y, 1, 18),

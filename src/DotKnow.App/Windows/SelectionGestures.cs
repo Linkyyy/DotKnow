@@ -44,8 +44,14 @@ internal sealed class SelectionGestures : IDisposable
             // Accept assistive pointer input as well as a physical mouse.
             var window = Native.GetForegroundWindow();
             var swapped = System.Windows.Forms.SystemInformation.MouseButtonsSwapped;
-            if (message == (swapped ? 0x204 : 0x201) && ExternalWindow(window))
-            { down = value.Point; downWindow = window; pressed = true; Record(window, value.Point, false); }
+            if (message == (swapped ? 0x204 : 0x201))
+            {
+                // The mouse-down hook runs before Windows activates the clicked application.
+                // Resolve the actual target, including our non-activating result bubble.
+                var target = Native.GetAncestor(Native.WindowFromPoint(value.Point), 2);
+                pressed = ExternalWindow(target);
+                if (pressed) { down = value.Point; downWindow = target; Record(target, value.Point, false); }
+            }
             else if (message == (swapped ? 0x205 : 0x202) && pressed)
             {
                 pressed = false;

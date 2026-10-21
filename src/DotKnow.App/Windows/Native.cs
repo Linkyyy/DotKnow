@@ -18,6 +18,7 @@ internal static class Native
     [DllImport("user32.dll")] internal static extern bool IsChild(nint parent, nint child);
     [DllImport("user32.dll")] internal static extern bool GetCursorPos(out Point point);
     [DllImport("user32.dll")] internal static extern nint WindowFromPoint(Point point);
+    [DllImport("user32.dll")] internal static extern nint GetAncestor(nint window, uint flags);
     [DllImport("user32.dll")] private static extern short GetAsyncKeyState(int key);
     internal static bool KeyDown(int key) => (GetAsyncKeyState(key) & 0x8000) != 0;
     [DllImport("user32.dll")] private static extern int GetSystemMetrics(int index);

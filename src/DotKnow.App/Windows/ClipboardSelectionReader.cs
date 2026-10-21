@@ -7,7 +7,7 @@ namespace DotKnow.App.Windows;
 /// <summary>One user-authorized copy. Never selects all, pastes, writes to the app, or reads stale clipboard text.</summary>
 internal static class ClipboardSelectionReader
 {
-    internal static Task<string?> ReadAsync(nint window, int maxCharacters, Func<bool> stillAllowed, Action<string> status)
+    internal static Task<string?> ReadAsync(nint window, int maxCharacters, Func<bool> stillAllowed, Action<string> status, Action<string>? diagnostics = null)
     {
         var completion = new TaskCompletionSource<string?>(TaskCreationOptions.RunContinuationsAsynchronously);
         var thread = new Thread(() =>
@@ -15,6 +15,7 @@ internal static class ClipboardSelectionReader
             string? result = null;
             uint copiedSequence = 0;
             IDataObject? previous = null;
+            var stage = "initial";
             var initialized = OleInitialize(0) >= 0;
             try
             {
@@ -24,9 +25,13 @@ internal static class ClipboardSelectionReader
                 while (ModifiersDown() && Environment.TickCount64 < releaseDeadline && Valid()) Thread.Sleep(15);
                 if (ModifiersDown() || !Valid()) return;
                 var originalSequence = GetClipboardSequenceNumber();
-                if (OleGetClipboard(out previous) < 0 || !Valid() || GetClipboardSequenceNumber() != originalSequence) return;
+                var saved = OleGetClipboard(out previous);
+                stage = $"backup:{saved:X8}";
+                if (saved < 0 || !Valid() || GetClipboardSequenceNumber() != originalSequence) return;
                 var input = new[] { Key(0x11), Key(0x43), Key(0x43, true), Key(0x11, true) };
-                if (SendInput((uint)input.Length, input, Marshal.SizeOf<Input>()) != input.Length) return;
+                var sent = SendInput((uint)input.Length, input, Marshal.SizeOf<Input>());
+                stage = $"copy:{sent}";
+                if (sent != input.Length) return;
                 var deadline = Environment.TickCount64 + 700;
                 while (Environment.TickCount64 < deadline)
                 {
@@ -35,6 +40,7 @@ internal static class ClipboardSelectionReader
                     {
                         Native.GetWindowThreadProcessId(GetClipboardOwner(), out var ownerPid);
                         Native.GetWindowThreadProcessId(window, out var targetPid);
+                        stage = $"owner:{ownerPid}/{targetPid}";
                         if (ownerPid == 0 || ownerPid != targetPid) return;
                         copiedSequence = sequence;
                         if (!Valid()) return;
@@ -43,6 +49,7 @@ internal static class ClipboardSelectionReader
                             if (Clipboard.ContainsText(TextDataFormat.UnicodeText))
                             {
                                 var text = Clipboard.GetText(TextDataFormat.UnicodeText);
+                                stage = "read";
                                 if (GetClipboardSequenceNumber() != sequence) return;
                                 if (!string.IsNullOrWhiteSpace(text) && text.Length <= maxCharacters) result = text;
                                 return;
@@ -70,6 +77,7 @@ internal static class ClipboardSelectionReader
                 }
                 if (previous != null && Marshal.IsComObject(previous)) Marshal.ReleaseComObject(previous);
                 if (initialized) OleUninitialize();
+                diagnostics?.Invoke($"{stage}; result={result != null}; foreground={Native.GetForegroundWindow() == window}; modifiers={ModifiersDown()}; copied={copiedSequence != 0}");
                 completion.TrySetResult(result);
             }
             bool Valid() => Native.GetForegroundWindow() == window && stillAllowed() && !Native.IsSelecting && !Native.IsComposing(window);
