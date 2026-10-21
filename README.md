@@ -16,15 +16,15 @@
 - 百科回答使用简洁阅读界面，原文和输入按需展开，支持继续追问。
 - 解决方案、项目、命名空间、程序集和图标资源统一为 DotKnow，旧版数据保持兼容。
 
-微信兼容已增加独立进程的自绘控件验收；实际微信版本与权限环境仍需在用户机器上确认。仓库远端改名需要 GitHub 管理 API，当前云环境尚未允许访问；现有仓库和下载地址继续有效。
+微信兼容已增加独立进程的自绘控件验收；实际微信版本与权限环境仍需在用户机器上确认。项目源码与官网源码已迁移至 [Linkyyy/DotKnow](https://github.com/Linkyyy/DotKnow)，官网目录为 website。旧仓库保留历史验收记录。
 
 验收：222 项核心测试、181 项 Windows 界面与跨进程检查、11 项官网浏览器检查通过。Windows 验收与安装包真实启动记录：[39520278016](https://github.com/Linkyyy/TypeLingo/actions/runs/39520278016)。
 
 ## 下载和开始使用
 
-- [点知 Windows x64](https://github.com/Linkyyy/TypeLingo/raw/refs/heads/codex/typelingo-favorites-and-replacement/downloads/DotKnow-Windows-x64.zip)
-- [完整源码](https://github.com/Linkyyy/TypeLingo/raw/refs/heads/codex/typelingo-favorites-and-replacement/downloads/DotKnow-Source.zip)
-- [宣传素材与文案](https://github.com/Linkyyy/TypeLingo/raw/refs/heads/codex/typelingo-favorites-and-replacement/downloads/DotKnow-Promotion.zip)
+- [点知 Windows x64](https://github.com/Linkyyy/DotKnow/raw/refs/heads/main/downloads/DotKnow-Windows-x64.zip)
+- [完整源码](https://github.com/Linkyyy/DotKnow/raw/refs/heads/main/downloads/DotKnow-Source.zip)
+- [宣传素材与文案](https://github.com/Linkyyy/DotKnow/raw/refs/heads/main/downloads/DotKnow-Promotion.zip)
 - [真实 Windows 界面](docs/UI_THEMES.md) · [验证记录](docs/VALIDATION.md)
 
 完整解压后运行 **DotKnow.exe**。也可运行「安装到当前用户.cmd」，安装并创建点知快捷方式；不需要管理员权限或额外安装 .NET。更新前从系统托盘退出旧版点知或伴译。

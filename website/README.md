@@ -21,9 +21,9 @@ npm test
 
 ## Vercel 部署
 
-正式官网仓库为 [Linkyyy/typelingo-website](https://github.com/Linkyyy/typelingo-website)。本目录是程序仓库中的官网副本，更新时同步到独立官网仓库的根目录。
+程序与官网共用 [Linkyyy/DotKnow](https://github.com/Linkyyy/DotKnow) 仓库，本目录为官网源码。旧独立官网仓库作为迁移前的历史记录保留。
 
-Vercel 项目沿用独立官网仓库，Production Branch 为 main，Root Directory 留空或设置为 `.`，Framework Preset 为 Vite。vercel.json 保留安全响应头。推送 main 后，启用 Git 自动部署的项目会更新；实际线上结果以项目 Deployments 为准。
+迁移目标配置：Vercel 绑定 Linkyyy/DotKnow，Production Branch 为 main，Root Directory 为 `website`，Framework Preset 为 Vite。现有项目改名与重新绑定需完成 Vercel 账户授权后执行。vercel.json 保留安全响应头。推送 main 后，启用 Git 自动部署的项目会更新；实际线上结果以项目 Deployments 为准。
 
 Vercel 提供生产域名用于分享图片、canonical URL 和 sitemap；也可以设置 SITE_URL 为自定义 HTTPS 域名。官网无后端，无需访客 API Key。
 

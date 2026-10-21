@@ -1,0 +1,11 @@
+/src/
+/tests/
+/tools/
+/data/
+/downloads/
+/docs/
+/packaging/
+/scripts/
+/artifacts/
+/TestResults/
+*.sln

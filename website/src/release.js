@@ -7,4 +7,4 @@ export const release = Object.freeze({
   sha256: "4e7c846d7c01f9bf03e4e6b822b9bb370d8f0b7c85664f0264a893e2b5f0a92a",
 });
 export const artifactUrl = (file) =>
-  `https://github.com/Linkyyy/TypeLingo/raw/${release.commit}/downloads/${file}`;
+  `https://github.com/Linkyyy/DotKnow/raw/${release.commit}/downloads/${file}`;
