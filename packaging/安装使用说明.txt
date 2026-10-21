@@ -46,7 +46,7 @@
 【快捷键与主题】
 Ctrl+Alt+T：显示查询面板；Ctrl+Alt+C：复制当前结果。
 Ctrl+Alt+Space：暂停全部读取；Ctrl+Alt+Enter：即时翻译准备替换确认。
-外观有浅纸、深林、雾蓝、暮紫，支持浅色、深色和跟随系统。
+外观有纯白、浅纸、深林、雾蓝、暮紫，支持浅色、深色和跟随系统。
 关闭设置窗口仍在托盘运行，退出请使用托盘“退出”。
 
 真实 Windows 界面与验证记录见 docs/UI_THEMES.md、docs/VALIDATION.md。

@@ -51,7 +51,8 @@ public sealed class AppearancePaletteTests
             var pairs = new[] { (colors.Text, colors.Canvas), (colors.Text, colors.Card), (colors.Text, colors.Input),
                 (colors.Text, colors.Selection), (colors.Muted, colors.Canvas), (colors.Muted, colors.Sidebar),
                 (colors.Muted, colors.Card), (colors.Muted, colors.AccentSurface), (colors.AccentText, colors.Accent),
-                (colors.HeroText, colors.Hero), (colors.HeroMuted, colors.Hero), (colors.HighlightText, colors.Highlight) };
+                (colors.HeroText, colors.Hero), (colors.HeroMuted, colors.Hero), (colors.HighlightText, colors.Highlight),
+                (colors.HeroHighlight ?? colors.Highlight, colors.Hero) };
             foreach (var (foreground, background) in pairs)
                 Assert.True(Contrast(foreground, background) >= 4.5,
                     $"{palette.Id}: {foreground} on {background} needs 4.5:1 contrast; got {Contrast(foreground, background):F2}");

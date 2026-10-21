@@ -8,7 +8,7 @@ public sealed record AppearancePalette(string Id, string Label, string Descripti
 public sealed record PaletteColors(string Canvas, string Surface, string Card, string Sidebar, string Border,
     string Hover, string Selection, string Text, string Muted, string Accent, string AccentText,
     string AccentSurface, string Highlight, string HighlightText, string Hero, string HeroText,
-    string HeroMuted, string Input, string Focus)
+    string HeroMuted, string Input, string Focus, string? HeroHighlight = null)
 {
     public IReadOnlyDictionary<string, string> Resources => new ReadOnlyDictionary<string, string>(new Dictionary<string, string>
     {
@@ -17,7 +17,7 @@ public sealed record PaletteColors(string Canvas, string Surface, string Card, s
         ["TextBrush"] = Text, ["MutedBrush"] = Muted, ["AccentBrush"] = Accent, ["AccentTextBrush"] = AccentText,
         ["AccentSurfaceBrush"] = AccentSurface, ["HighlightBrush"] = Highlight, ["HighlightTextBrush"] = HighlightText,
         ["HeroBrush"] = Hero, ["HeroTextBrush"] = HeroText, ["HeroMutedBrush"] = HeroMuted,
-        ["InputBrush"] = Input, ["FocusBrush"] = Focus
+        ["InputBrush"] = Input, ["FocusBrush"] = Focus, ["HeroHighlightBrush"] = HeroHighlight ?? Highlight
     });
 }
 
@@ -36,7 +36,7 @@ public static class AppearancePalettes
         new AppearancePalette("white", "纯白", "纯白背景与中性灰，清晰简洁",
             new("#FFFFFF", "#FFFFFF", "#FFFFFF", "#F5F5F5", "#DEDEDE", "#F0F0F0", "#E5E7EB",
                 "#202124", "#60636A", "#30343B", "#FFFFFF", "#F4F4F5", "#E5E7EB", "#202124",
-                "#F4F4F5", "#202124", "#60636A", "#FFFFFF", "#555B66"),
+                "#F4F4F5", "#202124", "#60636A", "#FFFFFF", "#555B66", "#555B66"),
             new("#202124", "#27282C", "#2D2F33", "#191A1D", "#505259", "#393C42", "#41454D",
                 "#F5F5F5", "#C3C5CA", "#E5E7EB", "#202124", "#35373C", "#E5E7EB", "#202124",
                 "#292B30", "#F5F5F5", "#C3C5CA", "#25262A", "#D4D7DE")),

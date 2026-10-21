@@ -17,6 +17,7 @@
   <SolidColorBrush x:Key="AccentTextBrush" Color="#F7F8F2"/>
   <SolidColorBrush x:Key="AccentSurfaceBrush" Color="#E7EBDF"/>
   <SolidColorBrush x:Key="HighlightBrush" Color="#D9FA82"/>
+  <SolidColorBrush x:Key="HeroHighlightBrush" Color="#D9FA82"/>
   <SolidColorBrush x:Key="HighlightTextBrush" Color="#26321C"/>
   <SolidColorBrush x:Key="HeroBrush" Color="#253329"/>
   <SolidColorBrush x:Key="HeroTextBrush" Color="#F5F8EE"/>

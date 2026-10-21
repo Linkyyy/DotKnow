@@ -326,6 +326,7 @@ internal static class Program
     }
     private static void Capture(Window window, string file)
     {
+        Pump(window);
         // 直接渲染已布局的真实 WPF 视觉树，不以网页或静态示意图代替应用截图。
         var visual = (FrameworkElement)window.Content;
         var bitmap = new RenderTargetBitmap((int)Math.Ceiling(visual.ActualWidth), (int)Math.Ceiling(visual.ActualHeight), 96, 96, PixelFormats.Pbgra32);

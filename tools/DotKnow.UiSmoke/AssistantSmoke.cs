@@ -78,6 +78,12 @@ internal static class AssistantSmoke
         check(Control<StackPanel>("EditorPanel").Visibility == Visibility.Collapsed &&
             !Control<Expander>("SourceExpander").IsExpanded && assistant.ActualHeight <= 420,
             "百科结果默认收起任务编辑器与完整原文，使用简洁阅读界面");
+        check(new[] { "CopyAnswerButton", "SaveAnswerButton", "FollowUpButton" }.All(name =>
+        {
+            var button = Control<Button>(name);
+            var bounds = button.TransformToAncestor(canvas).TransformBounds(new Rect(button.RenderSize));
+            return bounds.Right <= canvas.ActualWidth && bounds.Bottom <= canvas.ActualHeight;
+        }), "百科阅读界面的复制、收藏和追问按钮均位于窗口内");
         Control<Button>("CopyAnswerButton").RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
         check(System.Windows.Clipboard.GetText() == answer.Result.Text, "查询结果支持真实剪贴板复制");
         Control<Button>("SaveAnswerButton").RaiseEvent(new RoutedEventArgs(Button.ClickEvent));

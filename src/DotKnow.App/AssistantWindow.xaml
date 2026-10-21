@@ -4,11 +4,11 @@
     <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="*"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
     <Grid Margin="0,0,0,12"><Grid.ColumnDefinitions><ColumnDefinition Width="Auto"/><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
       <controls:BrandMark Width="21" Height="21" Foreground="{DynamicResource AccentBrush}" Margin="0,0,9,0"/>
-      <TextBlock x:Name="TaskHeading" Grid.Column="1" FontSize="15" FontWeight="SemiBold" VerticalAlignment="Center" TextTrimming="CharacterEllipsis"/>
+      <TextBlock x:Name="TaskHeading" Grid.Column="1" FontSize="15" FontWeight="SemiBold" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" TextWrapping="NoWrap"/>
       <Button Grid.Column="2" Style="{StaticResource OverlayIconButton}" Click="Dismiss_Click" AutomationProperties.Name="{DynamicResource '关闭'}"><controls:SymbolIcon Kind="close" Width="14" Height="14"/></Button>
     </Grid>
-    <Expander x:Name="SourceExpander" Grid.Row="1" Margin="0,0,0,12" HorizontalContentAlignment="Stretch">
-      <Expander.Header><TextBlock x:Name="SelectionPreview" TextTrimming="CharacterEllipsis" FontSize="11" Foreground="{DynamicResource MutedBrush}" MaxWidth="350"/></Expander.Header>
+    <Expander x:Name="SourceExpander" Foreground="{DynamicResource MutedBrush}" Grid.Row="1" Margin="0,0,0,12" HorizontalContentAlignment="Stretch">
+      <Expander.Header><TextBlock x:Name="SelectionPreview" TextTrimming="CharacterEllipsis" TextWrapping="NoWrap" FontSize="11" Foreground="{DynamicResource MutedBrush}" MaxWidth="350"/></Expander.Header>
       <TextBox x:Name="SelectionText" IsReadOnly="True" TextWrapping="Wrap" VerticalContentAlignment="Top" MaxHeight="80" Padding="8" Margin="0,7,0,0" VerticalScrollBarVisibility="Auto" AutomationProperties.Name="{DynamicResource '选中的内容'}"/>
     </Expander>
     <StackPanel x:Name="EditorPanel" Grid.Row="2" Margin="0,0,0,12">
@@ -28,13 +28,13 @@
     </Grid>
     <StackPanel Grid.Row="4">
       <ProgressBar x:Name="QueryProgress" IsIndeterminate="True" Height="3" Visibility="Collapsed" Margin="0,0,0,8"/>
-      <Grid><Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
-        <TextBlock x:Name="QueryStatus" FontSize="10" Foreground="{DynamicResource MutedBrush}" TextWrapping="Wrap" VerticalAlignment="Center" Margin="0,0,10,0" ToolTip="{DynamicResource 'AI 回答可能有误；百科等任务需要在线模型，不提供实时联网检索。'}"/>
-        <StackPanel Grid.Column="1" Orientation="Horizontal">
+      <Grid><Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
+        <WrapPanel HorizontalAlignment="Right">
           <Button x:Name="FollowUpButton" Content="{DynamicResource '追问'}" Visibility="Collapsed" Click="FollowUp_Click" Padding="9,6" Margin="0,0,6,0"/>
           <Button x:Name="CopyAnswerButton" Content="{DynamicResource '复制结果'}" IsEnabled="False" Click="Copy_Click" Padding="9,6"/>
           <Button x:Name="SaveAnswerButton" Content="{DynamicResource '收藏'}" IsEnabled="False" Click="Favorite_Click" Padding="9,6" Margin="6,0,0,0"/>
-        </StackPanel>
+        </WrapPanel>
+        <TextBlock x:Name="QueryStatus" Grid.Row="1" FontSize="10" Foreground="{DynamicResource MutedBrush}" TextWrapping="Wrap" Margin="0,8,0,0" ToolTip="{DynamicResource 'AI 回答可能有误；百科等任务需要在线模型，不提供实时联网检索。'}"/>
       </Grid>
     </StackPanel>
   </Grid></Border>

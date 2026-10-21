@@ -31,7 +31,12 @@ internal static class ClipboardSelectionReader
                 var input = new[] { Key(0x11), Key(0x43), Key(0x43, true), Key(0x11, true) };
                 var sent = SendInput((uint)input.Length, input, Marshal.SizeOf<Input>());
                 stage = $"copy:{sent}";
-                if (sent != input.Length) return;
+                if (sent == 0) return;
+                if (sent != input.Length)
+                {
+                    var release = new[] { Key(0x43, true), Key(0x11, true) };
+                    SendInput((uint)release.Length, release, Marshal.SizeOf<Input>());
+                }
                 var deadline = Environment.TickCount64 + 700;
                 while (Environment.TickCount64 < deadline)
                 {
@@ -49,8 +54,13 @@ internal static class ClipboardSelectionReader
                             if (Clipboard.ContainsText(TextDataFormat.UnicodeText))
                             {
                                 var text = Clipboard.GetText(TextDataFormat.UnicodeText);
-                                stage = "read";
-                                if (GetClipboardSequenceNumber() != sequence) return;
+                                // Delayed OLE rendering may advance the sequence during GetText itself.
+                                // Accept it only while the same app still owns the clipboard and the gesture is unchanged.
+                                var renderedSequence = GetClipboardSequenceNumber();
+                                Native.GetWindowThreadProcessId(GetClipboardOwner(), out var renderedOwner);
+                                stage = $"read:owner={renderedOwner == targetPid}; stable={renderedSequence == sequence}; length={text.Length}";
+                                if (renderedOwner != targetPid || !Valid()) return;
+                                copiedSequence = renderedSequence;
                                 if (!string.IsNullOrWhiteSpace(text) && text.Length <= maxCharacters) result = text;
                                 return;
                             }

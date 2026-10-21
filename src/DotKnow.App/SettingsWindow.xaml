@@ -144,7 +144,7 @@
                       <TextBlock Text="DOTKNOW / SELECT. ASK. UNDERSTAND." FontSize="9" Foreground="{DynamicResource HeroMutedBrush}" Margin="0,0,0,20" x:Name="HomeHeroEyebrow" />
                       <WrapPanel x:Name="HomeHeadlinePanel" Orientation="Vertical">
                         <TextBlock Text="{DynamicResource '哪里不会，'}" FontSize="34" FontWeight="SemiBold" Foreground="{DynamicResource HeroTextBrush}" x:Name="HomeHeadingFirst" />
-                        <TextBlock Text="{DynamicResource '点哪里。'}" FontSize="34" FontWeight="SemiBold" Foreground="{DynamicResource HighlightBrush}" Margin="0,0,0,15" x:Name="HomeHeadingSecond" />
+                        <TextBlock Text="{DynamicResource '点哪里。'}" FontSize="34" FontWeight="SemiBold" Foreground="{DynamicResource HeroHighlightBrush}" Margin="0,0,0,15" x:Name="HomeHeadingSecond" />
                       </WrapPanel>
                       <TextBlock x:Name="HomeStateText" FontSize="11" Foreground="{DynamicResource HeroMutedBrush}" LineHeight="19" />
                       <Button x:Name="HomeStartButton" Content="{DynamicResource '开始使用'}" Click="HomeStart_Click" Style="{StaticResource HighlightButton}" HorizontalAlignment="Left" Margin="0,20,0,0" Padding="18,9" />
