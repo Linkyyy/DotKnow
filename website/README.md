@@ -23,7 +23,7 @@ npm test
 
 程序与官网共用 [Linkyyy/DotKnow](https://github.com/Linkyyy/DotKnow) 仓库，本目录为官网源码。旧独立官网仓库作为迁移前的历史记录保留。
 
-迁移目标配置：Vercel 绑定 Linkyyy/DotKnow，Production Branch 为 main，Root Directory 为 `website`，Framework Preset 为 Vite。现有项目改名与重新绑定需完成 Vercel 账户授权后执行。vercel.json 保留安全响应头。推送 main 后，启用 Git 自动部署的项目会更新；实际线上结果以项目 Deployments 为准。
+Vercel 项目为 `huangwenwang/dotknow`，已绑定 Linkyyy/DotKnow，Production Branch 为 main，Root Directory 为 `website`，Framework Preset 为 Vite。官网为 https://dotknow.vercel.app ，原 https://typelingo-website.vercel.app 地址继续保留。vercel.json 保留安全响应头。推送 main 后自动部署；实际线上结果以项目 Deployments 为准。
 
 Vercel 提供生产域名用于分享图片、canonical URL 和 sitemap；也可以设置 SITE_URL 为自定义 HTTPS 域名。官网无后端，无需访客 API Key。
 

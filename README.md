@@ -84,4 +84,4 @@ python scripts/package-promotion.py
 
 生成 `artifacts/DotKnow-Windows-x64.zip`、`DotKnow-Source.zip` 和 `DotKnow-Promotion.zip`。解决方案、项目、命名空间、程序集与图标资源统一为 DotKnow；本地数据目录、加密上下文和单实例标识继续兼容旧版。自包含程序未签名，不含自动更新或 MSI。
 
-官网源码在 [website](website/README.md)，支持 Vercel 部署，下载链接由版本清单统一生成，禁用 JavaScript 也可下载。当前环境尚未连接 Vercel 账户，部署状态见网站说明。品牌定位、推广文案和素材见 [宣传方案](docs/promotion/campaign.zh-CN.md)。
+官网源码在 [website](website/README.md)，支持 Vercel 部署，下载链接由版本清单统一生成，禁用 JavaScript 也可下载。官网为 https://dotknow.vercel.app ，Vercel 已绑定本仓库的 website 目录并启用 main 自动部署。品牌定位、推广文案和素材见 [宣传方案](docs/promotion/campaign.zh-CN.md)。
