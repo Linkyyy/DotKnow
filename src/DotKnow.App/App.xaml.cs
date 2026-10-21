@@ -84,7 +84,12 @@ public partial class App : System.Windows.Application
                 HandleSnapshot(snapshot);
             });
         };
-        observer.StatusChanged += status => Ui(() => overlay.ShowStatus(status));
+        observer.StatusChanged += status => Ui(() =>
+        {
+            overlay.ShowStatus(status);
+            if (status == "微信选区已读取，但剪贴板恢复失败，请检查剪贴板内容。")
+                tray?.ShowBalloonTip(6000, "点知 · DotKnow", UiText.Get(status), Forms.ToolTipIcon.Warning);
+        });
         hotkeys.Pressed += async id =>
         {
             if (id == 1 && !assistant.HasSession) await overlay.RequestReplacementAsync();
@@ -95,7 +100,10 @@ public partial class App : System.Windows.Application
                 try
                 {
                     if (assistant.HasSession && assistant.OwnsForeground) { assistant.Activate(); return; }
-                    HandleSnapshot(await observer.RequestPreviewAsync(CancellationToken.None), true);
+                    var snapshot = await observer.RequestPreviewAsync(CancellationToken.None);
+                    HandleSnapshot(snapshot, true);
+                    if (snapshot == null) tray?.ShowBalloonTip(4000, "点知 · DotKnow",
+                        UiText.Get("未读到可查询的文字，请先选中可复制的文本，再按快捷键。"), Forms.ToolTipIcon.Info);
                 }
                 catch (Exception) { latest = null; await coordinator.ObserveAsync(null, true); overlay.ShowStatus("无法读取当前输入或选区，请切换应用后重试。"); }
             }

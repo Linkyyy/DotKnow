@@ -4,7 +4,7 @@
 
 ![C 程序图标](../promotion/app-icon.png)
 
-- 主标：`src/DotKnow.App/Assets/typelingo-mark.svg`。
+- 主标：`src/DotKnow.App/Assets/dotknow-mark.svg`。
 - 程序图标：深底白色 C，用于 EXE、窗口与首页。
 - 托盘图标：透明黑／白 C，分别适配浅色／深色系统任务栏。
 - 宣传图和 SVG／PNG／ICO：见 [宣传素材](../promotion/README.md)。

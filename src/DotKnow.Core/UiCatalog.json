@@ -2154,5 +2154,9 @@
   "追问": {
     "en-US": "Follow up",
     "ja-JP": "追加質問"
+  },
+  "未读到可查询的文字，请先选中可复制的文本，再按快捷键。": {
+    "en-US": "No queryable text found. Select copyable text, then press the shortcut again.",
+    "ja-JP": "テキストを取得できませんでした。コピーできる文字を選択して、ショートカットをもう一度押してください。"
   }
 }
