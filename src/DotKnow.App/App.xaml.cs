@@ -131,7 +131,15 @@ public partial class App : System.Windows.Application
     }
     private void HandleSnapshot(InputSnapshot? snapshot, bool force = false)
     {
-        if (!dismissal.Allows(snapshot, force)) return;
+        if (!dismissal.Allows(snapshot, force))
+        {
+            if (latest != null || assistant.HasSession || overlay.IsVisible)
+            {
+                latest = null; assistant.CancelSession(false); overlay.Dismiss(false);
+                _ = coordinator.ObserveAsync(null, true);
+            }
+            return;
+        }
         var same = latest == null ? snapshot == null : latest.SameContent(snapshot) && snapshot!.SelectionRevision <= latest.SelectionRevision;
         latest = snapshot;
         if (snapshot == null)

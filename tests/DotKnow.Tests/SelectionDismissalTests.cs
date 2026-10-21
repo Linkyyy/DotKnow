@@ -30,4 +30,13 @@ public sealed class SelectionDismissalTests
         gate.Dismiss(Selection()); gate.Dismiss(other);
         Assert.False(gate.Allows(Selection())); Assert.False(gate.Allows(other));
     }
+
+    [Fact] public void ProviderIdentityChanges_DoNotReopenTheDismissedSelectionInTheSameWindow()
+    {
+        var gate = new SelectionDismissal(); var original = Selection() with { SelectionSource = "process:window" };
+        gate.Dismiss(original);
+        Assert.False(gate.Allows(original with { Identity = "another-uia-element", CanWrite = true }));
+        Assert.True(gate.Allows(original with { SelectionSource = "other-process:other-window" }));
+        Assert.True(gate.Allows(original with { Identity = "another-uia-element", SelectionRevision = 2 }));
+    }
 }

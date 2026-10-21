@@ -112,7 +112,7 @@ internal sealed class InputObserver : IInputTarget, IDisposable
         if (text == null) return null;
         // Custom-drawn WeChat text has no verified editable range; the fallback is strictly read-only.
         fallbackSelection = new($"{pid}:{foreground}:selection-copy", text, new(point.X, point.Y, 1, 18),
-            CanWrite: false, IsSelection: true, SelectionRevision: gesture.SelectionRevision);
+            CanWrite: false, IsSelection: true, SelectionRevision: gesture.SelectionRevision, SelectionSource: $"{pid}:{foreground}");
         return fallbackSelection;
     }
 
@@ -269,7 +269,8 @@ internal sealed class InputObserver : IInputTarget, IDisposable
             if (string.IsNullOrWhiteSpace(text) || text.Length > config.Translation.MaxInputCharacters) return null;
             capturedElement = candidate;
             return new InputSnapshot($"{pid}:{state.ProcessId}:{foreground}:{string.Join('.', candidate.GetRuntimeId())}",
-                text, bounds, canWrite, IsSelection: selection, ControlBounds: controlBounds, EditRange: editRange);
+                text, bounds, canWrite, IsSelection: selection, ControlBounds: controlBounds, EditRange: editRange,
+                SelectionSource: $"{pid}:{foreground}");
         }
         return null;
     }

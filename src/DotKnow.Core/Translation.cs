@@ -8,7 +8,7 @@ public record InputRect(double X, double Y, double Width, double Height);
 public sealed record InputSnapshot(string Identity, string Text, InputRect Bounds,
     bool CanWrite = true, bool IsComposing = false, bool IsSensitive = false,
     bool IsSelection = false, InputRect? ControlBounds = null, InputTextRange? EditRange = null,
-    long SelectionRevision = 0)
+    long SelectionRevision = 0, string SelectionSource = "")
 {
     public bool SameContent(InputSnapshot? other) => other != null && Identity == other.Identity && Text == other.Text &&
         CanWrite == other.CanWrite && IsSelection == other.IsSelection && EditRange == other.EditRange &&
