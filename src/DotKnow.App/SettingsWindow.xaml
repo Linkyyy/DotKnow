@@ -115,7 +115,7 @@
                   <Ellipse Width="5" Height="5" Fill="{DynamicResource AccentBrush}" Margin="0,0,7,0" />
                   <TextBlock x:Name="SidebarStateText" FontSize="10" />
                 </StackPanel>
-                <TextBlock Text="DotKnow  v0.5.0-preview.2" FontSize="9" Foreground="{DynamicResource MutedBrush}" Margin="12,6,0,0" />
+                <TextBlock x:Name="VersionLabel" FontSize="9" Foreground="{DynamicResource MutedBrush}" Margin="12,6,0,0" />
               </StackPanel>
             </Border>
           </Grid>

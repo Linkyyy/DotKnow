@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using System.Globalization;
+using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Interop;
@@ -35,7 +36,11 @@ public partial class SettingsWindow : Window
         this.getModels = getModels; this.testTranslation = testTranslation; this.clearCache = clearCache;
         this.favorites = favorites ?? new FavoriteStore(service.DirectoryPath, new DpapiProtector());
         this.vocabulary = vocabulary; this.vocabularyChanged = vocabularyChanged;
-        InitializeComponent(); LoadSettings(); ShowMessage(service.LoadWarning ?? "");
+        InitializeComponent();
+        var version = typeof(App).Assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion.Split('+')[0]
+            ?? typeof(App).Assembly.GetName().Version?.ToString(3) ?? "";
+        VersionLabel.Text = $"DotKnow v{version}";
+        LoadSettings(); ShowMessage(service.LoadWarning ?? "");
         SourceInitialized += (_, _) =>
         {
             Native.ApplyWindowAppearance(new WindowInteropHelper(this).Handle, AppearanceTheme.IsDark(service.Current.Overlay.Theme, DesktopTheme.IsDark));
