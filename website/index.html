@@ -314,17 +314,18 @@
       <section class="container product-screens section-space" id="screenshots" aria-labelledby="screenshots-title">
         <div class="section-heading"><div><p class="eyebrow">THE APP, AS IT IS.</p><h2 id="screenshots-title">看一眼，<br />点知本来的样子。</h2></div><p>真实 Windows 程序截图。<br />从一个疑问，到自己的提问方式。</p></div>
         <div class="screen-grid">
-          <figure class="answer-screen"><div class="screen-frame"><img src="/assets/screens/assistant.png" width="484" height="621" loading="lazy" alt="点知 Windows 百科回答面板，保留选中内容和补充问题，支持复制与收藏" /></div><figcaption><span>01 / 划选即问</span><h3>问题，就在这段内容旁边。</h3><p>保留原选区，输入自己的问题。长回答在面板中滚动阅读，觉得有用就收藏。</p></figcaption></figure>
+          <figure class="answer-screen"><div class="screen-frame"><img src="/assets/screens/assistant.png" width="444" height="381" loading="lazy" alt="点知 Windows 百科回答面板，默认简洁阅读，按需展开原文与追问，支持复制与收藏" /></div><figcaption><span>01 / 划选即问</span><h3>问题，就在这段内容旁边。</h3><p>让回答占据主要空间，原文与提问按需展开。长回答在面板中滚动阅读，有用就收藏，想继续了解就追问。</p></figcaption></figure>
           <figure class="prompt-screen"><div class="screen-frame"><img src="/assets/screens/prompts.png" width="1040" height="788" loading="lazy" alt="点知任务与提示词设置，可选择默认任务、划选动作和回答语言" /></div><figcaption><span>02 / 你来定义</span><h3>把常用的问法，保存下来。</h3><p>选择内置预设，或创建专属模板。旧用户升级后，可在这里从即时翻译切换新模式。</p></figcaption></figure>
         </div>
         <p class="preset-note">截图来自隔离的 Windows 界面验收。回答使用固定示例，不是在线模型效果评测；未使用用户的个人内容。</p>
       </section>
 
       <section class="container theme-section section-space" aria-labelledby="theme-title">
-        <div class="section-heading"><div><p class="eyebrow">A LITTLE MORE YOU.</p><h2 id="theme-title">让工具，<br />也有你的颜色。</h2></div><p>浅纸、深林、雾蓝、暮紫。<br />每套都支持浅色、深色与跟随系统。</p></div>
+        <div class="section-heading"><div><p class="eyebrow">A LITTLE MORE YOU.</p><h2 id="theme-title">让工具，<br />也有你的颜色。</h2></div><p>纯白、浅纸、深林、雾蓝、暮紫。<br />每套都支持浅色、深色与跟随系统。</p></div>
         <div class="theme-controls">
           <div class="theme-tabs" role="tablist" aria-label="软件主题预览">
             <button role="tab" id="theme-paper" aria-selected="true" aria-controls="theme-panel" tabindex="0" data-theme="paper"><span class="theme-dot paper-dot" aria-hidden="true"></span>浅纸</button>
+            <button role="tab" id="theme-white" aria-selected="false" aria-controls="theme-panel" tabindex="-1" data-theme="white"><span class="theme-dot white-dot" aria-hidden="true"></span>纯白</button>
             <button role="tab" id="theme-forest" aria-selected="false" aria-controls="theme-panel" tabindex="-1" data-theme="forest"><span class="theme-dot forest-dot" aria-hidden="true"></span>深林</button>
             <button role="tab" id="theme-ocean" aria-selected="false" aria-controls="theme-panel" tabindex="-1" data-theme="ocean"><span class="theme-dot ocean-dot" aria-hidden="true"></span>雾蓝</button>
             <button role="tab" id="theme-lavender" aria-selected="false" aria-controls="theme-panel" tabindex="-1" data-theme="lavender"><span class="theme-dot lavender-dot" aria-hidden="true"></span>暮紫</button>
@@ -436,7 +437,7 @@
                 <h3>等待，也有自己的节奏。</h3>
                 <p>
                   自动查询时显示
-                  Loading，或等结果完成再出现。浅纸、深林、雾蓝、暮紫四套配色，都支持浅色、深色和跟随系统。
+                  Loading，或等结果完成再出现。纯白、浅纸、深林、雾蓝、暮紫五套配色，都支持浅色、深色和跟随系统。
                 </p>
               </div>
             </article>
@@ -507,6 +508,7 @@
               .NET。首次打开同意读取选区，在「任务与提示词」选择默认任务和划选方式；在线任务需选择 AI 服务并保存自己的 API Key。只用离线词库时选择翻译预设。更新前先退出旧版托盘。
             </p>
           </details>
+          <details><summary>微信里划选文字也能用吗？<span aria-hidden="true">+</span></summary><p>新版增加微信兼容：无法直接读取选区时，划选后临时复制所选文字，随后恢复原剪贴板。可在常规设置关闭。仅限微信本身可复制的文字，不含图片 OCR；该路径支持查询、复制和收藏，不能替换原文。具体微信版本与权限环境仍需在你的电脑上确认。</p></details>
           <details><summary>点知和原来的伴译有什么关系？<span aria-hidden="true">+</span></summary><p>点知由 TypeLingo 伴译升级而来。翻译成为多种任务之一；旧版配置、API 密钥、离线词库和收藏继续使用原有本地目录。升级后保留原来的即时翻译习惯，可在「任务与提示词」切换新模式。</p></details>
           <details><summary>百科是实时联网搜索吗？<span aria-hidden="true">+</span></summary><p>当前通过你选择的在线 AI 模型解释选中内容，不提供实时联网搜索或网页来源核验。遇到时效信息和重要事实，请再核实。网页上的交互为固定示例，不会调用 AI 或读取其他应用。</p></details>
           <details>

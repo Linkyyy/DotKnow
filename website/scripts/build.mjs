@@ -17,7 +17,7 @@ let hydrated = html.replace(
 );
 // Visible release metadata must also stay current when JavaScript is disabled.
 for (const [attribute, value] of Object.entries({ version: release.version, size: release.size, sha256: release.sha256 })) {
-  const pattern = new RegExp(`(<(?:span|code)\\b[^>]*\\bdata-${attribute}[^>]*>)[^<]*(<\\/(?:span|code)>)`, "g");
+  const pattern = new RegExp(`(<(?:span|code)\\b[^>]*\\bdata-${attribute}[^>]*>)[^<]*(<\\/(?:span|code)\\s*>)`, "g");
   hydrated = hydrated.replace(pattern, (_, prefix, suffix) => `${prefix}${value}${suffix}`);
 }
 const siteUrl =

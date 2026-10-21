@@ -130,7 +130,7 @@ document.querySelector("#copy-checksum").addEventListener("click", async () => {
 
 const themeTabs = [...document.querySelectorAll("[data-theme]")];
 const themeModes = [...document.querySelectorAll("[data-theme-mode]")];
-const themeLabels = { paper: "浅纸", forest: "深林", ocean: "雾蓝", lavender: "暮紫" };
+const themeLabels = { paper: "浅纸", white: "纯白", forest: "深林", ocean: "雾蓝", lavender: "暮紫" };
 let previewTheme = "paper";
 let previewMode = "light";
 function renderTheme() {

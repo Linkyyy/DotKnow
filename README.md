@@ -18,6 +18,8 @@
 
 微信兼容已增加独立进程的自绘控件验收；实际微信版本与权限环境仍需在用户机器上确认。仓库远端改名需要 GitHub 管理 API，当前云环境尚未允许访问；现有仓库和下载地址继续有效。
 
+验收：222 项核心测试、181 项 Windows 界面与跨进程检查、11 项官网浏览器检查通过。Windows 验收与安装包真实启动记录：[39520278016](https://github.com/Linkyyy/TypeLingo/actions/runs/39520278016)。
+
 ## 下载和开始使用
 
 - [点知 Windows x64](https://github.com/Linkyyy/TypeLingo/raw/refs/heads/codex/typelingo-favorites-and-replacement/downloads/DotKnow-Windows-x64.zip)

@@ -82,8 +82,9 @@ test("download buttons work without JavaScript and use the verified artifact", a
     "href",
     artifactUrl("SHA256SUMS.txt"),
   );
-  await expect(page.locator("[data-version]").first()).toHaveText(release.version);
-  await expect(page.locator("[data-size]").first()).toHaveText(release.size);
+  for (const [attribute, value] of [["version", release.version], ["size", release.size]]) {
+    for (const element of await page.locator(`[data-${attribute}]`).all()) await expect(element).toHaveText(value);
+  }
   await page.getByText("核对安装包 SHA-256", { exact: true }).click();
   await expect(page.locator("[data-sha256]")).toHaveText(release.sha256);
   await context.close();
@@ -184,7 +185,7 @@ test("real Windows theme previews switch all palettes and modes with stable layo
     const r = el.getBoundingClientRect(); return { width: r.width, height: r.height, top: r.top + window.scrollY };
   });
   const original = await geometry();
-  const palettes = { 浅纸: "paper", 深林: "forest", 雾蓝: "ocean", 暮紫: "lavender" };
+  const palettes = { 浅纸: "paper", 纯白: "white", 深林: "forest", 雾蓝: "ocean", 暮紫: "lavender" };
   for (const [name, id] of Object.entries(palettes)) {
     await page.getByRole("tab", { name, exact: true }).click();
     for (const [label, mode] of [["浅色", "light"], ["深色", "dark"]]) {
@@ -197,6 +198,6 @@ test("real Windows theme previews switch all palettes and modes with stable layo
   }
   await page.getByRole("tab", { name: "浅纸", exact: true }).click();
   await page.keyboard.press("ArrowRight");
-  await expect(page.getByRole("tab", { name: "深林", exact: true })).toBeFocused();
-  await expect(page.locator("#theme-caption")).toContainText("深林");
+  await expect(page.getByRole("tab", { name: "纯白", exact: true })).toBeFocused();
+  await expect(page.locator("#theme-caption")).toContainText("纯白");
 });

@@ -21,18 +21,11 @@ npm test
 
 ## Vercel 部署
 
-[一键部署官网](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FLinkyyy%2FTypeLingo%2Ftree%2Fcodex%2Ftypelingo-favorites-and-replacement%2Fwebsite&project-name=dotknow&repository-name=dotknow-website)（在你的 Vercel 账号内导入；此链接不是已上线地址）。
+正式官网仓库为 [Linkyyy/typelingo-website](https://github.com/Linkyyy/typelingo-website)。本目录是程序仓库中的官网副本，更新时同步到独立官网仓库的根目录。
 
-导入 GitHub 仓库 `Linkyyy/TypeLingo`，选择含本目录的分支，Root Directory 设置为 **website**，Framework Preset 为 **Vite**。仓库内的 `vercel.json` 已包含构建与安全响应头设置。使用默认 `*.vercel.app` 域名即可上线，无需配置环境变量。
+Vercel 项目沿用独立官网仓库，Production Branch 为 main，Root Directory 留空或设置为 `.`，Framework Preset 为 Vite。vercel.json 保留安全响应头。推送 main 后，启用 Git 自动部署的项目会更新；实际线上结果以项目 Deployments 为准。
 
-也可以在已经登录 Vercel CLI 的电脑中执行：
-
-```bash
-cd website
-npx vercel@latest --prod
-```
-
-首次部署按提示选择自己的账号／团队并创建项目。部署授权属于项目所有者，仓库中不保存访问令牌。
+Vercel 提供生产域名用于分享图片、canonical URL 和 sitemap；也可以设置 SITE_URL 为自定义 HTTPS 域名。官网无后端，无需访客 API Key。
 
 ## 更新下载版本
 
@@ -42,12 +35,8 @@ npx vercel@latest --prod
 
 字体：Space Grotesk（SIL Open Font License 1.1），授权见 `public/assets/space-grotesk-OFL.txt`。品牌素材沿用本项目已有资源。
 
-当前云会话未连接 Vercel 账户，官网未在本会话中部署；一键部署链接是导入入口，不是已上线网址。
+## 最新版本
 
-## 本轮官网更新
+v0.5.0-preview.2：简洁百科结果、纯白主题和微信兼容说明。真实截图来自 Windows 验收运行 39520278016，来源记录位于 public/assets/screens/source.json。
 
-首页加入两张真实 Windows 程序截图、四套配色的浅／深色主题预览、三步上手指南和可复制的安装包 SHA-256。截图来源记录随静态资源放在 public/assets/screens/source.json，回答使用隔离验收固定数据。新用户使用任务面板，旧用户切换入口也已说明。
-
-构建后运行 `python3 ../scripts/package-website.py` 可生成 `downloads/DotKnow-Website.zip`（从仓库根目录运行时使用 `python3 scripts/package-website.py`）。包含 static-site 构建产物、website 完整源码与中文部署说明，不包含依赖缓存、令牌或 .env。
-
-当前官网源码所在分支为 codex/typelingo-favorites-and-replacement。直接在 Vercel 导入仓库时，请选择此分支并把 Root Directory 设为 website；main 尚不包含官网目录。
+运行本目录下的构建命令后，可从程序仓库根目录运行 `python3 scripts/package-website.py` 生成官网部署包。

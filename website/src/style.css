@@ -2022,7 +2022,7 @@ h1 {
 .theme-tabs button, .theme-mode button { padding: 12px 17px; border-radius: 8px; background: transparent; font-size: 13px; }
 .theme-tabs button[aria-selected="true"], .theme-mode button[aria-pressed="true"] { background: var(--ink); color: white; }
 .theme-dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 7px; border: 1px solid #ffffff80; }
-.paper-dot { background: #d9fa82; }.forest-dot { background: #759875; }.ocean-dot { background: #7fa8c4; }.lavender-dot { background: #b092cc; }
+.white-dot { background: #fff; border-color: #92969d; }.paper-dot { background: #d9fa82; }.forest-dot { background: #759875; }.ocean-dot { background: #7fa8c4; }.lavender-dot { background: #b092cc; }
 .theme-preview { border: 1px solid var(--line); border-radius: 18px; overflow: hidden; background: #fff; }
 .theme-preview img { width: 100%; height: auto; aspect-ratio: 1024 / 720; object-fit: contain; }
 .theme-preview figcaption { padding: 16px 20px; font-size: 12px; color: #596455; }
