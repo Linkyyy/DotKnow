@@ -1,5 +1,5 @@
 <Window x:Class="DotKnow.App.AssistantWindow" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:controls="clr-namespace:DotKnow.App.Controls"
-        Title="{DynamicResource '点知 · 划选即问'}" Icon="pack://application:,,,/DotKnow;component/Assets/dotknow.ico" Width="460" Height="360" MinWidth="320" MinHeight="260" ShowInTaskbar="False" ShowActivated="False" Topmost="True" Background="{DynamicResource CanvasBrush}" PreviewKeyDown="Window_PreviewKeyDown">
+        Title="{DynamicResource '点解 · 划选即问'}" Icon="pack://application:,,,/DotKnow;component/Assets/dotknow.ico" Width="460" Height="360" MinWidth="320" MinHeight="260" ShowInTaskbar="False" ShowActivated="False" Topmost="True" Background="{DynamicResource CanvasBrush}" PreviewKeyDown="Window_PreviewKeyDown">
   <Border Background="{DynamicResource CanvasBrush}" Padding="18,14"><Grid>
     <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="*"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
     <Grid Margin="0,0,0,12"><Grid.ColumnDefinitions><ColumnDefinition Width="Auto"/><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>

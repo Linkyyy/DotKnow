@@ -1,12 +1,19 @@
-# 点知 · DotKnow
+# 点解 · DotKnow
 
 **哪里不会，点哪里。**
 
+中文名「点解」取自粤语的“为什么”：把好奇变成问题，在阅读的地方找到解答。英文名为 DotKnow。
+
 像点读机一样的 Windows 桌面 AI 助手：在网页、文档和应用中划选文字，选择百科、翻译、解释、摘要、润色、代码解读，或输入自己的问题。用你选择的 AI 回答，随手复制、收藏，之后在本地复习。
 
-点知由 TypeLingo · 伴译升级而来。翻译依然是重要功能：中英日互译、离线词库优先、在线译文自动积累和确认替换继续保留。离线词库只用于纯翻译，百科等任务使用在线模型，不会污染词库。
+点解由 TypeLingo · 伴译升级而来。翻译依然是重要功能：中英日互译、离线词库优先、在线译文自动积累和确认替换继续保留。离线词库只用于纯翻译，百科等任务使用在线模型，不会污染词库。
 
-当前版本：**v0.5.0-preview.2**，Windows 10 / 11 x64。图形继续使用已选定的 C 标志；界面和官网统一为纯白、浅纸、深林、雾蓝、暮紫五套配色，并支持浅色、深色和跟随系统。
+当前版本：**v0.5.0-preview.3**，Windows 10 / 11 x64。图形继续使用已选定的 C 标志；界面和官网统一为纯白、浅纸、深林、雾蓝、暮紫五套配色，并支持浅色、深色和跟随系统。
+
+## v0.5.0-preview.3
+
+- 中文名统一为「点解」，同步更新界面、系统托盘、程序属性、安装与卸载向导、官网及宣传素材。
+- 从上一版升级时，将本程序的旧中文快捷方式更新为「点解」，原有设置、词库与收藏继续保留。
 
 ## v0.5.0-preview.2
 
@@ -22,12 +29,12 @@
 
 ## 下载和开始使用
 
-- [点知 Windows x64](https://github.com/Linkyyy/DotKnow/raw/refs/heads/main/downloads/DotKnow-Windows-x64.zip)
+- [点解 Windows x64](https://github.com/Linkyyy/DotKnow/raw/refs/heads/main/downloads/DotKnow-Windows-x64.zip)
 - [完整源码](https://github.com/Linkyyy/DotKnow/raw/refs/heads/main/downloads/DotKnow-Source.zip)
 - [宣传素材与文案](https://github.com/Linkyyy/DotKnow/raw/refs/heads/main/downloads/DotKnow-Promotion.zip)
 - [真实 Windows 界面](docs/UI_THEMES.md) · [验证记录](docs/VALIDATION.md)
 
-完整解压后运行 **DotKnow.exe**。也可运行「安装到当前用户.cmd」，安装并创建点知快捷方式；不需要管理员权限或额外安装 .NET。更新前从系统托盘退出旧版点知或伴译。
+完整解压后运行 **DotKnow.exe**。也可运行「安装到当前用户.cmd」，安装并创建点解快捷方式；不需要管理员权限或额外安装 .NET。更新前从系统托盘退出旧版点解或伴译。
 
 1. 在「隐私与应用」授权读取选区，按需选择全部应用或应用允许列表。
 2. 在「AI 服务与模型」选择 DeepSeek、OpenAI、Claude、Gemini 或通义千问，保存自己的 API Key 和可用模型。在线调用可能产生服务商费用。

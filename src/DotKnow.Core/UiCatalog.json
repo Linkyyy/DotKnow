@@ -1739,17 +1739,17 @@
     "en-US": "A little lilac inspiration for your next thought.",
     "ja-JP": "柔らかなライラックで、表現にひらめきを。"
   },
-  "点知": {
+  "点解": {
     "en-US": "DotKnow",
-    "ja-JP": "点知"
+    "ja-JP": "点解"
   },
-  "点知 · DotKnow": {
+  "点解 · DotKnow": {
     "en-US": "DotKnow",
-    "ja-JP": "点知 · DotKnow"
+    "ja-JP": "点解 · DotKnow"
   },
-  "点知 · 划选即问": {
+  "点解 · 划选即问": {
     "en-US": "DotKnow · Select and ask",
-    "ja-JP": "点知 · 選択して質問"
+    "ja-JP": "点解 · 選択して質問"
   },
   "哪里不会，": {
     "en-US": "Something unclear?",
@@ -1971,9 +1971,9 @@
     "en-US": "Make new knowledge your own.",
     "ja-JP": "新しい知識を自分のものに。"
   },
-  "让点知更像你的桌面。": {
+  "让点解更像你的桌面。": {
     "en-US": "Make DotKnow feel at home.",
-    "ja-JP": "点知をあなたのデスクトップに。"
+    "ja-JP": "点解をあなたのデスクトップに。"
   },
   "默认划选即问。选预设，或写下自己的问题。翻译模式保留离线词库。": {
     "en-US": "Select and ask. Choose a preset or write a question. Translation keeps its offline vocabulary.",
@@ -2031,21 +2031,21 @@
     "en-US": "Skip content longer than this limit.",
     "ja-JP": "この文字数を超える内容は読み取りません。"
   },
-  "点知（或旧版伴译）已在系统托盘运行。": {
-    "en-US": "DotKnow (or DotKnow) is already running in the tray.",
-    "ja-JP": "点知（または旧版 DotKnow）はトレイで動作中です。"
+  "点解（或旧版伴译）已在系统托盘运行。": {
+    "en-US": "DotKnow (or legacy TypeLingo) is already running in the tray.",
+    "ja-JP": "点解（または旧版 TypeLingo）はトレイで動作中です。"
   },
-  "点知 · 已暂停读取": {
+  "点解 · 已暂停读取": {
     "en-US": "DotKnow · Paused",
-    "ja-JP": "点知 · 一時停止中"
+    "ja-JP": "点解 · 一時停止中"
   },
-  "点知 · 监控全部可访问应用": {
+  "点解 · 监控全部可访问应用": {
     "en-US": "DotKnow · All accessible apps",
-    "ja-JP": "点知 · アクセス可能なアプリ"
+    "ja-JP": "点解 · アクセス可能なアプリ"
   },
-  "点知 · 仅监控允许的应用": {
+  "点解 · 仅监控允许的应用": {
     "en-US": "DotKnow · Allowed apps only",
-    "ja-JP": "点知 · 許可したアプリのみ"
+    "ja-JP": "点解 · 許可したアプリのみ"
   },
   "查看答案": {
     "en-US": "Reveal answer",
@@ -2115,9 +2115,9 @@
     "en-US": "The API returned no usable content.",
     "ja-JP": "API から有効な内容が返されませんでした。"
   },
-  "点知 · 翻译预览": {
+  "点解 · 翻译预览": {
     "en-US": "DotKnow · Translation preview",
-    "ja-JP": "点知 · 翻訳プレビュー"
+    "ja-JP": "点解 · 翻訳プレビュー"
   },
   "纯白": {
     "en-US": "White",

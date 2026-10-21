@@ -53,5 +53,5 @@ await writeFile("dist/index.html", hydrated);
 // Static fallback for hosts that do not support redirects.
 await writeFile(
   "dist/download.html",
-  `<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta http-equiv="refresh" content="0;url=${artifactUrl(release.windowsFile)}"><title>下载点知 DotKnow</title><p>正在前往 Windows 下载… <a href="${artifactUrl(release.windowsFile)}">点击下载</a></p></html>`,
+  `<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta http-equiv="refresh" content="0;url=${artifactUrl(release.windowsFile)}"><title>下载点解 DotKnow</title><p>正在前往 Windows 下载… <a href="${artifactUrl(release.windowsFile)}">点击下载</a></p></html>`,
 );

@@ -59,7 +59,7 @@ jobs:
             ConvertTo-Json | Set-Content docs/ui-preview/source.json -Encoding utf8
       - run: python scripts/package-promotion.py
       - run: python scripts/package-release.py
-      - name: 验证点知安装包与程序启动
+      - name: 验证点解安装包与程序启动
         run: ./scripts/test-release-package.ps1
       - name: 发布 Windows 验收安装包
         if: github.event_name == 'push' && github.ref_name == github.event.repository.default_branch

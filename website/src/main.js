@@ -137,7 +137,7 @@ function renderTheme() {
   const label = `${themeLabels[previewTheme]} · ${previewMode === "dark" ? "深色" : "浅色"}模式`;
   const image = document.querySelector("#theme-image");
   image.src = `/assets/screens/theme-${previewTheme}-${previewMode}.png`;
-  image.alt = `点知主页真实截图，${label}`;
+  image.alt = `点解主页真实截图，${label}`;
   document.querySelector("#theme-caption").textContent = `${label} · 真实 Windows 截图`;
   document.querySelector("#theme-panel").setAttribute("aria-labelledby", `theme-${previewTheme}`);
   themeTabs.forEach((tab) => {

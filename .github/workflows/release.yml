@@ -75,5 +75,5 @@ jobs:
           $files += @(Get-ChildItem artifacts/ui-smoke/*.png, artifacts/ui-smoke/*.txt, artifacts/ui-smoke/*.trx | ForEach-Object { $_.FullName })
           $extra = @()
           if ($env:RELEASE_TAG.Contains('-')) { $extra += '--prerelease' }
-          gh release create $env:RELEASE_TAG @files --verify-tag --title "点知 DotKnow $env:RELEASE_TAG 中文版" --notes-file docs/RELEASE_NOTES.md @extra
+          gh release create $env:RELEASE_TAG @files --verify-tag --title "点解 DotKnow $env:RELEASE_TAG 中文版" --notes-file docs/RELEASE_NOTES.md @extra
           if ($LASTEXITCODE -ne 0) { throw 'GitHub 版本附件上传失败' }

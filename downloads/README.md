@@ -1,4 +1,4 @@
-# 点知 DotKnow 下载
+# 点解 DotKnow 下载
 
 当前版本 **v0.5.0-preview.2**。解压后运行 DotKnow.exe，或使用中文当前用户安装向导。
 

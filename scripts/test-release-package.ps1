@@ -9,7 +9,7 @@ try {
     $manifest = (Get-Content (Join-Path $temporary '文件校验.txt') -Encoding utf8).Trim()
     if ($manifest -notmatch '^([a-f0-9]{64})\s+DotKnow\.exe$') { throw '安装包缺少 DotKnow 校验信息。' }
     if ((Get-FileHash $exe -Algorithm SHA256).Hash -ne $Matches[1]) { throw 'DotKnow.exe 与安装包校验信息不一致。' }
-    if ([Diagnostics.FileVersionInfo]::GetVersionInfo($exe).ProductName -ne '点知 · DotKnow') { throw '程序产品名称未更新。' }
+    if ([Diagnostics.FileVersionInfo]::GetVersionInfo($exe).ProductName -ne '点解 · DotKnow') { throw '程序产品名称未更新。' }
     foreach ($script in Get-ChildItem $temporary -Filter '*.cmd') {
         $content = Get-Content -LiteralPath $script.FullName -Raw -Encoding utf8
         $command = [regex]::Match($content, 'powershell\.exe -NoProfile -Command "([^\r\n]+)"')

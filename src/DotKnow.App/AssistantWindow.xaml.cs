@@ -77,7 +77,7 @@ public partial class AssistantWindow : Window
             ? "翻译模式：沿用翻译方向、离线优先和自动积累设置。"
             : "在线 AI 任务：选区作为参考内容，提示词和补充问题决定回答方式。");
         TaskInput.ToolTip = TaskDescription.Text;
-        TaskHeading.Text = (TaskInput.SelectedItem as PromptPreset)?.Name ?? UiText.Get("点知 · DotKnow");
+        TaskHeading.Text = (TaskInput.SelectedItem as PromptPreset)?.Name ?? UiText.Get("点解 · DotKnow");
         UpdateQuestionPanel();
     }
     private void UpdateQuestionPanel()

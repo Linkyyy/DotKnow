@@ -20,7 +20,7 @@ with zipfile.ZipFile(output, "w", zipfile.ZIP_DEFLATED) as archive:
         parts = file.relative_to(site).parts
         if file.is_file() and not excluded.intersection(parts) and not file.name.startswith(".env"):
             archive.write(file, "website/" + file.relative_to(site).as_posix())
-    archive.writestr("使用说明.txt", "点知官网部署包\n\nstatic-site：已构建的静态网站，可用于静态托管。\nwebsite：完整官网源码，包含 Vercel 配置。\n\nVercel 部署：在已登录 Vercel 的电脑进入 website，运行 npm ci，再运行 npx vercel --prod。\n也可从 GitHub 导入，Root Directory 选择 website，框架选择 Vite。\n部署需要项目所有者的 Vercel 账户授权，此包不含令牌、个人配置或 API 密钥。\n".encode("utf-8"))
+    archive.writestr("使用说明.txt", "点解官网部署包\n\nstatic-site：已构建的静态网站，可用于静态托管。\nwebsite：完整官网源码，包含 Vercel 配置。\n\nVercel 部署：在已登录 Vercel 的电脑进入 website，运行 npm ci，再运行 npx vercel --prod。\n也可从 GitHub 导入，Root Directory 选择 website，框架选择 Vite。\n部署需要项目所有者的 Vercel 账户授权，此包不含令牌、个人配置或 API 密钥。\n".encode("utf-8"))
 with zipfile.ZipFile(output) as archive:
     if archive.testzip() is not None:
         raise RuntimeError("官网部署包完整性检查失败。")

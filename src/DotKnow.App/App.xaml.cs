@@ -33,7 +33,7 @@ public partial class App : System.Windows.Application
     {
         base.OnStartup(e);
         instance = new Mutex(true, @"Local\TypeLingo.CurrentUser", out var first);
-        if (!first) { System.Windows.MessageBox.Show(UiText.Get("点知（或旧版伴译）已在系统托盘运行。")); Shutdown(); return; }
+        if (!first) { System.Windows.MessageBox.Show(UiText.Get("点解（或旧版伴译）已在系统托盘运行。")); Shutdown(); return; }
         var protector = new DpapiProtector();
         var folder = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "TypeLingo");
         settings = new SettingsService(folder, protector); settings.Load();
@@ -88,7 +88,7 @@ public partial class App : System.Windows.Application
         {
             overlay.ShowStatus(status);
             if (status == "微信选区已读取，但剪贴板恢复失败，请检查剪贴板内容。")
-                tray?.ShowBalloonTip(6000, "点知 · DotKnow", UiText.Get(status), Forms.ToolTipIcon.Warning);
+                tray?.ShowBalloonTip(6000, "点解 · DotKnow", UiText.Get(status), Forms.ToolTipIcon.Warning);
         });
         hotkeys.Pressed += async id =>
         {
@@ -102,7 +102,7 @@ public partial class App : System.Windows.Application
                     if (assistant.HasSession && assistant.OwnsForeground) { assistant.Activate(); return; }
                     var snapshot = await observer.RequestPreviewAsync(CancellationToken.None);
                     HandleSnapshot(snapshot, true);
-                    if (snapshot == null) tray?.ShowBalloonTip(4000, "点知 · DotKnow",
+                    if (snapshot == null) tray?.ShowBalloonTip(4000, "点解 · DotKnow",
                         UiText.Get("未读到可查询的文字，请先选中可复制的文本，再按快捷键。"), Forms.ToolTipIcon.Info);
                 }
                 catch (Exception) { latest = null; await coordinator.ObserveAsync(null, true); overlay.ShowStatus("无法读取当前输入或选区，请切换应用后重试。"); }
@@ -121,7 +121,7 @@ public partial class App : System.Windows.Application
         trayIconWhite = BrandAssets.CreateTrayIcon(true);
         trayIconBlack = BrandAssets.CreateTrayIcon(false);
         tray = new Forms.NotifyIcon { Icon = DesktopTheme.IsTaskbarDark ? trayIconWhite : trayIconBlack,
-            Text = "点知 · DotKnow", ContextMenuStrip = menu, Visible = true };
+            Text = "点解 · DotKnow", ContextMenuStrip = menu, Visible = true };
         tray.DoubleClick += (_, _) => ShowSettings();
         UiText.Changed += UpdateTray;
         DesktopTheme.Changed += UpdateTrayAppearance;
@@ -193,8 +193,8 @@ public partial class App : System.Windows.Application
     private void UpdateTray()
     {
         pauseItem.Checked = !settings.Current.Translation.Enabled;
-        tray.Text = UiText.Get(!settings.Current.Translation.Enabled || !settings.Current.PrivacyConsent ? "点知 · 已暂停读取" :
-            settings.Current.MonitorAllApplications ? "点知 · 监控全部可访问应用" : "点知 · 仅监控允许的应用");
+        tray.Text = UiText.Get(!settings.Current.Translation.Enabled || !settings.Current.PrivacyConsent ? "点解 · 已暂停读取" :
+            settings.Current.MonitorAllApplications ? "点解 · 监控全部可访问应用" : "点解 · 仅监控允许的应用");
         foreach (Forms.ToolStripItem item in tray.ContextMenuStrip!.Items)
             if (item.Tag is string text) item.Text = UiText.Get(text);
     }
