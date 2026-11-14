@@ -477,7 +477,7 @@ h1 {
 .preset-grid article > span { color: #576650; font-size: 11px; }
 .preset-grid h3 { font-size: 19px; margin: 16px 0 10px; }
 .preset-grid p { color: #596455; font-size: 13px; line-height: 1.9; }
-.preset-grid .custom-preset { background: #eaf3d7; }
+.preset-grid .custom-preset { background: #eaf3d7; grid-column: 1 / -1; }
 .preset-note { color: #596455; font-size: 12px; line-height: 1.8; margin-top: 20px; }
 @media (max-width: 900px) { .preset-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 @media (max-width: 400px) { .preset-grid { grid-template-columns: 1fr; } .demo-question { font-size: 10px; padding: 7px 9px; } }
@@ -2051,3 +2051,10 @@ h1 {
     animation: none !important;
   }
 }
+
+.solve-layout { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 50px; align-items: center; }
+.solve-layout figure { margin: 0; max-width: 480px; }
+.solve-layout img { display: block; width: 100%; height: auto; }
+.solve-layout h3 { font-size: 24px; margin-bottom: 20px; }
+.solve-layout > div > p { color: #596455; font-size: 14px; line-height: 1.9; margin-bottom: 20px; }
+@media (max-width: 760px) { .solve-layout { grid-template-columns: 1fr; gap: 28px; } }

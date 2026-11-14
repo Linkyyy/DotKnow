@@ -1,15 +1,13 @@
 # 点解 DotKnow 下载
 
-当前版本 **v0.5.0-preview.3**。中文名「点解」取自粤语“为什么”。解压后运行 DotKnow.exe，或使用中文当前用户安装向导。
+当前版本 **v0.6.0-preview.1**，新增解题与 Ctrl+Alt+S 截图后自动解题。图片需要支持视觉输入的模型和用户自己的 API；DeepSeek 当前用于文字任务。
 
-- DotKnow-Windows-x64.zip：Windows 10 / 11 x64，68.9 MB，包含 .NET 运行时。
-- DotKnow-Source.zip：此验收版本的完整源码。
-- DotKnow-Promotion.zip：新版宣传图、C 图标与推广文案。
-- DotKnow-Website.zip：官网源码、静态构建产物和部署说明。
-- SHA256SUMS.txt：程序、源码与宣传包的 SHA-256；BUILD.json：Windows 安装包验收来源。
+- DotKnow-Windows-x64.zip：Windows 10／11 x64，69.0 MB，解压运行 DotKnow.exe。
+- DotKnow-Source.zip：经过验收的完整源码。
+- DotKnow-Promotion.zip：包含截图解题真实界面、品牌图标和文案。
+- DotKnow-Website.zip：官网源码、静态构建与部署说明。
+- SHA256SUMS.txt：本目录程序、源码和宣传包校验值；BUILD.json：Windows 包来源。
 
-Windows 安装包和源码保持 CI 生成的已验证字节不变。[Windows 验收记录](https://github.com/Linkyyy/DotKnow/actions/runs/39526940871)；[不可变安装包快照](https://github.com/Linkyyy/DotKnow/tree/7c7b5ee9a4733fcee13668e85e81b5bec03a61fc/downloads)。本目录的宣传包额外同步最终官网分享图，校验值已更新。
+[Windows 验收记录](https://github.com/Linkyyy/DotKnow/actions/runs/43547569432) · [不可变安装包快照](https://github.com/Linkyyy/DotKnow/tree/7a857e990a5a6ad7c261496eb8f6f444162e9d63/downloads)。本目录 Windows 和源码 ZIP 保持 CI 验证字节不变；宣传包另同步最终官网分享图，校验值随包更新。
 
-Windows ZIP SHA-256：`2be20220c378f898db523a0f6a2b567d12ca7972accaf5d8c005e43d1936f721`。
-
-旧版本与历史验收记录保留在 Linkyyy/TypeLingo。
+Windows ZIP SHA-256：`ab75315743e78c9044c206456b8b5af52877c98c9c25d7b38befc3159537db85`。

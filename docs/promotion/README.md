@@ -7,6 +7,7 @@
 | hero.png | 1200×630 官网分享图，固定交互示意 |
 | assistant-square.png | 640×640 百科交互示意，适合社交平台 |
 | app-assistant.png | 真实 Windows WPF 回答面板，隔离验收固定数据 |
+| app-solve.png | 真实 Windows 截图解题面板，题目与解答为验收固定数据 |
 | app-prompts.png | 真实 Windows WPF 任务与提示词设置 |
 | logo.svg / logo.png | 已选定的 C 双向对话主标 |
 | app-icon.png / app-icon.ico | 深底白色 C 程序图标 |
