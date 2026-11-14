@@ -57,7 +57,7 @@ internal static class ScreenshotSmoke
                 "截图窗口先隐藏再读取像素，图片没有框选遮罩污染");
             check(System.Windows.Clipboard.GetText() == "screenshot-must-not-overwrite-clipboard", "截图不读写剪贴板");
             fixture.Hide();
-            var config = service.Current with { PrivacyConsent = true };
+            var config = service.Current with { PrivacyConsent = true, Assistant = service.Current.Assistant with { ExamMode = false } };
             var assistant = new AssistantWindow(() => config);
             TranslationRequest? submitted = null; var calls = 0;
             assistant.QueryRequested += (_, request) => { submitted = request; calls++; };
@@ -84,6 +84,7 @@ internal static class ScreenshotSmoke
             using var cancellation = new CancellationTokenSource();
             var interrupted = ScreenshotCapture.CaptureAsync(cancellation.Token); cancellation.Cancel();
             check(InputFixture.WaitWithDispatcher(interrupted) == null, "暂停或配置变更取消框选，不提交截图");
+            ExamModeSmoke.Verify(settings, service, shot, check, capture);
         }
         finally { fixture.Close(); }
     }

@@ -2234,5 +2234,33 @@
   "纯翻译题库命中时不发送文本。截图解题仅发送主动框选的区域，不保存图片、不写入缓存；收藏仅保存文字解答。核对翻译替换范围时会在本机临时读取编辑框全文。": {
     "en-US": "Offline translation hits send no text. Screenshot solving sends only the region you select; images and answers are not cached automatically. Favorites save text answers only. Replacement checks temporarily read the local editor text.",
     "ja-JP": "オフライン翻訳の一致時は送信なし。画像の解答は自分で選んだ範囲のみ送信し、画像や解答を自動キャッシュしません。お気に入りはテキストのみ保存。置換確認時は入力欄全文をローカルで一時読取りします。"
+  },
+  "考试模式": {
+    "en-US": "Exam mode",
+    "ja-JP": "試験モード"
+  },
+  "解题结果仅显示文字，点击复制并收起；右键可展开详情。": {
+    "en-US": "Show problem-solving results as text only. Click to copy and close; right-click for details.",
+    "ja-JP": "解答結果をテキストだけで表示。クリックでコピーして閉じ、右クリックで詳細を表示。"
+  },
+  "精简": {
+    "en-US": "Compact",
+    "ja-JP": "コンパクト"
+  },
+  "展开详情": {
+    "en-US": "Show details",
+    "ja-JP": "詳細を表示"
+  },
+  "点击复制并收起；右键展开详情或关闭": {
+    "en-US": "Click to copy and close; right-click for details or close",
+    "ja-JP": "クリックでコピーして閉じる。右クリックで詳細表示または閉じる"
+  },
+  "点击复制解题结果": {
+    "en-US": "Click to copy the solution",
+    "ja-JP": "クリックして解答をコピー"
+  },
+  "模式保存失败，请在任务与提示词中重试。": {
+    "en-US": "Could not save the mode. Try again in Tasks and prompts.",
+    "ja-JP": "モードを保存できません。タスクとプロンプトで再試行してください。"
   }
 }

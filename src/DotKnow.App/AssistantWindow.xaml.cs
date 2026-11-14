@@ -30,7 +30,11 @@ public partial class AssistantWindow : Window
         this.settings = settings; this.saveFavorite = saveFavorite;
         InitializeComponent();
         Closing += (_, e) => { e.Cancel = true; CancelSession(); };
-        SourceInitialized += (_, _) => ApplyNativeTheme();
+        SourceInitialized += (_, _) =>
+        {
+            ApplyNativeTheme();
+            HwndSource.FromHwnd(new WindowInteropHelper(this).Handle)?.AddHook(CompactMouseHook);
+        };
         SourceExpander.Expanded += (_, _) => { if (SessionSnapshot != null) Position(SessionSnapshot.Bounds); };
         SourceExpander.Collapsed += (_, _) => { if (SessionSnapshot != null) Position(SessionSnapshot.Bounds); };
     }
@@ -40,6 +44,7 @@ public partial class AssistantWindow : Window
     private void PresentCore(InputSnapshot snapshot, ImageAttachment? image, bool autoRun, bool activate)
     {
         QueryRevision++; SessionSnapshot = snapshot; SessionImage = image; current = null;
+        compactOverride = null; CompactFeedback.Visibility = Visibility.Collapsed;
         var config = settings();
         questionExpanded = false;
         SelectionText.Text = snapshot.Text; QuestionInput.Clear(); AnswerText.Clear();
@@ -60,12 +65,14 @@ public partial class AssistantWindow : Window
         TaskInput.SelectedValue = image == null ? config.Assistant.PresetId : "solve";
         UpdateQuestionPanel();
         EditorPanel.Visibility = Visibility.Visible; FollowUpButton.Visibility = Visibility.Collapsed;
-        SetBusy(false); QueryStatus.Text = UiText.Get("选区已保留，输入问题不会读取其他内容。");
+        SetBusy(false); QueryStatus.Text = UiText.Get(autoRun ? "正在查询…" : "选区已保留，输入问题不会读取其他内容。");
         CopyAnswerButton.IsEnabled = SaveAnswerButton.IsEnabled = false;
+        SetCompactView(autoRun && WantsCompact);
         _ = new WindowInteropHelper(this).EnsureHandle();
         ApplyNativeTheme();
         Position(snapshot.Bounds);
         if (!autoRun || config.Overlay.ShowLoading) Show();
+        else Hide();
         if (activate) { Show(); Activate(); QuestionInput.Focus(); }
         if (autoRun) Submit();
     }
@@ -76,11 +83,16 @@ public partial class AssistantWindow : Window
         var area = System.Windows.Forms.Screen.FromPoint(new System.Drawing.Point((int)anchor.X, (int)anchor.Y)).WorkingArea;
         var topLeft = scale.Transform(new Point(area.Left, area.Top));
         var bottomRight = scale.Transform(new Point(area.Right, area.Bottom));
-        MinWidth = Math.Min(320, bottomRight.X - topLeft.X); MinHeight = Math.Min(260, bottomRight.Y - topLeft.Y);
-        Width = Math.Min(460, bottomRight.X - topLeft.X);
-        SelectionPreview.MaxWidth = Math.Max(100, Width - 100);
-        Height = Math.Min(current != null ? 420 : QuestionPanel.Visibility == Visibility.Visible ? 430 : 340, bottomRight.Y - topLeft.Y);
-        if (SessionImage != null) Height = Math.Min(SourceExpander.IsExpanded ? 600 : 460, bottomRight.Y - topLeft.Y);
+        if (compactView) MeasureCompact(bottomRight.X - topLeft.X, bottomRight.Y - topLeft.Y);
+        else
+        {
+            MaxWidth = MaxHeight = double.PositiveInfinity;
+            MinWidth = Math.Min(320, bottomRight.X - topLeft.X); MinHeight = Math.Min(260, bottomRight.Y - topLeft.Y);
+            Width = Math.Min(460, bottomRight.X - topLeft.X);
+            SelectionPreview.MaxWidth = Math.Max(100, Width - 100);
+            Height = Math.Min(current != null ? 420 : QuestionPanel.Visibility == Visibility.Visible ? 430 : 340, bottomRight.Y - topLeft.Y);
+            if (SessionImage != null) Height = Math.Min(SourceExpander.IsExpanded ? 600 : 460, bottomRight.Y - topLeft.Y);
+        }
         var point = scale.Transform(new Point(anchor.X + anchor.Width + 12, anchor.Y));
         Left = Math.Clamp(point.X, topLeft.X, Math.Max(topLeft.X, bottomRight.X - Width));
         Top = Math.Clamp(point.Y, topLeft.Y, Math.Max(topLeft.Y, bottomRight.Y - Height));
@@ -128,6 +140,8 @@ public partial class AssistantWindow : Window
             current = null; AnswerText.Clear(); AnswerText.Visibility = Visibility.Collapsed; EmptyText.Visibility = Visibility.Visible;
             CopyAnswerButton.IsEnabled = SaveAnswerButton.IsEnabled = false;
             QueryRevision++; SetBusy(true); QueryStatus.Text = UiText.Get("正在查询…");
+            CompactFeedback.Visibility = Visibility.Collapsed; SetCompactView(WantsCompact); Position(SessionSnapshot.Bounds);
+            if (compactView && !settings().Overlay.ShowLoading) Hide();
             QueryRequested?.Invoke(SessionSnapshot, request);
         }
         catch (ArgumentException e) { QueryStatus.Text = UiText.Get(e.Message); CompleteQuery(); }
@@ -144,6 +158,7 @@ public partial class AssistantWindow : Window
         SourceExpander.IsExpanded = false;
         QueryStatus.Text = UiText.Get(SessionImage != null ? "截图解题完成 · 收藏只保存文字解答" : preview.Origin == TranslationOrigin.Vocabulary ? "离线题库 · 未调用 API" :
             preview.FromCache ? "本地缓存 · 未调用 API" : preview.Request.IsTranslation ? "在线翻译" : "回答就绪 · AI 生成");
+        SetCompactView(WantsCompact);
         Position(preview.Snapshot.Bounds);
         if (!IsVisible) Show();
     }
@@ -151,10 +166,12 @@ public partial class AssistantWindow : Window
     {
         if (!HasSession) return;
         QueryStatus.Text = UiText.Get(status);
+        if (compactView && current == null) { RefreshCompactText(); Position(SessionSnapshot!.Bounds); }
     }
     public void CompleteQuery()
     {
         SetBusy(false);
+        if (compactView && HasSession) { RefreshCompactText(); Position(SessionSnapshot!.Bounds); }
         // The result-only option also needs to reveal authentication, offline-miss and other failures.
         if (HasSession && !IsVisible) Show();
     }
@@ -162,12 +179,14 @@ public partial class AssistantWindow : Window
     {
         IsQuerying = busy; QueryProgress.Visibility = busy ? Visibility.Visible : Visibility.Collapsed;
         TaskInput.IsEnabled = QuestionInput.IsEnabled = SubmitButton.IsEnabled = !busy;
+        CompactModeButton.Visibility = IsSolveTask && (current != null || busy) ? Visibility.Visible : Visibility.Collapsed;
     }
     public void CancelSession(bool notify = true)
     {
         var snapshot = SessionSnapshot;
         QueryRevision++; SessionSnapshot = null; SessionImage = null; ScreenshotPreview.Source = null;
         SelectionText.Clear(); SelectionPreview.Text = ""; AnswerText.Clear(); QuestionInput.Clear();
+        CompactAnswerText.Text = ""; CompactFeedback.Text = ""; CompactFeedback.Visibility = Visibility.Collapsed;
         current = null; SetBusy(false); Hide();
         if (notify) Dismissed?.Invoke(snapshot);
     }
@@ -181,8 +200,16 @@ public partial class AssistantWindow : Window
     public void CopyAnswer()
     {
         if (current == null) return;
-        try { System.Windows.Clipboard.SetText(current.Result.Text); QueryStatus.Text = UiText.Get("结果已复制"); }
-        catch (System.Runtime.InteropServices.COMException) { QueryStatus.Text = UiText.Get("剪贴板正忙，请重试。"); }
+        try
+        {
+            System.Windows.Clipboard.SetText(current.Result.Text); QueryStatus.Text = UiText.Get("结果已复制");
+            if (compactView) CancelSession();
+        }
+        catch (System.Runtime.InteropServices.COMException)
+        {
+            QueryStatus.Text = UiText.Get("剪贴板正忙，请重试。");
+            if (compactView) { CompactFeedback.Text = QueryStatus.Text; CompactFeedback.Visibility = Visibility.Visible; Position(SessionSnapshot!.Bounds); }
+        }
     }
     private void Copy_Click(object sender, RoutedEventArgs e) => CopyAnswer();
     private void Favorite_Click(object sender, RoutedEventArgs e)

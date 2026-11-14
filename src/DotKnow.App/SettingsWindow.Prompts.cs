@@ -14,6 +14,7 @@ public partial class SettingsWindow
         RefreshAssistantChoices(settings.Assistant.PresetId);
         SelectionActionInput.SelectedValue = settings.Assistant.SelectionAction;
         AnswerLanguageInput.SelectedValue = settings.Assistant.ResponseLanguage;
+        ExamModeCheck.IsChecked = settings.Assistant.ExamMode;
         PromptList.SelectedIndex = 0;
     }
     private void RefreshAssistantChoices(string? selected = null)
@@ -76,7 +77,7 @@ public partial class SettingsWindow
     {
         CommitPrompt();
         return new() { PresetId = Selected(AssistantTaskInput), SelectionAction = Selected(SelectionActionInput),
-            ResponseLanguage = Selected(AnswerLanguageInput), CustomPresets = customPrompts.ToArray() };
+            ResponseLanguage = Selected(AnswerLanguageInput), CustomPresets = customPrompts.ToArray(), ExamMode = ExamModeCheck.IsChecked == true };
     }
     private void RefreshAssistantLanguage()
     {

@@ -1,11 +1,13 @@
 <Window x:Class="DotKnow.App.AssistantWindow" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:controls="clr-namespace:DotKnow.App.Controls"
         Title="{DynamicResource '点解 · 划选即问'}" Icon="pack://application:,,,/DotKnow;component/Assets/dotknow.ico" Width="460" Height="360" MinWidth="320" MinHeight="260" ShowInTaskbar="False" ShowActivated="False" Topmost="True" Background="{DynamicResource CanvasBrush}" PreviewKeyDown="Window_PreviewKeyDown">
-  <Border Background="{DynamicResource CanvasBrush}" Padding="18,14"><Grid>
+  <Border x:Name="ContentFrame" Background="{DynamicResource CanvasBrush}" Padding="18,14"><Grid>
+  <Grid x:Name="StandardPanel">
     <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="*"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
-    <Grid Margin="0,0,0,12"><Grid.ColumnDefinitions><ColumnDefinition Width="Auto"/><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+    <Grid Margin="0,0,0,12"><Grid.ColumnDefinitions><ColumnDefinition Width="Auto"/><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
       <controls:BrandMark Width="21" Height="21" Foreground="{DynamicResource AccentBrush}" Margin="0,0,9,0"/>
       <TextBlock x:Name="TaskHeading" Grid.Column="1" FontSize="15" FontWeight="SemiBold" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" TextWrapping="NoWrap"/>
-      <Button Grid.Column="2" Style="{StaticResource OverlayIconButton}" Click="Dismiss_Click" AutomationProperties.Name="{DynamicResource '关闭'}"><controls:SymbolIcon Kind="close" Width="14" Height="14"/></Button>
+      <Button x:Name="CompactModeButton" Grid.Column="2" Visibility="Collapsed" Content="{DynamicResource '精简'}" Click="CompactMode_Click" FontSize="11" Padding="7,4" Margin="0,0,5,0"/>
+      <Button Grid.Column="3" Style="{StaticResource OverlayIconButton}" Click="Dismiss_Click" AutomationProperties.Name="{DynamicResource '关闭'}"><controls:SymbolIcon Kind="close" Width="14" Height="14"/></Button>
     </Grid>
     <Expander x:Name="SourceExpander" Foreground="{DynamicResource MutedBrush}" Grid.Row="1" Margin="0,0,0,12" HorizontalContentAlignment="Stretch">
       <Expander.Header><TextBlock x:Name="SelectionPreview" TextTrimming="CharacterEllipsis" TextWrapping="NoWrap" FontSize="11" Foreground="{DynamicResource MutedBrush}" MaxWidth="350"/></Expander.Header>
@@ -40,5 +42,17 @@
         <TextBlock x:Name="QueryStatus" Grid.Row="1" FontSize="10" Foreground="{DynamicResource MutedBrush}" TextWrapping="Wrap" Margin="0,8,0,0" ToolTip="{DynamicResource 'AI 回答可能有误；百科等任务需要在线模型，不提供实时联网检索。'}"/>
       </Grid>
     </StackPanel>
+  </Grid>
+  <Grid x:Name="CompactPanel" Visibility="Collapsed">
+    <Grid.RowDefinitions><RowDefinition Height="*"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
+    <ScrollViewer x:Name="CompactScroll" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Focusable="False">
+      <Button x:Name="CompactAnswerButton" Background="Transparent" BorderThickness="0" Padding="0" MinHeight="0" Focusable="False" Click="CompactCopy_Click" HorizontalContentAlignment="Stretch" ToolTip="{DynamicResource '点击复制并收起；右键展开详情或关闭'}" AutomationProperties.Name="{DynamicResource '点击复制解题结果'}">
+        <Button.Template><ControlTemplate TargetType="Button"><ContentPresenter/></ControlTemplate></Button.Template>
+        <Button.ContextMenu><ContextMenu><MenuItem Header="{DynamicResource '展开详情'}" Click="ExamDetails_Click"/><MenuItem Header="{DynamicResource '关闭'}" Click="Dismiss_Click"/></ContextMenu></Button.ContextMenu>
+        <TextBlock x:Name="CompactAnswerText" TextWrapping="Wrap" Foreground="{DynamicResource TextBrush}"/>
+      </Button>
+    </ScrollViewer>
+    <TextBlock x:Name="CompactFeedback" Grid.Row="1" Visibility="Collapsed" FontSize="10" Foreground="{DynamicResource MutedBrush}" TextWrapping="Wrap" Margin="0,6,0,0"/>
+  </Grid>
   </Grid></Border>
 </Window>

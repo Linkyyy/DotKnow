@@ -26,6 +26,7 @@ public partial class App : System.Windows.Application
     private System.Drawing.Icon? trayIconBlack;
     private Forms.NotifyIcon tray = null!;
     private Forms.ToolStripMenuItem pauseItem = null!;
+    private Forms.ToolStripMenuItem examItem = null!;
     private readonly HttpClient http = new(new HttpClientHandler { AllowAutoRedirect = false }) { Timeout = Timeout.InfiniteTimeSpan, MaxResponseContentBufferSize = 2 * 1024 * 1024 };
     private InputSnapshot? latest;
     private readonly SelectionDismissal dismissal = new();
@@ -131,6 +132,7 @@ public partial class App : System.Windows.Application
         menu.Items.Add("设置 / 隐私授权", null, (_, _) => ShowSettings()).Tag = "设置 / 隐私授权";
         menu.Items.Add("任务与提示词", null, (_, _) => { ShowSettings(); settingsWindow.OpenAssistantSettings(); }).Tag = "任务与提示词";
         menu.Items.Add("截图解题", null, async (_, _) => await CaptureAndSolveAsync()).Tag = "截图解题";
+        examItem = new Forms.ToolStripMenuItem("考试模式", null, (_, _) => ToggleExamMode()) { Tag = "考试模式" }; menu.Items.Add(examItem);
         pauseItem = new Forms.ToolStripMenuItem("暂停全部读取", null, (_, _) => TogglePause()) { Tag = "暂停全部读取" }; menu.Items.Add(pauseItem);
         menu.Items.Add("清除缓存", null, async (_, _) =>
         {
@@ -216,10 +218,21 @@ public partial class App : System.Windows.Application
     private void UpdateTray()
     {
         pauseItem.Checked = !settings.Current.Translation.Enabled;
+        examItem.Checked = settings.Current.Assistant.ExamMode;
         tray.Text = UiText.Get(!settings.Current.Translation.Enabled || !settings.Current.PrivacyConsent ? "点解 · 已暂停读取" :
             settings.Current.MonitorAllApplications ? "点解 · 监控全部可访问应用" : "点解 · 仅监控允许的应用");
         foreach (Forms.ToolStripItem item in tray.ContextMenuStrip!.Items)
             if (item.Tag is string text) item.Text = UiText.Get(text);
+    }
+    private void ToggleExamMode()
+    {
+        try
+        {
+            var config = settings.Current;
+            var warning = SaveSettings(config with { Assistant = config.Assistant with { ExamMode = !config.Assistant.ExamMode } }, "");
+            if (warning != null) { ShowSettings(); settingsWindow.ShowMessage(warning); }
+        }
+        catch (Exception) { ShowSettings(); settingsWindow.ShowMessage("模式保存失败，请在任务与提示词中重试。"); }
     }
     private void ShowSettings()
     {

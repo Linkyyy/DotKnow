@@ -4,6 +4,7 @@ public sealed record PromptPreset(string Id, string Name, string Instructions);
 
 public sealed record AssistantSettings
 {
+    public bool ExamMode { get; init; } = true;
     public string PresetId { get; init; } = "encyclopedia";
     public string SelectionAction { get; init; } = "ask";
     public string ResponseLanguage { get; init; } = "zh";

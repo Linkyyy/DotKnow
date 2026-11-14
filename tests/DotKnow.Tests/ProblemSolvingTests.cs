@@ -15,6 +15,19 @@ public sealed class ProblemSolvingTests
     { AI = ProviderCatalog.Defaults(provider) with { ImageModel = provider == "Qwen" ? "qwen-vl-plus" : "" } };
     private static InputSnapshot Snapshot(ImageAttachment image) => new("screenshot", image.Description, new(20, 30, 100, 80), CanWrite: false, IsSelection: true);
 
+    [Fact] public void ExamMode_IsEnabledForOldSettings_AndDoesNotChangeTheQuestionOrPrompt()
+    {
+        var old = JsonSerializer.Deserialize<AssistantSettings>("""{"PresetId":"solve","SelectionAction":"ask"}""")!;
+        Assert.True(old.ExamMode);
+        var normal = old with { ExamMode = false };
+        Assert.False(JsonSerializer.Deserialize<AssistantSettings>(JsonSerializer.Serialize(normal))!.ExamMode);
+        var config = Config() with { Assistant = old };
+        Assert.Equal(ProblemSolving.CreateRequest(config, Image()).CacheKey,
+            ProblemSolving.CreateRequest(config with { Assistant = normal }, Image()).CacheKey);
+        Assert.Equal(AssistantPresets.CreateRequest(config, "2+2", "solve"),
+            AssistantPresets.CreateRequest(config with { Assistant = normal }, "2+2", "solve"));
+    }
+
     [Fact] public void TextSolvingAndImages_AreSeparateFromTranslations_AndFromEachOther()
     {
         var settings = Config();
