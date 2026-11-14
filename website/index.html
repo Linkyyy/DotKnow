@@ -354,8 +354,8 @@
       <section class="container section-space" id="solve" aria-labelledby="solve-title">
         <div class="section-heading"><div><p class="eyebrow">CAPTURE. SOLVE. UNDERSTAND.</p><h2 id="solve-title">题目在屏幕上，<br />思路在你手边。</h2></div><p>文字可以划选，图片也能框选。<br />看清题意、步骤，再核对答案。</p></div>
         <div class="solve-layout">
-          <figure><div class="screen-frame"><img src="/assets/screens/solve.png" width="444" height="561" loading="lazy" alt="点解截图解题真实 Windows 界面，包含框选的题目图片与固定验收解答" /></div><figcaption class="preset-note">真实 Windows 验收截图；题目和解答为固定示例，非在线模型效果评测。</figcaption></figure>
-          <div><h3>Ctrl+Alt+S，框选后自动解题。</h3><p>先保存支持图片的服务、密钥和截图模型。拖动选中完整题目，松开鼠标后发送框选区域；按 Esc 或右键取消。结果可复制，也能带着原图继续追问。</p><p>支持 OpenAI、Claude、Gemini 与 Qwen-VL 的图片输入。DeepSeek 当前用于文字解题。模糊图片或缺少条件时，应补充题目；AI 解答需要核对。</p><p>图片只保留在本次会话内存，不写入剪贴板、缓存或翻译词库；关闭后释放。主动收藏仅保存文字解答。</p><a class="text-link" href="#download">下载支持截图解题的 Windows 版 ↗</a></div>
+          <figure class="exam-screen"><div class="screen-frame"><img src="/assets/screens/exam.png" width="96" height="41" loading="lazy" alt="点解考试模式真实 Windows 小窗，仅显示答案文字" /></div><figcaption class="preset-note">考试模式的真实文字小窗，示例答案为固定验收数据；点击复制并收起，右键可查看详情。</figcaption></figure>
+          <div><h3>框选后解题，点击文字就复制。</h3><p>先保存支持图片的服务、密钥和截图模型。拖动选中完整题目，松开鼠标后发送框选区域；按 Esc 或右键取消。结果默认只显示文字小窗，随内容缩小；点击复制完整解答并收起。右键展开详情后，可带着原图继续追问。</p><p>支持 OpenAI、Claude、Gemini 与 Qwen-VL 的图片输入。DeepSeek 当前用于文字解题。模糊图片或缺少条件时，应补充题目；AI 解答需要核对。</p><p>图片只保留在本次会话内存，不写入剪贴板、缓存或翻译词库；关闭后释放。主动收藏仅保存文字解答。</p><a class="text-link" href="#download">下载支持截图解题的 Windows 版 ↗</a></div>
         </div>
       </section>
 
@@ -520,6 +520,7 @@
           <details><summary>微信里划选文字也能用吗？<span aria-hidden="true">+</span></summary><p>新版增加微信兼容：无法直接读取选区时，划选后临时复制所选文字，随后恢复原剪贴板。可在常规设置关闭。仅限微信本身可复制的文字，不含图片 OCR；该路径支持查询、复制和收藏，不能替换原文。具体微信版本与权限环境仍需在你的电脑上确认。</p></details>
           <details><summary>为什么叫「点解」？<span aria-hidden="true">+</span></summary><p>「点解」是粤语里的“为什么”。我们希望你在阅读时，随时把好奇变成问题：哪里有疑问，就划选哪里。英文名继续使用 DotKnow。</p></details>
           <details><summary>点解和原来的伴译有什么关系？<span aria-hidden="true">+</span></summary><p>点解由 TypeLingo 伴译升级而来。翻译成为多种任务之一；旧版配置、API 密钥、离线词库和收藏继续使用原有本地目录。升级后保留原来的即时翻译习惯，可在「任务与提示词」切换新模式。</p></details>
+          <details><summary>窗口可以只显示答案文字吗？<span aria-hidden="true">+</span></summary><p>新版默认开启「考试模式」：解题结果随文字自动缩小，不显示题目图片和工具栏。长答案在最高 320×240 DIP 的小窗内滚动，点击复制包括未显示部分的完整解答并收起；不会自动粘贴。右键可展开详情或关闭，任务设置与托盘菜单可切换模式。模型回答内容保持不变。</p></details>
           <details><summary>如何截图自动解题？<span aria-hidden="true">+</span></summary><p>先在「AI 服务与模型」保存支持图片的服务、密钥和截图模型。按 Ctrl+Alt+S，或点击主页、任务页、托盘的「截图解题」，拖动框选，松开后自动发送题目；Esc 或右键取消。支持 OpenAI、Claude、Gemini 与 Qwen-VL，DeepSeek 当前只用于文字任务。结果可复制、追问或收藏文字；图片不写入缓存或词库，关闭后释放。AI 解答请自行核对。</p></details>
           <details><summary>百科是实时联网搜索吗？<span aria-hidden="true">+</span></summary><p>当前通过你选择的在线 AI 模型解释选中内容，不提供实时联网搜索或网页来源核验。遇到时效信息和重要事实，请再核实。网页上的交互为固定示例，不会调用 AI 或读取其他应用。</p></details>
           <details>

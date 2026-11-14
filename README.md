@@ -39,7 +39,7 @@
 
 微信兼容已增加独立进程的自绘控件验收；实际微信版本与权限环境仍需在用户机器上确认。项目源码与官网源码已迁移至 [Linkyyy/DotKnow](https://github.com/Linkyyy/DotKnow)，官网目录为 website。旧仓库保留历史验收记录。
 
-验收：239 项核心测试、192 项 Windows 界面与跨进程检查通过。Windows 截图与安装包真实启动记录：[43547569432](https://github.com/Linkyyy/DotKnow/actions/runs/43547569432)。在线模型使用隔离协议测试，未调用付费 API。
+验收：240 项核心测试、206 项 Windows 界面与跨进程检查通过。Windows 截图与安装包真实启动记录：[43554500846](https://github.com/Linkyyy/DotKnow/actions/runs/43554500846)。在线模型使用隔离协议测试，未调用付费 API。
 
 ## 下载和开始使用
 

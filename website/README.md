@@ -37,6 +37,6 @@ Vercel 提供生产域名用于分享图片、canonical URL 和 sitemap；也可
 
 ## 最新版本
 
-v0.6.0-preview.1：新增解题与截图说明、8 套预设，下载指向经过 Windows 验收的安装包。真实截图来自运行 43547569432，来源记录见 public/assets/screens/source.json。
+v0.6.0-preview.2：解题默认开启考试模式，更新真实文字小窗、使用说明和下载。截图来自 Windows 验收运行 43554500846，来源记录见 public/assets/screens/source.json。
 
 运行本目录下的构建命令后，可从程序仓库根目录运行 `python3 scripts/package-website.py` 生成官网部署包。

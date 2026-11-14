@@ -2058,3 +2058,6 @@ h1 {
 .solve-layout h3 { font-size: 24px; margin-bottom: 20px; }
 .solve-layout > div > p { color: #596455; font-size: 14px; line-height: 1.9; margin-bottom: 20px; }
 @media (max-width: 760px) { .solve-layout { grid-template-columns: 1fr; gap: 28px; } }
+
+.solve-layout .exam-screen .screen-frame { width: fit-content; margin: auto; }
+.solve-layout .exam-screen img { width: auto; max-width: 100%; }
