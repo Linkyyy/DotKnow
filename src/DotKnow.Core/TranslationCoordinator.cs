@@ -65,7 +65,7 @@ public sealed class TranslationCoordinator(ITranslationProvider provider, ITrans
             }
             if (request.IsTranslation && result == null && !config.Vocabulary.AllowOnlineFallback)
             { PublishStatus(id, "离线题库未命中，已关闭在线翻译。"); return; }
-            if (result == null)
+            if (result == null && request.Image == null)
             {
                 result = await cache.GetAsync(request.CacheKey, token);
                 if (result != null) origin = TranslationOrigin.Cache;
@@ -86,7 +86,7 @@ public sealed class TranslationCoordinator(ITranslationProvider provider, ITrans
                     result = await provider.TranslateAsync(request, token);
                     token.ThrowIfCancellationRequested();
                     if (string.IsNullOrWhiteSpace(result.Text)) throw new TranslationException(TranslationError.InvalidResponse, "API 未返回有效内容。");
-                    try { await cache.PutAsync(request.CacheKey, result, token); }
+                    try { if (request.Image == null) await cache.PutAsync(request.CacheKey, result, token); }
                     catch (Exception) when (!token.IsCancellationRequested) { savingFailed = true; }
                 }
                 finally { singleRequest.Release(); }

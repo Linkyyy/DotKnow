@@ -2158,5 +2158,81 @@
   "未读到可查询的文字，请先选中可复制的文本，再按快捷键。": {
     "en-US": "No queryable text found. Select copyable text, then press the shortcut again.",
     "ja-JP": "テキストを取得できませんでした。コピーできる文字を選択して、ショートカットをもう一度押してください。"
+  },
+  "解题": {
+    "en-US": "Solve a problem",
+    "ja-JP": "問題を解く"
+  },
+  "截图解题": {
+    "en-US": "Screenshot & solve",
+    "ja-JP": "スクリーンショットで解く"
+  },
+  "截图模型": {
+    "en-US": "Vision model",
+    "ja-JP": "画像対応モデル"
+  },
+  "题目截图": {
+    "en-US": "Problem screenshot",
+    "ja-JP": "問題のスクリーンショット"
+  },
+  "使用已保存的视觉模型，框选后自动解题；Esc 取消。": {
+    "en-US": "Use the saved vision model. Select a region to solve automatically; Esc cancels.",
+    "ja-JP": "保存済みの画像対応モデルを使用。範囲を選ぶと自動で解答。Esc で取消。"
+  },
+  "留空使用当前模型；必须支持图片。Qwen 请填写 VL 模型，DeepSeek 不支持截图。": {
+    "en-US": "Leave blank to use the current model. Images must be supported. Use a VL model for Qwen; DeepSeek does not support screenshots.",
+    "ja-JP": "空欄は現在のモデルを使用。画像対応が必要です。Qwen は VL モデルを指定。DeepSeek は画像に非対応。"
+  },
+  "拖动框选题目，松开后自动发送给视觉模型解题。Esc / 右键取消。": {
+    "en-US": "Drag over the problem. Release to send the selected image to your vision model. Esc / right-click cancels.",
+    "ja-JP": "問題の範囲をドラッグ。離すと画像対応モデルへ送信して解答。Esc／右クリックで取消。"
+  },
+  "截图解题完成 · 收藏只保存文字解答": {
+    "en-US": "Solution ready · Favorites save only the text answer",
+    "ja-JP": "解答完了 · お気に入りはテキストのみ保存"
+  },
+  "截图区域过小或过大，请重新框选题目。": {
+    "en-US": "The region is too small or too large. Select the problem again.",
+    "ja-JP": "選択範囲が小さすぎるか大きすぎます。問題を選び直してください。"
+  },
+  "截图无效或过大，请重新选择较小的题目区域。": {
+    "en-US": "Invalid or oversized screenshot. Select a smaller problem region.",
+    "ja-JP": "画像が無効または大きすぎます。小さな範囲を選んでください。"
+  },
+  "当前 DeepSeek 接口不支持截图，请切换到支持图片的服务商和视觉模型。": {
+    "en-US": "This DeepSeek API does not support screenshots. Select an image-capable provider and vision model.",
+    "ja-JP": "現在の DeepSeek API は画像に非対応です。画像対応のサービスとモデルを選んでください。"
+  },
+  "截图解题需要视觉模型，请为通义千问选择 Qwen-VL 模型。": {
+    "en-US": "Screenshot solving requires a vision model. Select a Qwen-VL model for Qwen.",
+    "ja-JP": "画像からの解答には画像対応モデルが必要です。Qwen-VL を選んでください。"
+  },
+  "截图解题需要支持图片输入的视觉模型，请在 AI 服务与模型中设置。": {
+    "en-US": "Select an image-capable model in AI services and models.",
+    "ja-JP": "AI サービスとモデルで画像対応モデルを設定してください。"
+  },
+  "截图模型名称最多 200 字。": {
+    "en-US": "Vision model names are limited to 200 characters.",
+    "ja-JP": "画像対応モデル名は200文字以内です。"
+  },
+  "请先授权并开启助手，再使用截图解题。": {
+    "en-US": "Enable the assistant and grant access before using screenshot solving.",
+    "ja-JP": "アクセスを許可しアシスタントを有効にしてから画像で解答してください。"
+  },
+  "截图失败，请重新框选题目或检查屏幕访问权限。": {
+    "en-US": "Screenshot failed. Select the problem again or check screen access.",
+    "ja-JP": "撮影に失敗しました。範囲を選び直すか画面へのアクセスを確認してください。"
+  },
+  "允许读取选区；手动截图解题会发送框选区域给视觉模型，纯翻译按离线回退设置处理": {
+    "en-US": "Allow selection reading; manual screenshots send the selected region to your vision model. Translation uses offline settings.",
+    "ja-JP": "選択範囲の読取りを許可。手動撮影は選択領域を画像対応モデルへ送信。翻訳はオフライン設定に従います。"
+  },
+  "我同意读取选区，并按所选任务发送文字或主动框选的截图给 AI": {
+    "en-US": "I allow selected text or a screenshot region I select to be sent to my AI for the chosen task",
+    "ja-JP": "選択したテキストや自分で選んだ撮影範囲を、選んだタスクで AI に送信することを許可します"
+  },
+  "纯翻译题库命中时不发送文本。截图解题仅发送主动框选的区域，不保存图片、不写入缓存；收藏仅保存文字解答。核对翻译替换范围时会在本机临时读取编辑框全文。": {
+    "en-US": "Offline translation hits send no text. Screenshot solving sends only the region you select; images and answers are not cached automatically. Favorites save text answers only. Replacement checks temporarily read the local editor text.",
+    "ja-JP": "オフライン翻訳の一致時は送信なし。画像の解答は自分で選んだ範囲のみ送信し、画像や解答を自動キャッシュしません。お気に入りはテキストのみ保存。置換確認時は入力欄全文をローカルで一時読取りします。"
   }
 }

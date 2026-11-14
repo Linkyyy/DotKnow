@@ -17,14 +17,21 @@ public sealed record InputSnapshot(string Identity, string Text, InputRect Bound
 
 public sealed record TranslationRequest(string Provider, string Model, string SourceLanguage,
     string TargetLanguage, string Mode, string Text, string BaseUrl, string PromptVersion = "1",
-    string TaskId = "translate", string Instructions = "", string Question = "", string ResponseLanguage = "zh")
+    string TaskId = "translate", string Instructions = "", string Question = "", string ResponseLanguage = "zh", ImageAttachment? Image = null)
 {
-    public bool IsTranslation => TaskId == "translate" && Instructions.Length == 0 && Question.Length == 0;
-    public string CacheKey => Convert.ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes(
-        JsonSerializer.Serialize(IsTranslation
-            ? new[] { Provider, Model, SourceLanguage, TargetLanguage, Mode, PromptVersion, Text, BaseUrl }
-            : new[] { Provider, Model, SourceLanguage, TargetLanguage, Mode, PromptVersion, Text, BaseUrl,
-                "assistant-v1", TaskId, Instructions, Question, ResponseLanguage }))));
+    public bool IsTranslation => Image == null && TaskId == "translate" && Instructions.Length == 0 && Question.Length == 0;
+    public string CacheKey
+    {
+        get
+        {
+            var parts = IsTranslation
+                ? new[] { Provider, Model, SourceLanguage, TargetLanguage, Mode, PromptVersion, Text, BaseUrl }
+                : new[] { Provider, Model, SourceLanguage, TargetLanguage, Mode, PromptVersion, Text, BaseUrl,
+                    "assistant-v1", TaskId, Instructions, Question, ResponseLanguage };
+            if (Image != null) parts = [.. parts, "image-v1", Image.Digest];
+            return Convert.ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes(JsonSerializer.Serialize(parts))));
+        }
+    }
 
     public static TranslationRequest Create(AppSettings settings, string text) => new(settings.AI.Provider,
         settings.AI.Model, settings.Translation.SourceLanguage, settings.Translation.TargetLanguage,

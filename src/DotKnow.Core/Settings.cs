@@ -26,6 +26,8 @@ public sealed record AppSettings
         _ = ProviderCatalog.Get(AI.Provider);
         if (string.IsNullOrWhiteSpace(AI.Model))
             throw new ArgumentException("请选择 API 服务商并填写模型名称。");
+        if (AI.ImageModel == null || AI.ImageModel.Length > 200)
+            throw new ArgumentException("截图模型名称最多 200 字。");
         if (!Uri.TryCreate(AI.BaseUrl, UriKind.Absolute, out var uri) || uri.Scheme != "https" ||
             uri.UserInfo.Length > 0 || uri.Query.Length > 0 || uri.Fragment.Length > 0)
             throw new ArgumentException("API Base URL 必须是不含凭证、查询参数或片段的 HTTPS 地址。");
@@ -56,6 +58,7 @@ public sealed record AppSettings
 
 public sealed record AiSettings
 {
+    public string ImageModel { get; init; } = "";
     public string Provider { get; init; } = "DeepSeek";
     public string BaseUrl { get; init; } = "https://api.deepseek.com";
     // 模型可显式配置；启用前用用户自己的账户查询 /models 确认可用性。
@@ -107,6 +110,7 @@ public sealed record OverlaySettings
 }
 public sealed record HotkeySettings
 {
+    public string Screenshot { get; init; } = "Ctrl+Alt+S";
     public string Replace { get; init; } = "Ctrl+Alt+Enter";
     public string Toggle { get; init; } = "Ctrl+Alt+Space";
     public string Copy { get; init; } = "Ctrl+Alt+C";

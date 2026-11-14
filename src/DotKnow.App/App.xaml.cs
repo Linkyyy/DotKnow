@@ -29,6 +29,8 @@ public partial class App : System.Windows.Application
     private readonly HttpClient http = new(new HttpClientHandler { AllowAutoRedirect = false }) { Timeout = Timeout.InfiniteTimeSpan, MaxResponseContentBufferSize = 2 * 1024 * 1024 };
     private InputSnapshot? latest;
     private readonly SelectionDismissal dismissal = new();
+    private bool capturingScreenshot;
+    private CancellationTokenSource? screenshotCancellation;
     protected override void OnStartup(StartupEventArgs e)
     {
         base.OnStartup(e);
@@ -63,6 +65,7 @@ public partial class App : System.Windows.Application
             (candidate, key) => TestApi(candidate, key).GetModelsAsync(),
             (candidate, key) => TestApi(candidate, key).TranslateAsync(TranslationRequest.Create(candidate, "Hello") with { SourceLanguage = "en" }, CancellationToken.None),
             async () => { await coordinator.ObserveAsync(null, true); await cache.ClearAsync(); }, favorites, vocabulary, () => { _ = coordinator.ObserveAsync(null, true); });
+        settingsWindow.ScreenshotRequested += async () => await CaptureAndSolveAsync();
         _ = PrepareVocabularyAsync();
         coordinator.PreviewChanged += preview => Ui(() =>
         {
@@ -79,6 +82,7 @@ public partial class App : System.Windows.Application
             Ui(() =>
             {
                 if (!ReferenceEquals(capturedConfig, settings.Current)) return;
+                if (capturingScreenshot || assistant.SessionImage != null) return;
                 // Clicking our question box changes focus; its session keeps the already captured selection.
                 if (assistant.HasSession && assistant.OwnsForeground) return;
                 HandleSnapshot(snapshot);
@@ -92,6 +96,7 @@ public partial class App : System.Windows.Application
         });
         hotkeys.Pressed += async id =>
         {
+            if (capturingScreenshot && id != 2) return;
             if (id == 1 && !assistant.HasSession) await overlay.RequestReplacementAsync();
             else if (id == 2) TogglePause();
             else if (id == 3) { if (assistant.HasSession) assistant.CopyAnswer(); else overlay.CopyTranslation(); }
@@ -107,10 +112,12 @@ public partial class App : System.Windows.Application
                 }
                 catch (Exception) { latest = null; await coordinator.ObserveAsync(null, true); overlay.ShowStatus("无法读取当前输入或选区，请切换应用后重试。"); }
             }
+            else if (id == 5) await CaptureAndSolveAsync();
         };
         var menu = new Forms.ContextMenuStrip();
         menu.Items.Add("设置 / 隐私授权", null, (_, _) => ShowSettings()).Tag = "设置 / 隐私授权";
         menu.Items.Add("任务与提示词", null, (_, _) => { ShowSettings(); settingsWindow.OpenAssistantSettings(); }).Tag = "任务与提示词";
+        menu.Items.Add("截图解题", null, async (_, _) => await CaptureAndSolveAsync()).Tag = "截图解题";
         pauseItem = new Forms.ToolStripMenuItem("暂停全部读取", null, (_, _) => TogglePause()) { Tag = "暂停全部读取" }; menu.Items.Add(pauseItem);
         menu.Items.Add("清除缓存", null, async (_, _) =>
         {
@@ -172,6 +179,7 @@ public partial class App : System.Windows.Application
     }
     private string? SaveSettings(AppSettings candidate, string key)
     {
+        screenshotCancellation?.Cancel();
         settings.Save(candidate, key);
         latest = null; assistant.CancelSession(false); overlay.Dismiss(false);
         UiText.Apply(candidate.UiLanguage);
@@ -180,12 +188,14 @@ public partial class App : System.Windows.Application
     }
     private void TogglePause()
     {
+        screenshotCancellation?.Cancel();
         settings.SetPaused(settings.Current.Translation.Enabled);
         latest = null; assistant.CancelSession(false);
         _ = coordinator.ObserveAsync(null, true); overlay.Hide(); UpdateTray();
     }
     internal void PauseMonitoring()
     {
+        screenshotCancellation?.Cancel();
         settings.SetPaused(true);
         latest = null; assistant.CancelSession(false);
         _ = coordinator.ObserveAsync(null, true); overlay.Hide(); UpdateTray();
@@ -223,6 +233,7 @@ public partial class App : System.Windows.Application
     }
     protected override void OnExit(ExitEventArgs e)
     {
+        screenshotCancellation?.Cancel();
         observer?.Dispose(); coordinator?.Dispose(); hotkeys?.Dispose();
         tray?.Dispose(); trayIconWhite?.Dispose(); trayIconBlack?.Dispose(); http.Dispose();
         SystemEvents.UserPreferenceChanged -= SystemThemeChanged;
@@ -230,5 +241,43 @@ public partial class App : System.Windows.Application
         UiText.Changed -= UpdateTray;
         // 后台 API 与 UIA 调用可能仍在退出；进程结束会释放缓存文件句柄。
         instance?.Dispose(); base.OnExit(e);
+    }
+
+    private async Task CaptureAndSolveAsync()
+    {
+        if (capturingScreenshot) return;
+        var config = settings.Current;
+        if (!config.PrivacyConsent || !config.Translation.Enabled)
+        {
+            ShowSettings(); settingsWindow.OpenPrivacySettings();
+            settingsWindow.ShowMessage("请先授权并开启助手，再使用截图解题。"); return;
+        }
+        var error = ProblemSolving.ConfigurationError(config.AI);
+        if (error != null || !settings.HasKey)
+        {
+            ShowSettings(); settingsWindow.OpenAiSettings();
+            settingsWindow.ShowMessage(error ?? "请为当前服务商和 API 地址保存密钥。"); return;
+        }
+        capturingScreenshot = true;
+        using var cancellation = new CancellationTokenSource(); screenshotCancellation = cancellation;
+        try
+        {
+            latest = null; assistant.CancelSession(false); overlay.Dismiss(false);
+            await coordinator.ObserveAsync(null, true);
+            settingsWindow.Hide();
+            await Task.Delay(150, cancellation.Token);
+            var captured = await ScreenshotCapture.CaptureAsync(cancellation.Token);
+            if (captured == null || cancellation.IsCancellationRequested || !ReferenceEquals(config, settings.Current)) return;
+            var snapshot = new InputSnapshot("screenshot-" + Guid.NewGuid().ToString("N"), captured.Image.Description, captured.Bounds,
+                CanWrite: false, IsSelection: true);
+            latest = snapshot;
+            assistant.PresentScreenshot(snapshot, captured.Image);
+        }
+        catch (OperationCanceledException) when (cancellation.IsCancellationRequested) { }
+        catch (Exception e)
+        {
+            ShowSettings(); settingsWindow.ShowMessage(e is ArgumentException ? e.Message : "截图失败，请重新框选题目或检查屏幕访问权限。");
+        }
+        finally { screenshotCancellation = null; capturingScreenshot = false; }
     }
 }

@@ -7,7 +7,7 @@
     <EnableWindowsTargeting>true</EnableWindowsTargeting>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <AssemblyName>DotKnow</AssemblyName>
-    <Version>0.5.0-preview.3</Version>
+    <Version>0.6.0-preview.1</Version>
     <Product>点解 · DotKnow</Product>
     <Title>点解 · DotKnow</Title>
     <Description>划选即问的桌面 AI 助手：哪里不会，点哪里。</Description>

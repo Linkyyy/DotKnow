@@ -2,6 +2,8 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Interop;
+using System.Windows.Media.Imaging;
+using System.IO;
 using DotKnow.App.Windows;
 using DotKnow.Core;
 
@@ -16,6 +18,7 @@ public partial class AssistantWindow : Window
     private bool questionExpanded;
     public InputSnapshot? SessionSnapshot { get; private set; }
     public bool HasSession => SessionSnapshot != null;
+    public ImageAttachment? SessionImage { get; private set; }
     internal bool OwnsForeground => Native.GetForegroundWindow() == new WindowInteropHelper(this).Handle;
     public bool IsQuerying { get; private set; }
     public long QueryRevision { get; private set; }
@@ -28,20 +31,33 @@ public partial class AssistantWindow : Window
         InitializeComponent();
         Closing += (_, e) => { e.Cancel = true; CancelSession(); };
         SourceInitialized += (_, _) => ApplyNativeTheme();
+        SourceExpander.Expanded += (_, _) => { if (SessionSnapshot != null) Position(SessionSnapshot.Bounds); };
+        SourceExpander.Collapsed += (_, _) => { if (SessionSnapshot != null) Position(SessionSnapshot.Bounds); };
     }
     public bool Matches(InputSnapshot snapshot) => SessionSnapshot?.SameContent(snapshot) == true;
-    public void Present(InputSnapshot snapshot, bool autoRun = false, bool activate = false)
+    public void Present(InputSnapshot snapshot, bool autoRun = false, bool activate = false) => PresentCore(snapshot, null, autoRun, activate);
+    public void PresentScreenshot(InputSnapshot snapshot, ImageAttachment image) => PresentCore(snapshot, image, true, false);
+    private void PresentCore(InputSnapshot snapshot, ImageAttachment? image, bool autoRun, bool activate)
     {
-        QueryRevision++; SessionSnapshot = snapshot; current = null;
+        QueryRevision++; SessionSnapshot = snapshot; SessionImage = image; current = null;
         var config = settings();
         questionExpanded = false;
         SelectionText.Text = snapshot.Text; QuestionInput.Clear(); AnswerText.Clear();
         SelectionPreview.Text = snapshot.Text.Replace('\r', ' ').Replace('\n', ' ');
         SourceExpander.IsExpanded = false;
+        ScreenshotPreview.Source = null;
+        ScreenshotPreview.Visibility = image == null ? Visibility.Collapsed : Visibility.Visible;
+        SelectionText.Visibility = image == null ? Visibility.Visible : Visibility.Collapsed;
+        if (image != null)
+        {
+            using var stream = new MemoryStream(Convert.FromBase64String(image.Base64Data));
+            var bitmap = new BitmapImage(); bitmap.BeginInit(); bitmap.CacheOption = BitmapCacheOption.OnLoad;
+            bitmap.StreamSource = stream; bitmap.EndInit(); bitmap.Freeze(); ScreenshotPreview.Source = bitmap;
+        }
         AnswerText.Visibility = Visibility.Collapsed; EmptyText.Visibility = Visibility.Visible;
-        TaskInput.ItemsSource = AssistantPresets.For(config.Assistant).Select(x => x with
+        TaskInput.ItemsSource = AssistantPresets.For(config.Assistant).Where(x => image == null || x.Id == "solve").Select(x => x with
             { Name = x.Id.StartsWith("custom-", StringComparison.Ordinal) ? x.Name : UiText.Get(x.Name) }).ToArray();
-        TaskInput.SelectedValue = config.Assistant.PresetId;
+        TaskInput.SelectedValue = image == null ? config.Assistant.PresetId : "solve";
         UpdateQuestionPanel();
         EditorPanel.Visibility = Visibility.Visible; FollowUpButton.Visibility = Visibility.Collapsed;
         SetBusy(false); QueryStatus.Text = UiText.Get("选区已保留，输入问题不会读取其他内容。");
@@ -64,6 +80,7 @@ public partial class AssistantWindow : Window
         Width = Math.Min(460, bottomRight.X - topLeft.X);
         SelectionPreview.MaxWidth = Math.Max(100, Width - 100);
         Height = Math.Min(current != null ? 420 : QuestionPanel.Visibility == Visibility.Visible ? 430 : 340, bottomRight.Y - topLeft.Y);
+        if (SessionImage != null) Height = Math.Min(SourceExpander.IsExpanded ? 600 : 460, bottomRight.Y - topLeft.Y);
         var point = scale.Transform(new Point(anchor.X + anchor.Width + 12, anchor.Y));
         Left = Math.Clamp(point.X, topLeft.X, Math.Max(topLeft.X, bottomRight.X - Width));
         Top = Math.Clamp(point.Y, topLeft.Y, Math.Max(topLeft.Y, bottomRight.Y - Height));
@@ -106,13 +123,14 @@ public partial class AssistantWindow : Window
         if (SessionSnapshot == null || IsQuerying) return;
         try
         {
-            var request = AssistantPresets.CreateRequest(settings(), SessionSnapshot.Text, TaskInput.SelectedValue as string, QuestionInput.Text);
+            var request = SessionImage is { } image ? ProblemSolving.CreateRequest(settings(), image, QuestionInput.Text)
+                : AssistantPresets.CreateRequest(settings(), SessionSnapshot.Text, TaskInput.SelectedValue as string, QuestionInput.Text);
             current = null; AnswerText.Clear(); AnswerText.Visibility = Visibility.Collapsed; EmptyText.Visibility = Visibility.Visible;
             CopyAnswerButton.IsEnabled = SaveAnswerButton.IsEnabled = false;
             QueryRevision++; SetBusy(true); QueryStatus.Text = UiText.Get("正在查询…");
             QueryRequested?.Invoke(SessionSnapshot, request);
         }
-        catch (ArgumentException e) { QueryStatus.Text = UiText.Get(e.Message); }
+        catch (ArgumentException e) { QueryStatus.Text = UiText.Get(e.Message); CompleteQuery(); }
     }
     public void Display(Preview? preview)
     {
@@ -124,7 +142,7 @@ public partial class AssistantWindow : Window
         SetBusy(false);
         EditorPanel.Visibility = Visibility.Collapsed; FollowUpButton.Visibility = Visibility.Visible;
         SourceExpander.IsExpanded = false;
-        QueryStatus.Text = UiText.Get(preview.Origin == TranslationOrigin.Vocabulary ? "离线题库 · 未调用 API" :
+        QueryStatus.Text = UiText.Get(SessionImage != null ? "截图解题完成 · 收藏只保存文字解答" : preview.Origin == TranslationOrigin.Vocabulary ? "离线题库 · 未调用 API" :
             preview.FromCache ? "本地缓存 · 未调用 API" : preview.Request.IsTranslation ? "在线翻译" : "回答就绪 · AI 生成");
         Position(preview.Snapshot.Bounds);
         if (!IsVisible) Show();
@@ -148,7 +166,9 @@ public partial class AssistantWindow : Window
     public void CancelSession(bool notify = true)
     {
         var snapshot = SessionSnapshot;
-        QueryRevision++; SessionSnapshot = null; current = null; SetBusy(false); Hide();
+        QueryRevision++; SessionSnapshot = null; SessionImage = null; ScreenshotPreview.Source = null;
+        SelectionText.Clear(); SelectionPreview.Text = ""; AnswerText.Clear(); QuestionInput.Clear();
+        current = null; SetBusy(false); Hide();
         if (notify) Dismissed?.Invoke(snapshot);
     }
     private void Window_PreviewKeyDown(object sender, System.Windows.Input.KeyEventArgs e)

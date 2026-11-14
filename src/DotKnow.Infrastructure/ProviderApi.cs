@@ -15,6 +15,8 @@ public sealed class ProviderApi(HttpClient client, Func<AppSettings> settings,
     {
         var config = settings() with { AI = settings().AI with { Provider = request.Provider, Model = request.Model, BaseUrl = request.BaseUrl } };
         config.Validate(); var watch = Stopwatch.StartNew();
+        if (request.Image != null && ProblemSolving.ConfigurationError(config.AI with { ImageModel = request.Model }) is { } error)
+            throw new TranslationException(TranslationError.Configuration, error);
         var body = CreateBody(request);
         var path = request.Provider switch
         {
@@ -42,7 +44,7 @@ public sealed class ProviderApi(HttpClient client, Func<AppSettings> settings,
         if (request.Provider == "Anthropic") return new
         {
             model = request.Model, max_tokens = 4096, stream = false, system = prompt,
-            messages = new[] { new { role = "user", content = TranslationPrompt.UserContent(request) } }
+            messages = new[] { new { role = "user", content = UserContent(request) } }
         };
         if (request.Provider == "Gemini")
         {
@@ -52,19 +54,31 @@ public sealed class ProviderApi(HttpClient client, Func<AppSettings> settings,
             return new
             {
                 systemInstruction = new { parts = new[] { new { text = prompt } } },
-                contents = new[] { new { role = "user", parts = new[] { new { text = TranslationPrompt.UserContent(request) } } } },
+                contents = new[] { new { role = "user", parts = GeminiParts(request) } },
                 generationConfig = generation
             };
         }
         var body = new Dictionary<string, object>
         {
             ["model"] = request.Model, ["stream"] = false,
-            ["messages"] = new[] { new { role = "system", content = prompt }, new { role = "user", content = TranslationPrompt.UserContent(request) } }
+            ["messages"] = new[] { new { role = "system", content = (object)prompt }, new { role = "user", content = UserContent(request) } }
         };
         if (request.Provider == "DeepSeek") body["thinking"] = new { type = "disabled" };
-        if (request.Provider == "Qwen") body["enable_thinking"] = false;
+        if (request.Provider == "Qwen" && request.Image == null) body["enable_thinking"] = false;
         return body;
     }
+
+    private static object UserContent(TranslationRequest request)
+    {
+        var text = TranslationPrompt.UserContent(request);
+        if (request.Image is not { } image) return text;
+        return request.Provider == "Anthropic"
+            ? new object[] { new { type = "image", source = new { type = "base64", media_type = image.MimeType, data = image.Base64Data } }, new { type = "text", text } }
+            : new object[] { new { type = "text", text }, new { type = "image_url", image_url = new { url = $"data:{image.MimeType};base64,{image.Base64Data}" } } };
+    }
+    private static object[] GeminiParts(TranslationRequest request) => request.Image is { } image
+        ? [new { text = TranslationPrompt.UserContent(request) }, new { inlineData = new { mimeType = image.MimeType, data = image.Base64Data } }]
+        : [new { text = TranslationPrompt.UserContent(request) }];
 
     private static TranslationResult ParseResult(JsonElement root, string provider)
     {

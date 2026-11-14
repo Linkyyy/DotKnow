@@ -13,6 +13,10 @@ namespace DotKnow.App;
 
 public partial class SettingsWindow : Window
 {
+    public event Action? ScreenshotRequested;
+    private void Screenshot_Click(object sender, RoutedEventArgs e) => ScreenshotRequested?.Invoke();
+    internal void OpenAiSettings() => OpenPage("ai");
+    internal void OpenPrivacySettings() => OpenPage("privacy");
     private sealed record Choice(string Code, string Label);
     private readonly SettingsService service;
     private readonly SessionStatistics statistics;
@@ -61,6 +65,7 @@ public partial class SettingsWindow : Window
             HomeHeadingSecond.Margin = new Thickness(0, 0, 0, compactHome ? 10 : 15);
             HomeHeroBorder.Padding = new Thickness(compactHome ? 22 : 26);
             HomeStartButton.Margin = new Thickness(0, compactHome ? 14 : 20, 0, 0);
+            HomeScreenshotButton.Margin = new Thickness(10, compactHome ? 14 : 20, 0, 0);
             HomeLogoPanel.Margin = new Thickness(0, compactHome ? 0 : 34, 0, 0);
             HomeLogoPanel.VerticalAlignment = compactHome ? VerticalAlignment.Center : VerticalAlignment.Top;
         };
@@ -201,6 +206,7 @@ public partial class SettingsWindow : Window
             AllApplicationsCheck.IsChecked = s.MonitorAllApplications;
             DebounceInput.Text = s.Translation.DebounceMilliseconds.ToString(); IntervalInput.Text = s.Translation.MinimumRequestIntervalMilliseconds.ToString(); MaxInput.Text = s.Translation.MaxInputCharacters.ToString();
             BaseUrlInput.Text = s.AI.BaseUrl; ModelInput.ItemsSource = null; ModelInput.Text = s.AI.Model;
+            ImageModelInput.Text = s.AI.ImageModel;
             TimeoutInput.Text = s.AI.TimeoutSeconds.ToString(); RetriesInput.Text = s.AI.MaxRetries.ToString();
             KeyInput.Clear(); RefreshKeyStatus(); PlatformAddress.Text = ProviderCatalog.Get(s.AI.Provider).PlatformUrl;
             MemoryCheck.IsChecked = s.Cache.MemoryEnabled; MemoryCapacityInput.Text = s.Cache.MemoryMaxEntries.ToString(); MemoryTtlInput.Text = s.Cache.MemoryTTLMinutes.ToString();
@@ -210,6 +216,7 @@ public partial class SettingsWindow : Window
             foreach (var choice in PaletteChoices) choice.IsChecked = (string)choice.Tag == s.Overlay.ColorTheme;
             AutoHideInput.Text = s.Overlay.AutoHideSeconds.ToString(); PreviewHotkey.Text = s.Hotkeys.Preview; FontInput.Text = Number(s.Overlay.FontSize); WidthInput.Text = Number(s.Overlay.MaxWidth); OpacityInput.Text = Number(s.Overlay.Opacity);
             ReplaceHotkey.Text = s.Hotkeys.Replace; ToggleHotkey.Text = s.Hotkeys.Toggle; CopyHotkey.Text = s.Hotkeys.Copy;
+            ScreenshotHotkey.Text = s.Hotkeys.Screenshot;
             AllowedInput.Text = string.Join(", ", s.AllowedApplications); ExcludedInput.Text = string.Join(", ", s.ExcludedApplications); RefreshStatistics();
             providerRevision++;
         }
@@ -255,11 +262,12 @@ public partial class SettingsWindow : Window
             var defaults = ProviderCatalog.Get(provider);
             // 切换服务商时清除尚未保存的密钥输入，避免把上一家的密钥误发给新平台。
             KeyInput.Clear(); BaseUrlInput.Text = defaults.BaseUrl; ModelInput.ItemsSource = null; ModelInput.Text = defaults.DefaultModel;
+            ImageModelInput.Clear();
             PlatformAddress.Text = defaults.PlatformUrl; TestStatus.Text = ""; providerRevision++; RefreshKeyStatus();
         }
         finally { loading = false; }
     }
-    private AiSettings SelectedAi() => service.Current.AI with { Provider = Selected(ProviderInput), BaseUrl = BaseUrlInput.Text.Trim().TrimEnd('/'), Model = ModelInput.Text.Trim() };
+    private AiSettings SelectedAi() => service.Current.AI with { Provider = Selected(ProviderInput), BaseUrl = BaseUrlInput.Text.Trim().TrimEnd('/'), Model = ModelInput.Text.Trim(), ImageModel = ImageModelInput.Text.Trim() };
     private void RefreshKeyStatus() => KeyStatus.Text = UiText.Get(service.HasKeyFor(SelectedAi()) ? "密钥已加密保存，留空即可继续使用。" : "当前服务商和 API 地址尚未保存密钥。");
     private void BaseUrl_TextChanged(object sender, TextChangedEventArgs e)
     {
@@ -283,11 +291,11 @@ public partial class SettingsWindow : Window
             Cache = new() { MemoryEnabled = MemoryCheck.IsChecked == true, MemoryMaxEntries = Integer(MemoryCapacityInput.Text), MemoryTTLMinutes = Integer(MemoryTtlInput.Text), DiskEnabled = DiskCheck.IsChecked == true, DiskMaxEntries = Integer(DiskCapacityInput.Text), DiskTTLDays = Integer(DiskTtlInput.Text) },
             Vocabulary = new() { PreferOffline = PreferOfflineCheck.IsChecked == true, AutoLearn = AutoLearnCheck.IsChecked == true, AllowOnlineFallback = OnlineFallbackCheck.IsChecked == true },
             Overlay = new() { WeChatClipboardFallback = WeChatFallbackCheck.IsChecked == true, ShowLoading = Selected(PopupDisplayInput) == "loading", Theme = SelectedTheme(), ColorTheme = SelectedPalette(), DarkMode = SelectedTheme() == "dark", TriggerMode = Selected(TriggerInput), AutoHideSeconds = Integer(AutoHideInput.Text), FontSize = Decimal(FontInput.Text), MaxWidth = Decimal(WidthInput.Text), Opacity = Decimal(OpacityInput.Text), Position = Selected(PositionInput) },
-            Hotkeys = new() { Replace = ReplaceHotkey.Text.Trim(), Toggle = ToggleHotkey.Text.Trim(), Copy = CopyHotkey.Text.Trim(), Preview = PreviewHotkey.Text.Trim() },
+            Hotkeys = new() { Replace = ReplaceHotkey.Text.Trim(), Toggle = ToggleHotkey.Text.Trim(), Copy = CopyHotkey.Text.Trim(), Preview = PreviewHotkey.Text.Trim(), Screenshot = ScreenshotHotkey.Text.Trim() },
             AllowedApplications = Split(AllowedInput.Text), ExcludedApplications = Split(ExcludedInput.Text)
         };
         candidate.Validate();
-        foreach (var text in new[] { candidate.Hotkeys.Replace, candidate.Hotkeys.Toggle, candidate.Hotkeys.Copy, candidate.Hotkeys.Preview })
+        foreach (var text in new[] { candidate.Hotkeys.Replace, candidate.Hotkeys.Toggle, candidate.Hotkeys.Copy, candidate.Hotkeys.Preview, candidate.Hotkeys.Screenshot })
             if (!HotkeyService.TryParse(text, out _, out _)) throw new ArgumentException("快捷键格式无效，例如 Ctrl+Alt+Enter。");
         return candidate;
     }
