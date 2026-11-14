@@ -1,0 +1,4 @@
+System.InvalidOperationException: 真实鼠标框选只捕获所选区域，坐标使用物理屏幕像素
+   at DotKnow.UiSmoke.Program.<>c__DisplayClass0_0.<Main>g__Check|9(Boolean condition, String message) in D:\a\DotKnow\DotKnow\tools\DotKnow.UiSmoke\Program.cs:line 49
+   at DotKnow.UiSmoke.ScreenshotSmoke.Verify(SettingsWindow settings, SettingsService service, Action`2 check, Action`2 capture) in D:\a\DotKnow\DotKnow\tools\DotKnow.UiSmoke\ScreenshotSmoke.cs:line 48
+   at DotKnow.UiSmoke.Program.Main(String[] args) in D:\a\DotKnow\DotKnow\tools\DotKnow.UiSmoke\Program.cs:line 301
