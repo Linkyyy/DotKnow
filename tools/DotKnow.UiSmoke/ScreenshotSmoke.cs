@@ -42,11 +42,11 @@ internal static class ScreenshotSmoke
             {
                 PointerFixture.Move(start); pointer.Press(); Wait(40);
                 for (var i = 1; i <= 8; i++) { PointerFixture.Move(start + (end - start) * (i / 8d)); Wait(20); }
-                pointer.Release();
+                pointer.Release(); Wait(40);
             }
             var shot = InputFixture.WaitWithDispatcher(task) ?? throw new InvalidOperationException("拖动截图未返回图片。");
             check(Math.Abs(shot.Bounds.Width - (end.X - start.X)) <= 2 && Math.Abs(shot.Bounds.Height - (end.Y - start.Y)) <= 2,
-                "真实鼠标框选只捕获所选区域，坐标使用物理屏幕像素");
+                $"真实鼠标框选只捕获所选区域，坐标使用物理屏幕像素：实际 {shot.Bounds}，预期 {start} → {end}");
             using var stream = new MemoryStream(Convert.FromBase64String(shot.Image.Base64Data));
             var bitmap = new BitmapImage(); bitmap.BeginInit(); bitmap.CacheOption = BitmapCacheOption.OnLoad; bitmap.StreamSource = stream; bitmap.EndInit();
             check(bitmap.PixelWidth == shot.Image.Width && bitmap.PixelHeight == shot.Image.Height && bitmap.PixelWidth > 200,
@@ -65,9 +65,10 @@ internal static class ScreenshotSmoke
             assistant.PresentScreenshot(snapshot, shot.Image); Wait(50);
             check(calls == 1 && submitted?.TaskId == "solve" && submitted.Image == shot.Image && submitted.Model == "gpt-4.1" && !submitted.IsTranslation,
                 "完成截图后自动提交一次解题请求，携带真实 PNG，不触发纯翻译");
-            assistant.Display(new(snapshot, submitted!, new("题目：2 + 2 = ?\n步骤：把两个 2 相加。\n答案：4。"), 1, false)); Wait(50);
+            assistant.Display(new(snapshot, submitted!, new("题目：2 + 2 = ?\n步骤：把两个 2 相加。\n答案：4。"), 1, false));
+            ((Expander)assistant.FindName("SourceExpander")).IsExpanded = true; Wait(50);
             check(((TextBox)assistant.FindName("AnswerText")).Text.Contains("答案：4") &&
-                ((Image)assistant.FindName("ScreenshotPreview")).Source != null, "解题结果和题目图片可在同一窗口查看");
+                ((Image)assistant.FindName("ScreenshotPreview")).Source != null && ((Image)assistant.FindName("ScreenshotPreview")).IsVisible, "解题结果和题目图片可在同一窗口查看");
             capture(assistant, "assistant-solve.png");
             ((Button)assistant.FindName("FollowUpButton")).RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
             ((TextBox)assistant.FindName("QuestionInput")).Text = "请用另一种方法解释";

@@ -70,6 +70,7 @@ internal sealed class ScreenshotSelector : Window
     private readonly System.Windows.Shapes.Rectangle outline = new() { Stroke = Brushes.YellowGreen, StrokeThickness = 2, IsHitTestVisible = false, Visibility = Visibility.Collapsed };
     private readonly Border hint;
     private Native.Point start;
+    private Native.Point? pressedPoint, releasedPoint, movedPoint;
     private bool dragging, finished;
 
     public ScreenshotSelector()
@@ -84,7 +85,12 @@ internal sealed class ScreenshotSelector : Window
         hint = new Border { Background = Brushes.Black, CornerRadius = new CornerRadius(8), Padding = new Thickness(14, 10, 14, 10),
             Child = new TextBlock { Text = UiText.Get("拖动框选题目，松开后自动发送给视觉模型解题。Esc / 右键取消。"), Foreground = Brushes.White, FontSize = 14, TextWrapping = TextWrapping.Wrap, MaxWidth = 500 }, IsHitTestVisible = false };
         canvas.Children.Add(hint);
-        SourceInitialized += (_, _) => Native.SetWindowPos(new WindowInteropHelper(this).Handle, new nint(-1), area.X, area.Y, area.Width, area.Height, 0x0040);
+        SourceInitialized += (_, _) =>
+        {
+            var handle = new WindowInteropHelper(this).Handle;
+            HwndSource.FromHwnd(handle)?.AddHook(TrackMouseMessage);
+            Native.SetWindowPos(handle, new nint(-1), area.X, area.Y, area.Width, area.Height, 0x0040);
+        };
         Loaded += (_, _) =>
         {
             Native.SetWindowPos(new WindowInteropHelper(this).Handle, new nint(-1), area.X, area.Y, area.Width, area.Height, 0x0040);
@@ -93,17 +99,20 @@ internal sealed class ScreenshotSelector : Window
         SizeChanged += (_, _) => Draw(null);
         PreviewMouseLeftButtonDown += (_, e) =>
         {
-            Native.GetCursorPos(out start); dragging = true; CaptureMouse(); e.Handled = true;
+            if (pressedPoint is { } point) start = point; else Native.GetCursorPos(out start);
+            dragging = true; CaptureMouse(); e.Handled = true;
         };
         PreviewMouseMove += (_, _) =>
         {
-            if (dragging && Native.GetCursorPos(out var end)) Draw(ProblemSolving.Selection(start.X, start.Y, end.X, end.Y, desktop));
+            if (!dragging) return;
+            var end = movedPoint ?? CurrentPointer();
+            Draw(ProblemSolving.Selection(start.X, start.Y, end.X, end.Y, desktop));
         };
         PreviewMouseLeftButtonUp += (_, e) =>
         {
             if (!dragging) return;
             dragging = false; ReleaseMouseCapture();
-            Native.GetCursorPos(out var end);
+            var end = releasedPoint ?? CurrentPointer();
             var selection = ProblemSolving.Selection(start.X, start.Y, end.X, end.Y, desktop);
             if (selection != null) Finish(selection); else Draw(null);
             e.Handled = true;
@@ -115,6 +124,22 @@ internal sealed class ScreenshotSelector : Window
         SystemEventsDisplayHandler = (_, _) => Dispatcher.BeginInvoke(new Action(Cancel));
     }
     private readonly EventHandler SystemEventsDisplayHandler;
+    private static Native.Point CurrentPointer() { Native.GetCursorPos(out var point); return point; }
+    private nint TrackMouseMessage(nint hwnd, int message, nint wParam, nint lParam, ref bool handled)
+    {
+        if (message is 0x0200 or 0x0201 or 0x0202)
+        {
+            // lParam belongs to this queued event; GetCursorPos may already describe a later movement.
+            var point = new Native.Point { X = (short)((long)lParam & 0xffff), Y = (short)(((long)lParam >> 16) & 0xffff) };
+            if (Native.ClientToScreen(hwnd, ref point))
+            {
+                if (message == 0x0201) { pressedPoint = point; releasedPoint = null; }
+                else if (message == 0x0202) releasedPoint = point;
+                else movedPoint = point;
+            }
+        }
+        return 0;
+    }
     public Task<InputRect?> SelectAsync()
     {
         Microsoft.Win32.SystemEvents.DisplaySettingsChanged += SystemEventsDisplayHandler;

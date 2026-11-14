@@ -45,7 +45,13 @@ public partial class App : System.Windows.Application
         vocabulary = new VocabularyStore(folder, protector);
         var provider = new ProviderApi(http, () => settings.Current, settings.ReadKey, statistics);
         coordinator = new TranslationCoordinator(provider, cache, () => settings.Current, statistics, vocabulary);
-        observer = new InputObserver(() => settings.Current);
+        observer = new InputObserver(() =>
+        {
+            var config = settings.Current;
+            // A screenshot session owns its source. Suspend UIA/clipboard polling until it is closed.
+            return capturingScreenshot || assistant?.SessionImage != null
+                ? config with { Translation = config.Translation with { Enabled = false } } : config;
+        });
         var replacement = new ReplacementService(observer, coordinator);
         var favorites = new FavoriteStore(folder, protector);
         overlay = new OverlayWindow(replacement, () => settings.Current, preview => favorites.Add(preview));
@@ -69,6 +75,8 @@ public partial class App : System.Windows.Application
         _ = PrepareVocabularyAsync();
         coordinator.PreviewChanged += preview => Ui(() =>
         {
+            // A result can have been queued on the dispatcher just before closing or starting a new screenshot.
+            if (capturingScreenshot || preview != null && !coordinator.IsCurrent(preview)) return;
             if (assistant.HasSession) assistant.Display(preview); else overlay.Display(preview);
         });
         coordinator.StatusChanged += status => Ui(() =>
@@ -105,6 +113,11 @@ public partial class App : System.Windows.Application
                 try
                 {
                     if (assistant.HasSession && assistant.OwnsForeground) { assistant.Activate(); return; }
+                    if (assistant.SessionImage != null)
+                    {
+                        assistant.CancelSession(false); latest = null;
+                        await coordinator.ObserveAsync(null, true);
+                    }
                     var snapshot = await observer.RequestPreviewAsync(CancellationToken.None);
                     HandleSnapshot(snapshot, true);
                     if (snapshot == null) tray?.ShowBalloonTip(4000, "点解 · DotKnow",
