@@ -35,7 +35,6 @@ jobs:
       - run: dotnet restore DotKnow.sln --locked-mode
       - run: dotnet build DotKnow.sln -c Release --no-restore
       - run: dotnet test tests/DotKnow.Tests -c Release --no-build --logger trx
-      - run: ./scripts/publish-windows.ps1
       - name: 运行真实 WPF 设置窗口验证
         id: ui_smoke
         timeout-minutes: 5
@@ -48,6 +47,7 @@ jobs:
       - name: 发布界面预览与验收诊断
         if: always() && steps.ui_smoke.outcome != 'skipped' && github.event_name == 'push' && github.ref_name == github.event.repository.default_branch
         run: ./scripts/publish-ui-previews.ps1
+      - run: ./scripts/publish-windows.ps1
       - name: 同步本次验收截图到安装包与宣传素材
         shell: pwsh
         run: |

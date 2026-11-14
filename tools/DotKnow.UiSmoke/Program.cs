@@ -298,7 +298,7 @@ internal static class Program
                 Check(target.Writes == 1 && !clickable.IsVisible, "确认后点击译文流程只写入一次并隐藏");
             }
             AssistantSmoke.Verify(window, settings, vocabulary, Check, (w, name) => Capture(w, Path.Combine(output, name)), temporary);
-            ScreenshotSmoke.Verify(window, Check, (w, name) => Capture(w, Path.Combine(output, name)));
+            ScreenshotSmoke.Verify(window, settings, Check, (w, name) => Capture(w, Path.Combine(output, name)));
             var fixtureErrors = new List<Exception>();
             try { InputFixture.Verify(Check); } catch (Exception error) { fixtureErrors.Add(error); }
             try { WeChatFixture.Verify(Check); } catch (Exception error) { fixtureErrors.Add(error); }

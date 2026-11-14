@@ -7,13 +7,20 @@ using System.Windows.Threading;
 using DotKnow.App;
 using DotKnow.App.Windows;
 using DotKnow.Core;
+using DotKnow.Infrastructure;
 
 namespace DotKnow.UiSmoke;
 
 internal static class ScreenshotSmoke
 {
-    internal static void Verify(SettingsWindow settings, Action<bool, string> check, Action<Window, string> capture)
+    internal static void Verify(SettingsWindow settings, SettingsService service, Action<bool, string> check, Action<Window, string> capture)
     {
+        settings.Show(); settings.OpenAiSettings(); Wait(50);
+        ((ComboBox)settings.FindName("ProviderInput")).SelectedValue = "OpenAI";
+        ((TextBox)settings.FindName("ImageModelInput")).Text = "gpt-4.1";
+        ((Button)settings.FindName("SaveSettingsButton")).RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+        check(service.Current.AI.Provider == "OpenAI" && service.Current.AI.ImageModel == "gpt-4.1" && service.Current.AI.Model == "gpt-4.1-mini",
+            "截图模型可独立于文字模型通过真实设置界面保存");
         var screenshots = 0;
         settings.ScreenshotRequested += OnRequest;
         void OnRequest() => screenshots++;
@@ -50,13 +57,13 @@ internal static class ScreenshotSmoke
                 "截图窗口先隐藏再读取像素，图片没有框选遮罩污染");
             check(System.Windows.Clipboard.GetText() == "screenshot-must-not-overwrite-clipboard", "截图不读写剪贴板");
             fixture.Hide();
-            var config = new AppSettings { PrivacyConsent = true, AI = ProviderCatalog.Defaults("OpenAI") };
+            var config = service.Current with { PrivacyConsent = true };
             var assistant = new AssistantWindow(() => config);
             TranslationRequest? submitted = null; var calls = 0;
             assistant.QueryRequested += (_, request) => { submitted = request; calls++; };
             var snapshot = new InputSnapshot("screenshot-fixture", shot.Image.Description, shot.Bounds, CanWrite: false, IsSelection: true);
             assistant.PresentScreenshot(snapshot, shot.Image); Wait(50);
-            check(calls == 1 && submitted?.TaskId == "solve" && submitted.Image == shot.Image && !submitted.IsTranslation,
+            check(calls == 1 && submitted?.TaskId == "solve" && submitted.Image == shot.Image && submitted.Model == "gpt-4.1" && !submitted.IsTranslation,
                 "完成截图后自动提交一次解题请求，携带真实 PNG，不触发纯翻译");
             assistant.Display(new(snapshot, submitted!, new("题目：2 + 2 = ?\n步骤：把两个 2 相加。\n答案：4。"), 1, false)); Wait(50);
             check(((TextBox)assistant.FindName("AnswerText")).Text.Contains("答案：4") &&
