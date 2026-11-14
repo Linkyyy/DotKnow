@@ -79,7 +79,7 @@ internal static class ScreenshotSmoke
             check(assistant.SessionImage == null && ((Image)assistant.FindName("ScreenshotPreview")).Source == null && !assistant.IsVisible,
                 "关闭解题面板释放截图并隐藏结果");
             var cancelled = ScreenshotCapture.CaptureAsync(); Wait(80);
-            System.Windows.Forms.SendKeys.SendWait("{ESC}");
+            PointerFixture.Escape();
             check(InputFixture.WaitWithDispatcher(cancelled) == null && calls == 2, "Esc 取消截图，不产生图片或额外解题请求");
             using var cancellation = new CancellationTokenSource();
             var interrupted = ScreenshotCapture.CaptureAsync(cancellation.Token); cancellation.Cancel();

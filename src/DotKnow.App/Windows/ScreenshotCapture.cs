@@ -65,7 +65,7 @@ internal sealed class ScreenshotSelector : Window
 {
     private readonly TaskCompletionSource<InputRect?> completion = new(TaskCreationOptions.RunContinuationsAsynchronously);
     private readonly InputRect desktop;
-    private readonly Canvas canvas = new() { Background = Brushes.Transparent };
+    private readonly Canvas canvas = new() { Background = Brushes.Transparent, Focusable = true };
     private readonly System.Windows.Shapes.Path shade = new() { Fill = new SolidColorBrush(System.Windows.Media.Color.FromArgb(145, 0, 0, 0)), IsHitTestVisible = false };
     private readonly System.Windows.Shapes.Rectangle outline = new() { Stroke = Brushes.YellowGreen, StrokeThickness = 2, IsHitTestVisible = false, Visibility = Visibility.Collapsed };
     private readonly Border hint;
@@ -78,7 +78,7 @@ internal sealed class ScreenshotSelector : Window
         var area = System.Windows.Forms.SystemInformation.VirtualScreen;
         desktop = new(area.X, area.Y, area.Width, area.Height);
         WindowStyle = WindowStyle.None; ResizeMode = ResizeMode.NoResize; AllowsTransparency = true;
-        Background = Brushes.Transparent; Topmost = true; ShowInTaskbar = false; Cursor = Cursors.Cross;
+        Background = Brushes.Transparent; Topmost = true; ShowInTaskbar = false; ShowActivated = true; Focusable = true; Cursor = Cursors.Cross;
         Title = UiText.Get("截图解题"); Content = canvas;
         Left = area.Left; Top = area.Top; Width = area.Width; Height = area.Height;
         canvas.Children.Add(shade); canvas.Children.Add(outline);
@@ -94,7 +94,7 @@ internal sealed class ScreenshotSelector : Window
         Loaded += (_, _) =>
         {
             Native.SetWindowPos(new WindowInteropHelper(this).Handle, new nint(-1), area.X, area.Y, area.Width, area.Height, 0x0040);
-            Draw(null); Activate(); Focus();
+            Draw(null); Activate(); Keyboard.Focus(canvas);
         };
         SizeChanged += (_, _) => Draw(null);
         PreviewMouseLeftButtonDown += (_, e) =>
@@ -127,6 +127,12 @@ internal sealed class ScreenshotSelector : Window
     private static Native.Point CurrentPointer() { Native.GetCursorPos(out var point); return point; }
     private nint TrackMouseMessage(nint hwnd, int message, nint wParam, nint lParam, ref bool handled)
     {
+        if (message == 0x0100 && (int)wParam == 0x1b)
+        {
+            handled = true;
+            Dispatcher.BeginInvoke(new Action(Cancel));
+            return 0;
+        }
         if (message is 0x0200 or 0x0201 or 0x0202)
         {
             // lParam belongs to this queued event; GetCursorPos may already describe a later movement.

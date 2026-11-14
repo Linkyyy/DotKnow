@@ -12,6 +12,8 @@ internal sealed class PointerFixture : IDisposable
     public PointerFixture() { Native.GetCursorPos(out original); }
     [DllImport("user32.dll")] private static extern bool SetCursorPos(int x, int y);
     [DllImport("user32.dll")] private static extern void mouse_event(uint flags, uint dx, uint dy, uint data, nuint extra);
+    [DllImport("user32.dll")] private static extern void keybd_event(byte key, byte scan, uint flags, nuint extra);
+    public static void Escape() { keybd_event(0x1b, 0, 0, 0); keybd_event(0x1b, 0, 2, 0); }
     [DllImport("user32.dll")] private static extern int GetSystemMetrics(int index);
     public static void Move(Point point)
     {
