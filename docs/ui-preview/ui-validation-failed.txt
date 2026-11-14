@@ -1,0 +1,4 @@
+System.TimeoutException: The operation has timed out.
+   at DotKnow.UiSmoke.InputFixture.WaitWithDispatcher[T](Task`1 operation, Int32 timeoutSeconds) in D:\a\DotKnow\DotKnow\tools\DotKnow.UiSmoke\InputFixture.cs:line 203
+   at DotKnow.UiSmoke.ScreenshotSmoke.Verify(SettingsWindow settings, SettingsService service, Action`2 check, Action`2 capture) in D:\a\DotKnow\DotKnow\tools\DotKnow.UiSmoke\ScreenshotSmoke.cs:line 83
+   at DotKnow.UiSmoke.Program.Main(String[] args) in D:\a\DotKnow\DotKnow\tools\DotKnow.UiSmoke\Program.cs:line 301
